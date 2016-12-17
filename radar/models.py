@@ -1,9 +1,10 @@
-import os
+from werkzeug.utils import secure_filename
 from peewee import (SqliteDatabase, Model, CharField, TextField, ForeignKeyField, IntegerField, SmallIntegerField,
                     DateTimeField, DoubleField, BooleanField, DecimalField, datetime as peewee_datetime, FloatField,
                     fn)
 
-from config import DB_CONFIG
+
+from config import *
 
 db = SqliteDatabase(**DB_CONFIG)
 db.commit_select = True
@@ -23,7 +24,7 @@ class Account(_Model):
     class Meta:
         database = db
 
-    username = CharField(unique=True)
+    email = CharField(unique=True)
     password = CharField()
     created = DateTimeField(default=peewee_now)
 
@@ -41,12 +42,32 @@ class BaseModel(Model):
     type = IntegerField(null=True)
 
 
+class Image(_Model):
+
+    class Meta:
+        db_table = "images"
+
+    image = CharField(null=True)
+
+    def __unicode__(self):
+        return self.image
+
+    def save_image(self, file_obj):
+        self.image = secure_filename(file_obj.filename)
+        full_path = os.path.join(MEDIA_ROOT, self.image)
+        file_obj.save(full_path)
+        self.save()
+
+    def url(self):
+        return os.path.join(MEDIA_URL, self.image)
+
+
 class RadarView(BaseModel):
 
     class Meta:
         db_table = "radar_views"
 
-    bg_image = CharField(null=True)
+    bg_image = ForeignKeyField(Image, null=True)
     image_scaling = FloatField(null=True)
     view_scaling = FloatField(null=True)
 
@@ -102,6 +123,7 @@ class AlarmLog(_Model):
     alarm_zone = ForeignKeyField(AlarmZone, null=True)
     timestamp = DateTimeField(default=peewee_now)
     radar_object = ForeignKeyField(RadarObject, null=True)
+
 
 
 

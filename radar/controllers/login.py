@@ -20,13 +20,13 @@ class LoginController(BaseController):
         return redirect(url_for('index'))
 
     def _check_username(self):
-        username = self._verify_field("username")
+        email = self._verify_field("email")
         try:
-            account = Account.get(Account.username == username)
+            account = Account.get(Account.email == email)
             return account
         except Account.DoesNotExist:
-            raise ServiceException("Account {username} does not exist"
-                                   .format(username=username))
+            raise ServiceException("Account {email} does not exist"
+                                   .format(email=email))
 
     def _check_password(self, account):
         password = self._verify_field("password")

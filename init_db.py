@@ -6,7 +6,7 @@ from radar.models import *
 
 def fill_test_data():
     for i in range(1, 3):
-        account = Account(username="radar%s" % i,
+        account = Account(email="radar@example.com%s" % (i if i != 1 else ""),
                           password=sha1("123").hexdigest())
         account.save()
 
@@ -31,7 +31,6 @@ def fill_test_data():
                                visible=random.choice([True, False]),
                                location="gps coordinates for radar view %s" % i,
                                type=random.choice([1, 2, 3]),
-                               bg_image="image.jpg",
                                view_scaling=1.5)
         radar_view.save()
 
