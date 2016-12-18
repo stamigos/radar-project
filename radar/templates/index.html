@@ -3,8 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Radar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
 </head>
 <body>
-Index page
+<header>
+    <img src="{{ url_for('static', filename='img/logo.png')}}"/>
+    <i class="fa fa-sign-out"></i>
+    <i class="fa fa-cog"></i>
+</header>
+<div class="main">
+    <div class="left-panel">
+        <h1>Polygons</h1>
+    </div>
+    <div class="right-panel"></div>
+    <div class="panel"></div>
+    <div class="panel"></div>
+</div>
 </body>
 </html>
