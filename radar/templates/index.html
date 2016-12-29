@@ -25,9 +25,6 @@
                 <button class="btn-main">Save</button>
             </div>
         </div>
-        <div class="content">
-
-        </div>
     </div>
     <div class="right-panel">
         <div class="content-header">
@@ -87,10 +84,41 @@
                 </table>
             </div>
         </div>
+        <div class="content-header">
+            <h1 class="bordered">Radar settings</h1><br>
+        </div>
+        <div class="content padded">
+            <div class="form-item">
+                <label for="height">Installation Height</label>
+                <input type="number" step="0.01" name="height" id="height"/>
+            </div>
+            <div class="form-item">
+                <label for="offset_x">Installation Offset X</label>
+                <input type="number" step="0.01" name="offset_x" id="offset_x"/>
+            </div>
+            <div class="form-item">
+                <label for="offset_y">Installation Offset Y</label>
+                <input type="number" step="0.01" name="offset_y" id="offset_y"/>
+            </div>
+            <div class="form-item">
+                <label for="radar_az_angle">Radar Azimuth Angle</label>
+                <input type="number" step="0.01" name="radar_az_angle" id="radar_az_angle"/>
+            </div>
+            <div class="form-item">
+                <label for="radar_el_angle">Radar Elevation Angle</label>
+                <input type="number" step="0.01" name="radar_el_angle" id="radar_el_angle"/>
+            </div>
+            <br>
+            <div class="form-items-actions">
+                <button type="button" class="btn-simple">Clear</button>
+                <button type="button" class="btn-main">Save</button>
+            </div>
+        </div>
     </div>
+
     <div class="panel">
         <div class="content-header">
-            <h1>Alarm zones</h1><br>
+            <h1>Real time radar objects</h1><br>
         </div>
         <div class="content">
             <div class="content-table-header">
@@ -185,7 +213,103 @@
             </div>
         </div>
     </div>
-    <div class="panel"></div>
+    <div class="panel">
+                <div class="content-header">
+            <h1>Alarm history</h1><br>
+        </div>
+        <div class="content">
+            <div class="content-table-header">
+                <table>
+                    <thead>
+                          <tr>
+                              <th>#</th>
+                              <th>Object ID</th>
+                              <th>Quality</th>
+                              <th>Distance X(m)</th>
+                              <th>Distance X(m)</th>
+                              <th>Velocity X(km/h)</th>
+                              <th>Velocity Y(km/h)</th>
+                              <th>Object Type</th>
+                              <th>Distance Polar(m)</th>
+                              <th>Speed Polar(km/h)</th>
+                              <th>Angle()</th>
+                          </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="content-table-body">
+                <table>
+                    <tbody>
+                          <tr>
+                              <td>1</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                          </tr>
+                          <tr>
+                              <td>2</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                          </tr>
+                          <tr>
+                              <td>3</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                          </tr>
+                          <tr>
+                              <td>4</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                          </tr>
+                          <tr>
+                              <td>5</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                          </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 <script type="text/javascript" src="{{ url_for('static', filename='js/paint.js') }}"></script>

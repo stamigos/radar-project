@@ -15,13 +15,14 @@ h1, h2 {
     margin: 0;
     line-height: 24px;
 }
+h1.bordered {
+    border-bottom: 2px solid #dddddd;
+    width: 100%;
+    display: block;
+    padding-bottom: 20px;
+}
 h2 {
     font-size: 13px;
-}
-button {
-    cursor: pointer;
-    height: 40px;
-    border-radius: 3px;
 }
 th {
     font-family: 'Roboto Bold';
@@ -42,7 +43,7 @@ th {
 td {
     font-family: 'Roboto Light';
     font-size: 13px;
-    padding: 17px 20px;
+    padding: 14px 20px;
 }
 tr:nth-child(odd) {
     background-color: #f2f2f2
@@ -63,7 +64,7 @@ body {
     margin: 0;
     padding: 0;
     background: #eeeeee;
-    min-width: 1280px;
+    min-width: 1305px;
 }
 header {
     background: #ffffff;
@@ -93,7 +94,7 @@ header i.fa.fa-sign-out:hover {
 }
 .main {
     padding-top: 30px;
-    width: 1240px;
+    width: 1265px;
     margin: auto;
     padding-left: 20px;
     padding-right: 20px;
@@ -101,26 +102,31 @@ header i.fa.fa-sign-out:hover {
 .main div {
     background: #ffffff;
     border-radius: 3px;
-    padding: 30px 20px 30px 20px;
 }
 .left-panel {
     display: inline-block;
     position: relative;
-    width: 660px;
-    height: 520px;
+    float: left;
+    width: 723px;
+    height: 600px;
 }
 .right-panel {
     display: inline-block;
     position: relative;
-    width: 466px;
-    height: 520px;
+    width: 508px;
+    height: 600px;
     margin-left: 30px;
+    padding: 0 !important;
 }
 .panel {
     display: block;
-    width: 1200px;
-    height: 190px;
+    width: 1260px;
+    height: 245px;
     margin-top: 30px;
+    padding-bottom: 0;
+}
+.panel td {
+    padding: 16px 20px;
 }
 .main:last-child {
     margin-bottom: 30px;
@@ -131,9 +137,13 @@ header i.fa.fa-sign-out:hover {
     padding-top: 10px !important;
     width: 100%;
 }
+.content.padded {
+    padding: 0 20px 0 20px !important;
+    width: initial !important;
+}
 .content-header {
     position: relative;
-    padding: 0 !important;
+    padding: 25px 20px 0 20px;
 }
 .content-header .buttons {
     float: right;
@@ -143,35 +153,39 @@ header i.fa.fa-sign-out:hover {
 .right-panel .content-table-header,
 .right-panel .content-table-body {
     padding: 0 !important;
-    position: absolute;
-    width: 506px;
-    margin-left: -20px;
 }
 .right-panel .content-table-header {
     position: relative;
 }
 .right-panel .content-table-body {
-    height: 170px;
+    height: 150px;
     overflow-y: auto;
 }
 .panel .content-table-header,
 .panel .content-table-body {
     padding: 0 !important;
     position: absolute;
-    width: 1240px;
-    margin-left: -20px;
+    width: 100%;
+}
+.panel .content-table-body td {
+    border-bottom: 1px solid #dddddd;
 }
 .panel .content-table-header {
     position: relative;
     border-top: 1px solid #dddddd;
 }
 .panel .content-table-body {
-    height: 160px;
+    height: 141px;
     overflow-y: auto;
 }
 
 
 /* --- Buttons --- */
+button {
+    cursor: pointer;
+    height: 40px;
+    border-radius: 3px;
+}
 .btn-main {
     float: right;
     background: #4285f4;
@@ -182,6 +196,16 @@ header i.fa.fa-sign-out:hover {
 }
 .btn-main:hover {
     background: #458cff;
+}
+.btn-simple {
+    color: #737373;
+    border-radius: 3px;
+    border: 1px solid #dedede;
+    width: 90px;
+    background: #ffffff;
+}
+.btn-simple:hover {
+    border-color: #bababa;
 }
 .btn-img-upload {
     color: #737373;
@@ -194,6 +218,42 @@ header i.fa.fa-sign-out:hover {
     border-color: #bababa;
 }
 /* --- Buttons end --- */
+
+/* --- Inputs --- */
+label {
+    display: block;
+}
+input, label {
+    color: #333333;
+    font-size: 13px;
+    font-family: 'Roboto Light';
+}
+input {
+    display: inline-block;
+    border-radius: 3px;
+    border: 1px solid #dedede;
+    margin-top: 10px;
+    padding: 15px;
+    width: 113px;
+}
+input.error {
+    border: 1px solid #f24841;
+}
+.form-items-actions {
+    display: block;
+    float: left;
+}
+.form-item:nth-child(3) {
+    margin-right: 0;
+}
+.form-item {
+    display: inline-block;
+    float: left;
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
+/* --- Inputs end --- */
+
 /* --- Colors --- */
 div.circle {
     height:20px;
