@@ -14,11 +14,182 @@
 </header>
 <div class="main">
     <div class="left-panel">
-        <h1>Polygons</h1>
+        <div class="content-header">
+            <h1>Polygons</h1><br>
+            <h2>Radar live-view</h2>
+            <div class="buttons">
+                <button class="btn-img-upload">
+                    <i class="fa fa-picture-o" aria-hidden="true"></i>
+                    Load Image
+                </button>
+                <button class="btn-main">Save</button>
+            </div>
+        </div>
+        <div class="content">
+
+        </div>
     </div>
-    <div class="right-panel"></div>
-    <div class="panel"></div>
+    <div class="right-panel">
+        <div class="content-header">
+            <h1>Alarm zones</h1><br>
+            <h2>Polygons</h2>
+            <div class="buttons">
+                <button class="btn-main">Add</button>
+            </div>
+        </div>
+        <div class="content">
+            <div class="content-table-header">
+                <table>
+                    <thead>
+                          <tr>
+                            <th class="polygon-name-header">Name</th>
+                            <th>Color</th>
+                            <th>Modify</th>
+                            <th>Delete</th>
+                          </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="content-table-body">
+                <table>
+                    <tbody>
+                          <tr>
+                            <td class="polygon-name">Polygon 1</td>
+                            <td><div class="circle red"></div></td>
+                            <td><i class="fa fa-pencil" aria-hidden="true"></i></td>
+                            <td><i class="fa fa-times" aria-hidden="true"></i></td>
+                          </tr>
+                          <tr>
+                            <td class="polygon-name">Polygon 2</td>
+                            <td><div class="circle green"></div></td>
+                            <td><i class="fa fa-pencil" aria-hidden="true"></i></td>
+                            <td><i class="fa fa-times" aria-hidden="true"></i></td>
+                          </tr>
+                          <tr>
+                            <td class="polygon-name">Polygon 3</td>
+                            <td><div class="circle blue"></div></td>
+                            <td><i class="fa fa-pencil" aria-hidden="true"></i></td>
+                            <td><i class="fa fa-times" aria-hidden="true"></i></td>
+                          </tr>
+                          <tr>
+                            <td class="polygon-name">Polygon 4</td>
+                            <td><div class="circle red"></div></td>
+                            <td><i class="fa fa-pencil" aria-hidden="true"></i></td>
+                            <td><i class="fa fa-times" aria-hidden="true"></i></td>
+                          </tr>
+                          <tr>
+                            <td class="polygon-name">Polygon 5</td>
+                            <td><div class="circle green"></div></td>
+                            <td><i class="fa fa-pencil" aria-hidden="true"></i></td>
+                            <td><i class="fa fa-times" aria-hidden="true"></i></td>
+                          </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="panel">
+        <div class="content-header">
+            <h1>Alarm zones</h1><br>
+        </div>
+        <div class="content">
+            <div class="content-table-header">
+                <table>
+                    <thead>
+                          <tr>
+                              <th>#</th>
+                              <th>Object ID</th>
+                              <th>Quality</th>
+                              <th>Distance X(m)</th>
+                              <th>Distance X(m)</th>
+                              <th>Velocity X(km/h)</th>
+                              <th>Velocity Y(km/h)</th>
+                              <th>Object Type</th>
+                              <th>Distance Polar(m)</th>
+                              <th>Speed Polar(km/h)</th>
+                              <th>Angle()</th>
+                          </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="content-table-body">
+                <table>
+                    <tbody>
+                          <tr>
+                              <td>1</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                          </tr>
+                          <tr>
+                              <td>2</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                          </tr>
+                          <tr>
+                              <td>3</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                          </tr>
+                          <tr>
+                              <td>4</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                          </tr>
+                          <tr>
+                              <td>5</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                          </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
     <div class="panel"></div>
 </div>
 </body>
+<script type="text/javascript" src="{{ url_for('static', filename='js/paint.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/polygon.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/page_state.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/button.js') }}"></script>
 </html>
