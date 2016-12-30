@@ -292,3 +292,11 @@ div.circle.blue {
     color: #f20000;
 }
 /* --- Colors end --- */
+.canvas-container {
+    background: none !important;
+    position: absolute !important;
+}
+canvas {
+    background: transparent;
+    margin: 20px;
+}

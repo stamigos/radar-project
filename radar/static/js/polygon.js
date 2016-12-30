@@ -1,6 +1,5 @@
 
 
-
 prototypefabric.polygon = {
     drawPolygon : function() {
         polygonMode = true;

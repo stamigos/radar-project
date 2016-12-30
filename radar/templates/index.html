@@ -22,8 +22,14 @@
                     <i class="fa fa-picture-o" aria-hidden="true"></i>
                     Load Image
                 </button>
-                <button class="btn-main">Save</button>
+                <button class="btn-main" id="id_Save_Image">Save</button>
             </div>
+        </div>
+        <div class="content">
+                <canvas id = "c2" width = "660" height = "430" ></canvas>
+                <canvas id="id_Canv_Grid_Left_Canv" width="35" height="430" class="canv_grid"></canvas>
+                <canvas id="c" width="660" height="430"></canvas>
+                <canvas id ="id_Canv_Grid_Bottom_Canv" width = "660" height = "30" class="canv_grid"></canvas>
         </div>
     </div>
     <div class="right-panel">
@@ -312,8 +318,12 @@
     </div>
 </div>
 </body>
-<script type="text/javascript" src="{{ url_for('static', filename='js/paint.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/polygon.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/page_state.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/button.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.1.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.mousewheel.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/grid.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/paint.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/polygon.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/page_state.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/button.js') }}"></script>
 </html>
