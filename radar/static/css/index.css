@@ -300,3 +300,25 @@ canvas {
     background: transparent;
     margin: 20px;
 }
+/*.canv_grid {*/
+    /*margin-top: 20px;*/
+/*}*/
+.left-grid {
+    float: left;
+    position: relative;
+    background: transparent;
+}
+.bottom-grid {
+    background: transparent;
+    margin-top: 430px;
+    margin-left: 34px;
+}
+.grid {
+    background: transparent;
+}
+.line {
+    border: 1px solid #dddddd;
+}
+.canvas-container {
+    top:0;
+}

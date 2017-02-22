@@ -1,6 +1,4 @@
 
-
-
 function PageState(state){
     switch (state) {
         case "modify_alarm_zone":
@@ -93,15 +91,6 @@ function PageState(state){
 
 
         default: break;
-
-
-
-
-
-
-
-
-
     }
 }
 

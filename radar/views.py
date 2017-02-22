@@ -32,6 +32,12 @@ def index():
     return render_template("index.html")
 
 
+@app.route('/i/')
+@login_required
+def index_old():
+    return render_template("index_old.html")
+
+
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
     return LoginController(request)()

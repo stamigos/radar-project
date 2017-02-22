@@ -17,7 +17,7 @@ var pointArray = [];    //в этот массив записываются то
 var lineArray = [];     //в этот массив записываются линии при рисовании полигона
 var activeLine;         //текущая линия при рисовании полигона
 
-var canvas;                  //объект для работы с canvas
+var grid_canvas;                  //объект для работы с canvas
 var canvas_down;             //объект для работы с canvas
 var canvas_grid_bottom;      //объект для работы с canvas нижней линейки
 var canvas_grid_left;        //объект для работы с canvas левой линейки
@@ -50,7 +50,7 @@ $(window).on('load', function() {
     document.getElementById("id_Save_Image").disabled=true;
     // document.getElementById("id_Scale_Image").disabled=true;
     prototypefabric.initCanvas();
-    Resize_Canvas();
+    // Resize_Canvas();
 });
 
 var prototypefabric = new function () {
@@ -86,11 +86,11 @@ var prototypefabric = new function () {
                 prototypefabric.polygon.addPoint(options);
             }
 
-            if((fl_draw_scale_line=='start_draw_line')||(fl_draw_scale_line=='draw_line')){scaling.line.addPoint(options);}
-            if ((fl_draw_scale_line=='modify_line')&&(options.target && options.target.id == arr_pointLine[0].id)) {scaling.line.addPoint(options);}
-            if ((fl_draw_scale_line=='modify_line')&&(options.target && options.target.id == arr_pointLine[1].id)) {scaling.line.addPoint(options);}
-            if(fl_draw_scale_line=='modify_point_0'){scaling.line.addPoint(options);}
-            if(fl_draw_scale_line=='modify_point_1'){scaling.line.addPoint(options);}
+            // if((fl_draw_scale_line=='start_draw_line')||(fl_draw_scale_line=='draw_line')){scaling.line.addPoint(options);}
+            // if ((fl_draw_scale_line=='modify_line')&&(options.target && options.target.id == arr_pointLine[0].id)) {scaling.line.addPoint(options);}
+            // if ((fl_draw_scale_line=='modify_line')&&(options.target && options.target.id == arr_pointLine[1].id)) {scaling.line.addPoint(options);}
+            // if(fl_draw_scale_line=='modify_point_0'){scaling.line.addPoint(options);}
+            // if(fl_draw_scale_line=='modify_point_1'){scaling.line.addPoint(options);}
         });
 
         /*########################################################################################################## MOUSEWHEEL */
@@ -109,8 +109,9 @@ var prototypefabric = new function () {
                     zoomStep = Math.pow(1.1, deltaY); // шаг масштабирования, удобный для пользователя.
 
 
-                anchor_x = centerX; anchor_y = centerY; scale_to_set = scale_sc * zoomStep;
-                scale_wind.setScale(scale_sc * zoomStep, centerX, centerY);
+                anchor_x = centerX; anchor_y = centerY;
+                //scale_to_set = scale_sc * zoomStep;
+                //scale_wind.setScale(scale_sc * zoomStep, centerX, centerY);
                 canvas.renderAll();
             // Отключим скролл страницы
             event.preventDefault();}
@@ -148,23 +149,23 @@ var prototypefabric = new function () {
                 canvas.renderAll();
             }
 
-            if(fl_draw_scale_line=='draw_line'){
-                pointer = canvas.getPointer(options.e);
-                active_scale_line.set({ x2: pointer.x, y2: pointer.y });
-                canvas.renderAll();
-            }
-            if(fl_draw_scale_line=='modify_point_0'){
-                pointer = canvas.getPointer(options.e);
-                active_scale_line.set({ x1: pointer.x, y1: pointer.y });
-                arr_pointLine[0].set({ left: pointer.x, top: pointer.y });
-                canvas.renderAll();
-            }
-            if(fl_draw_scale_line=='modify_point_1'){
-                pointer = canvas.getPointer(options.e);
-                active_scale_line.set({ x2: pointer.x, y2: pointer.y });
-                arr_pointLine[1].set({ left: pointer.x, top: pointer.y });
-                canvas.renderAll();
-            }
+            // if(fl_draw_scale_line=='draw_line'){
+            //     pointer = canvas.getPointer(options.e);
+            //     active_scale_line.set({ x2: pointer.x, y2: pointer.y });
+            //     canvas.renderAll();
+            // }
+            // if(fl_draw_scale_line=='modify_point_0'){
+            //     pointer = canvas.getPointer(options.e);
+            //     active_scale_line.set({ x1: pointer.x, y1: pointer.y });
+            //     arr_pointLine[0].set({ left: pointer.x, top: pointer.y });
+            //     canvas.renderAll();
+            // }
+            // if(fl_draw_scale_line=='modify_point_1'){
+            //     pointer = canvas.getPointer(options.e);
+            //     active_scale_line.set({ x2: pointer.x, y2: pointer.y });
+            //     arr_pointLine[1].set({ left: pointer.x, top: pointer.y });
+            //     canvas.renderAll();
+            // }
 
 
         });

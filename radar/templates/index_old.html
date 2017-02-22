@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Radar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+</head>
+<body>
+<header>
+    <img src="{{ url_for('static', filename='img/logo.png')}}"/>
+    <i class="fa fa-sign-out"></i>
+    <i class="fa fa-cog"></i>
+</header>
+<div class="main">
+    <div class="left-panel">
+        <div class="content-header">
+            <h1>Polygons</h1><br>
+            <h2>Radar live-view</h2>
+            <div class="buttons">
+                <button class="btn-img-upload">
+                    <i class="fa fa-picture-o" aria-hidden="true"></i>
+                    Load Image
+                </button>
+                <button class="btn-main" id="id_Save_Image">Save</button>
+            </div>
+        </div>
+        <div class="content">
+
+            <div class="map">
+                <canvas id="id_canvas_map" width="690" height="500" class="canv_area" style="padding-right: 20px;padding-top: 10px;"></canvas>
+            </div>
+            <div class="grid">
+                <canvas id="id_canvas_grid" width="690" height="500" class="canv_grid" style=""></canvas>
+            </div>
+
+{#            <div class="left-grid">#}
+{#                <canvas id = "c2" width = "660" height = "430" ></canvas>#}
+{#                <canvas id="id_Canv_Grid_Left_Canv" width="50" height="430" class="canv_grid"></canvas>#}
+{#            </div>#}
+{#            <div class="bottom-grid">#}
+{#                 <canvas id="c" width="660" height="430"></canvas>#}
+{#                <canvas id ="id_Canv_Grid_Bottom_Canv" width = "660" height = "50" class="canv_grid"></canvas>#}
+{#            </div>#}
+        </div>
+    </div>
+    <div class="right-panel">
+        <div class="content-header">
+            <h1>Alarm zones</h1><br>
+            <h2>Polygons</h2>
+            <div class="buttons">
+                <button class="btn-main">Add</button>
+            </div>
+        </div>
+        <div class="content">
+            <div class="content-table-header">
+                <table>
+                    <thead>
+                          <tr>
+                            <th class="polygon-name-header">Name</th>
+                            <th>Color</th>
+                            <th>Modify</th>
+                            <th>Delete</th>
+                          </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="content-table-body">
+                <table>
+                    <tbody>
+                          <tr>
+                            <td class="polygon-name">Polygon 1</td>
+                            <td><div class="circle red"></div></td>
+                            <td><i class="fa fa-pencil" aria-hidden="true"></i></td>
+                            <td><i class="fa fa-times" aria-hidden="true"></i></td>
+                          </tr>
+                          <tr>
+                            <td class="polygon-name">Polygon 2</td>
+                            <td><div class="circle green"></div></td>
+                            <td><i class="fa fa-pencil" aria-hidden="true"></i></td>
+                            <td><i class="fa fa-times" aria-hidden="true"></i></td>
+                          </tr>
+                          <tr>
+                            <td class="polygon-name">Polygon 3</td>
+                            <td><div class="circle blue"></div></td>
+                            <td><i class="fa fa-pencil" aria-hidden="true"></i></td>
+                            <td><i class="fa fa-times" aria-hidden="true"></i></td>
+                          </tr>
+                          <tr>
+                            <td class="polygon-name">Polygon 4</td>
+                            <td><div class="circle red"></div></td>
+                            <td><i class="fa fa-pencil" aria-hidden="true"></i></td>
+                            <td><i class="fa fa-times" aria-hidden="true"></i></td>
+                          </tr>
+                          <tr>
+                            <td class="polygon-name">Polygon 5</td>
+                            <td><div class="circle green"></div></td>
+                            <td><i class="fa fa-pencil" aria-hidden="true"></i></td>
+                            <td><i class="fa fa-times" aria-hidden="true"></i></td>
+                          </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="content-header">
+            <h1 class="bordered">Radar settings</h1><br>
+        </div>
+        <div class="content padded">
+            <div class="form-item">
+                <label for="height">Installation Height</label>
+                <input type="number" step="0.01" name="height" id="height"/>
+            </div>
+            <div class="form-item">
+                <label for="offset_x">Installation Offset X</label>
+                <input type="number" step="0.01" name="offset_x" id="offset_x"/>
+            </div>
+            <div class="form-item">
+                <label for="offset_y">Installation Offset Y</label>
+                <input type="number" step="0.01" name="offset_y" id="offset_y"/>
+            </div>
+            <div class="form-item">
+                <label for="radar_az_angle">Radar Azimuth Angle</label>
+                <input type="number" step="0.01" name="radar_az_angle" id="radar_az_angle"/>
+            </div>
+            <div class="form-item">
+                <label for="radar_el_angle">Radar Elevation Angle</label>
+                <input type="number" step="0.01" name="radar_el_angle" id="radar_el_angle"/>
+            </div>
+            <br>
+            <div class="form-items-actions">
+                <button type="button" class="btn-simple">Clear</button>
+                <button type="button" class="btn-main">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="content-header">
+            <h1>Real time radar objects</h1><br>
+        </div>
+        <div class="content">
+            <div class="content-table-header">
+                <table>
+                    <thead>
+                          <tr>
+                              <th>#</th>
+                              <th>Object ID</th>
+                              <th>Quality</th>
+                              <th>Distance X(m)</th>
+                              <th>Distance X(m)</th>
+                              <th>Velocity X(km/h)</th>
+                              <th>Velocity Y(km/h)</th>
+                              <th>Object Type</th>
+                              <th>Distance Polar(m)</th>
+                              <th>Speed Polar(km/h)</th>
+                              <th>Angle()</th>
+                          </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="content-table-body">
+                <table>
+                    <tbody>
+                          <tr>
+                              <td>1</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                          </tr>
+                          <tr>
+                              <td>2</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                          </tr>
+                          <tr>
+                              <td>3</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                          </tr>
+                          <tr>
+                              <td>4</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                          </tr>
+                          <tr>
+                              <td>5</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                          </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="panel">
+                <div class="content-header">
+            <h1>Alarm history</h1><br>
+        </div>
+        <div class="content">
+            <div class="content-table-header">
+                <table>
+                    <thead>
+                          <tr>
+                              <th>#</th>
+                              <th>Object ID</th>
+                              <th>Quality</th>
+                              <th>Distance X(m)</th>
+                              <th>Distance X(m)</th>
+                              <th>Velocity X(km/h)</th>
+                              <th>Velocity Y(km/h)</th>
+                              <th>Object Type</th>
+                              <th>Distance Polar(m)</th>
+                              <th>Speed Polar(km/h)</th>
+                              <th>Angle()</th>
+                          </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="content-table-body">
+                <table>
+                    <tbody>
+                          <tr>
+                              <td>1</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                          </tr>
+                          <tr>
+                              <td>2</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                          </tr>
+                          <tr>
+                              <td>3</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                          </tr>
+                          <tr>
+                              <td>4</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                          </tr>
+                          <tr>
+                              <td>5</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                          </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.1.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.mousewheel.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/new_js/main.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/new_js/grid.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/new_js/radar.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/paint.js') }}"></script>
+{#    <script type="text/javascript" src="{{ url_for('static', filename='js/new_js/polygon.js') }}"></script>#}
+{#    <script type="text/javascript" src="{{ url_for('static', filename='js/new_js/page_state.js') }}"></script>#}
+{#    <script type="text/javascript" src="{{ url_for('static', filename='js/new_js/button.js') }}"></script>#}
+</html>
