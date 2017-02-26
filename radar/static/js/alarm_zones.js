@@ -14,35 +14,27 @@ function ChangeAlarmZoneColor() {
     canvas.renderAll();
 }
 /*########################################################################################################## ALARM ZONES */
-/*########################################################################################################## ALARM ZONES */
-/*########################################################################################################## ALARM ZONES */
-/*########################################################################################################## ALARM ZONES */
-/*########################################################################################################## ALARM ZONES */
 $(document).ready(function(){
     document.getElementById("id_Delete_Alarm_Zone").disabled=true;
     document.getElementById("id_Modify_Alarm_Zone").disabled=true;
 
-    $('#Title_Alarm_Zones_Div').html('Alarm zones(polygons)');
+    // $('#Title_Alarm_Zones_Div').html('Alarm zones(polygons)');
 });
 
-
-
-/*########################################################################################################## XXXXXXXX */
-/*########################################################################################################## XXXXXXXX */
-/*########################################################################################################## XXXXXXXX */
-/*########################################################################################################## XXXXXXXX */
 /*########################################################################################################## XXXXXXXX */
 function AddAlarmZones(rows_data) {
-    if(document.getElementById('id_Modify_Alarm_Zone').value == 'Modify'){
-        $("#id_Modify_Alarm_Zone").removeClass("fa-pencil").addClass("fa-floppy-o");
-        // $("#id_Modify_Alarm_Zone").attr("value","Save");
+    if(document.getElementById('id_Modify_Alarm_Zone').getAttribute('action') == 'Modify'){
+        $("#id_Modify_Alarm_Zone").attr("action", "Save");
         object_status='object_add';
 
         Alarm_Zone_Temp['name']="Polygon_" + (rows_data+1).toString();
-        Alarm_Zone_Temp['color']="#000000";
+        Alarm_Zone_Temp['color']="#4285f4";
         Alarm_Zone_Temp['type_alarm']=0;
         Alarm_Zone_Temp['url']='';
 
+        var new_alarm_zome = $("<tr>", {html: "<td class='polygon-name'>"+ Alarm_Zone_Temp['name'] +"</td>"});
+        new_alarm_zome.find("td").addClass("selected_zone");
+        $("#alarm_zones_ul").append(new_alarm_zome);
 
         DisplayAlarmZones(Select_Alarm_Zone=rows_data+1);
         ShowDropAlarmZones(rows_data);
@@ -51,12 +43,8 @@ function AddAlarmZones(rows_data) {
 }
 
 /*########################################################################################################## XXXXXXXX */
-/*########################################################################################################## XXXXXXXX */
-/*########################################################################################################## XXXXXXXX */
-/*########################################################################################################## XXXXXXXX */
-/*########################################################################################################## XXXXXXXX */
 function DisplayAlarmZones(ind_alr_zone) {
-    var selectTitle=$('#Title_Alarm_Zones_Div');
+    var selectTitle=$('#id_Alarm_Zone_Name');
     var selectBox=$('#Box_Alarm_Zones_Div');
     var name,color,i;
 
@@ -68,24 +56,35 @@ function DisplayAlarmZones(ind_alr_zone) {
 
 
     // Цикл по оригинальному элементу select
-    var td;
+    var tr;
     for(i in Alarm_Zones){
-        if (!Alarm_Zones.hasOwnProperty(i)){continue;}
-        name=Alarm_Zones[i]['name'];
-        color=Alarm_Zones[i]['color'];
-        if(i==ind_alr_zone){selectTitle.html(name);}
+        if (!Alarm_Zones.hasOwnProperty(i)){
+            continue;
+        }
 
-        td = $('<tr>', {html: "<td class='polygon-name'><input type='text' class='pol-name' id='id_Alarm_Zone_Name' value='" + name + "' /></td><td><div class='circle' id='color-picker' style='background: #000000;'></div><input type='color' value='" + color + "' id='id_Alarm_Zone_Color' onchange='ChangeAlarmZoneColor()' /></td><td><button type='button' class='btn-wrapper' id='id_Modify_Alarm_Zone'></button><i class='fa fa-pencil' aria-hidden='true'></i></td><td><button type='button' class='btn-wrapper' id='id_Delete_Alarm_Zone'><i class='fa fa-times' id='id_Delete_Alarm_Zone' aria-hidden='true'></i></button></td>"});
+        name = Alarm_Zones[i]['name'];
+        color = Alarm_Zones[i]['color'];
 
-        // if(i==(ind_alr_zone)){$(td).addClass("selected_zone");} else {$(td).addClass("unselected_zone");}
+        if (i == ind_alr_zone){
+            selectTitle.html(name);
+        }
 
-        td.click({a:i}, function(eventObject){
+        tr = $("<tr>", {html: "<td class='polygon-name'>"+ name +"</td>"});
+        // td = $('td.polygon-name');
+
+        if (i == ind_alr_zone){
+            $(tr).addClass("selected_zone");
+        }
+        tr.click({a:i}, function(eventObject){
+            console.log("clicked")
             var ind=eventObject.data.a;
             if(fl_alarm_zome!=true) {
                 Select_Alarm_Zone=ind;
-                // dropDown.find('tr').each(function(){$(this).removeClass("selected_zone").addClass("unselected_zone");});
-                // $(this).removeClass("unselected_zone").addClass("selected_zone");
-                // $('#Title_Alarm_Zones_Div').html(Alarm_Zones[ind]['name']);
+                dropDown.find('tr').each(function(){
+                    $(this).removeClass("selected_zone");
+                });
+                $(this).addClass("selected_zone");
+                $('#id_Alarm_Zone_Name').attr("value", Alarm_Zones[ind]['name']);
 
                 document.getElementById("id_Delete_Alarm_Zone").disabled = false;
                 document.getElementById("id_Modify_Alarm_Zone").disabled = false;
@@ -93,11 +92,11 @@ function DisplayAlarmZones(ind_alr_zone) {
             return false;
 
         });
-        dropDown.append(td);
+        dropDown.append(tr);
     }
 
 
-    if((ind_alr_zone!=null)&&(!(ind_alr_zone in Alarm_Zones))){
+    if ((ind_alr_zone != null)&&(!(ind_alr_zone in Alarm_Zones))) {
         name=Alarm_Zone_Temp['name'];
         color=Alarm_Zone_Temp['color'];
         selectTitle.html(name);
@@ -106,24 +105,20 @@ function DisplayAlarmZones(ind_alr_zone) {
                                     // <td><div class="circle red"></div></td>
                                     // <td><i class="fa fa-pencil" aria-hidden="true"></i></td>
                                     // <td><i class="fa fa-times" aria-hidden="true"></i></td>
-
-        td = $('<tr>', {html: "<td class='polygon-name'><input type='text' class='pol-name' id='id_Alarm_Zone_Name' value='" + name + "' /></td><td><div class='circle' id='color-picker' style='background: #000000;'></div><input type='color' class='circle' value='" + color + "' id='id_Alarm_Zone_Color' onchange='ChangeAlarmZoneColor()' style='opacity: 0;'/></td><td><i class='fa fa-pencil' id='id_Modify_Alarm_Zone' aria-hidden='true'></i></td><td><i class='fa fa-times' id='id_Delete_Alarm_Zone' aria-hidden='true'></i></td>"});
-        // $(td).addClass("selected_zone");
-        dropDown.append(td);
+        tr = $('<tr>', {html: "<td class='polygon-name'>"+ name +"</td>"});
+        // td = $('<tr>', {html: "<td class='polygon-name'><input type='text' class='pol-name' id='id_Alarm_Zone_Name' value='" + name + "' /></td><td><div class='circle' id='color-picker' style='background: #000000;'></div><input type='color' value='" + color + "' id='id_Alarm_Zone_Color' onchange='ChangeAlarmZoneColor()' /></td><td><button type='button' class='btn-wrapper' id='id_Modify_Alarm_Zone' action='Modify'><i class='fa fa-pencil' aria-hidden='true'></i></button></td><td><button type='button' class='btn-wrapper' id='id_Delete_Alarm_Zone'><i class='fa fa-times' aria-hidden='true'></i></button></td>"});
+        $(tr).addClass("selected_zone");
+        dropDown.append(tr);
     }
 
     selectBox.append(dropDown.show());
+
     $('#color-picker').click(function() {
         $('#id_Alarm_Zone_Color').click()
     });
+
 }
 
-
-
-/*########################################################################################################## XXXXXXXX */
-/*########################################################################################################## XXXXXXXX */
-/*########################################################################################################## XXXXXXXX */
-/*########################################################################################################## XXXXXXXX */
 /*########################################################################################################## XXXXXXXX */
 function ShowDropAlarmZones() {
     var name_zone = $('#id_Alarm_Zone_Name');
@@ -137,11 +132,6 @@ function ShowDropAlarmZones() {
     url_zone.val(Alarm_Zone_Temp['url']);
 }
 
-
-/*########################################################################################################## XXXXXXXX */
-/*########################################################################################################## XXXXXXXX */
-/*########################################################################################################## XXXXXXXX */
-/*########################################################################################################## XXXXXXXX */
 /*########################################################################################################## XXXXXXXX */
 function SaveAddAlarmZone(ind_alr_zone) {
     var name_zone = $('#id_Alarm_Zone_Name');
@@ -163,8 +153,12 @@ function SaveAddAlarmZone(ind_alr_zone) {
     Alarm_Zones[ind_alr_zone]['polygon_down']=Alarm_Zone_Temp['polygon_down'];
 
 
+    var fabric_state = {obj: '{"alarm_zone":['+JSON.stringify(Alarm_Zones[ind_alr_zone]["polygon"])+','+JSON.stringify(Alarm_Zones[ind_alr_zone]["polygon_down"])+']}', name: Alarm_Zones[ind_alr_zone]["name"], color: Alarm_Zones[ind_alr_zone]["color"], alrm_type: Alarm_Zones[ind_alr_zone]["type_alarm"], alrm_url: Alarm_Zones[ind_alr_zone]["url"], radar_height: '0', radar_offset_x: '0', radar_offset_y: '0', radar_azimuth_angle:'0', radar_elevation_angle: '0'};
+    // call api
+    set_alarm_zone(name_zone.val(), pointArrayApi, color_zone.val(), fabric_state);
     object_db.delete_row(""+ind_alr_zone+"");
-    object_db.add_row(""+ind_alr_zone+"",'{"alarm_zone":['+JSON.stringify(Alarm_Zones[ind_alr_zone]["polygon"])+','+JSON.stringify(Alarm_Zones[ind_alr_zone]["polygon_down"])+']}',Alarm_Zones[ind_alr_zone]["name"],Alarm_Zones[ind_alr_zone]["color"],Alarm_Zones[ind_alr_zone]["type_alarm"],Alarm_Zones[ind_alr_zone]["url"], '0', '0', '0', '0', '0');
+
+    // object_db.add_row(""+ind_alr_zone+"",'{"alarm_zone":['+JSON.stringify(Alarm_Zones[ind_alr_zone]["polygon"])+','+JSON.stringify(Alarm_Zones[ind_alr_zone]["polygon_down"])+']}',Alarm_Zones[ind_alr_zone]["name"],Alarm_Zones[ind_alr_zone]["color"],Alarm_Zones[ind_alr_zone]["type_alarm"],Alarm_Zones[ind_alr_zone]["url"], '0', '0', '0', '0', '0');
 
     canvas_down.add(Alarm_Zones[ind_alr_zone]['polygon_down']);
     if(radar_down_obj_save){canvas_down.bringToFront(radar_down_obj_save);}
@@ -172,10 +166,6 @@ function SaveAddAlarmZone(ind_alr_zone) {
     fl_alarm_zome=false;
 }
 
-/*########################################################################################################## XXXXXXXX */
-/*########################################################################################################## XXXXXXXX */
-/*########################################################################################################## XXXXXXXX */
-/*########################################################################################################## XXXXXXXX */
 /*########################################################################################################## XXXXXXXX */
 function ModifyAlarmZone(ind_alr_zone) {
     var name_zone = $('#id_Alarm_Zone_Name');
@@ -199,10 +189,6 @@ function ModifyAlarmZone(ind_alr_zone) {
 }
 
 /*########################################################################################################## XXXXXXXX */
-/*########################################################################################################## XXXXXXXX */
-/*########################################################################################################## XXXXXXXX */
-/*########################################################################################################## XXXXXXXX */
-/*########################################################################################################## XXXXXXXX */
 function SaveModifyAlarmZone(ind_alr_zone) {
     var name_zone = $('#id_Alarm_Zone_Name');
     var color_zone=$('#id_Alarm_Zone_Color');
@@ -222,19 +208,14 @@ function SaveModifyAlarmZone(ind_alr_zone) {
     Alarm_Zones[ind_alr_zone]['polygon']=Alarm_Zone_Temp['polygon'];
     Alarm_Zones[ind_alr_zone]['polygon_down']=Alarm_Zone_Temp['polygon_down'];
 
+    // call api to edit
+    edit_alarm_zone(Alarm_Zones[ind_alr_zone]['name'], Alarm_Zone_Temp['name'], Alarm_Zone_Temp['color']);
 
-
-    object_db.delete_row(""+ind_alr_zone+"");
-    object_db.add_row(""+ind_alr_zone+"",'{"alarm_zone":['+JSON.stringify(Alarm_Zones[ind_alr_zone]["polygon"])+','+JSON.stringify(Alarm_Zones[ind_alr_zone]["polygon_down"])+']}',Alarm_Zones[ind_alr_zone]["name"],Alarm_Zones[ind_alr_zone]["color"],Alarm_Zones[ind_alr_zone]["type_alarm"],Alarm_Zones[ind_alr_zone]["url"], '0', '0', '0', '0', '0');
+    // object_db.delete_row(""+ind_alr_zone+"");
+    // object_db.add_row(""+ind_alr_zone+"",'{"alarm_zone":['+JSON.stringify(Alarm_Zones[ind_alr_zone]["polygon"])+','+JSON.stringify(Alarm_Zones[ind_alr_zone]["polygon_down"])+']}',Alarm_Zones[ind_alr_zone]["name"],Alarm_Zones[ind_alr_zone]["color"],Alarm_Zones[ind_alr_zone]["type_alarm"],Alarm_Zones[ind_alr_zone]["url"], '0', '0', '0', '0', '0');
     fl_alarm_zome=false;
 }
 
-
-
-/*########################################################################################################## ValidateUrl */
-/*########################################################################################################## ValidateUrl */
-/*########################################################################################################## ValidateUrl */
-/*########################################################################################################## ValidateUrl */
 /*########################################################################################################## ValidateUrl */
 /**
  * @return {boolean}
@@ -295,10 +276,6 @@ function ValidateUrl(){
 }
 
 /*########################################################################################################## DelayValidateUrl */
-/*########################################################################################################## DelayValidateUrl */
-/*########################################################################################################## DelayValidateUrl */
-/*########################################################################################################## DelayValidateUrl */
-/*########################################################################################################## DelayValidateUrl */
 /**
  * @return {boolean}
  */
@@ -320,11 +297,6 @@ function DelayValidateUrl(){
 
 }
 
-
-/*########################################################################################################## ValidateName */
-/*########################################################################################################## ValidateName */
-/*########################################################################################################## ValidateName */
-/*########################################################################################################## ValidateName */
 /*########################################################################################################## ValidateName */
 /**
  * @return {boolean}

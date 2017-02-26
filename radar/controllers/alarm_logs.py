@@ -1,6 +1,6 @@
 from flask import jsonify
 from radar.models import AlarmLog
-from . import BaseController
+from radar.controllers import BaseController
 
 
 class GetAlarmLogsController(BaseController):
@@ -9,4 +9,4 @@ class GetAlarmLogsController(BaseController):
 
     def _call(self):
         alarm_logs = [alarm_log for alarm_log in AlarmLog.select()]
-        return jsonify({'result': alarm_logs})
+        return alarm_logs#jsonify({'result': alarm_logs})

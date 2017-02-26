@@ -9,4 +9,4 @@ class GetRadarObjectsController(BaseController):
 
     def _call(self):
         radar_objects = [r_object for r_object in RadarObject.select()]
-        return jsonify({'result': radar_objects})
+        return radar_objects #jsonify({'result': radar_objects})

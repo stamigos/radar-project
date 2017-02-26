@@ -20,7 +20,7 @@ class BaseController(object):
 
     def _verify_field(self, field):
         try:
-            return self.request.form[field]
+            return self.request.form.get(field)
         except KeyError:
             raise ServiceException("{field} required".format(field=field))
 

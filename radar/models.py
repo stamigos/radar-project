@@ -91,7 +91,9 @@ class Radar(BaseModel):
     ip_address = CharField(default="localhost", null=True)
     off_x_distance = CharField(null=True)  # installation off x distance
     off_y_distance = CharField(null=True)  # installation off y distance
-    angle = CharField(null=True)  # installation angle
+    az_angle = CharField(null=True)  # installation azimuth angle
+    el_angle = CharField(null=True)  # installation elevation angle
+    height = CharField(null=True)  # installation height
     level = CharField(null=True)  # installation level
 
 
@@ -106,6 +108,8 @@ class AlarmZone(BaseModel):
     delay = SmallIntegerField(null=True)
     polygon = TextField(null=True)  # Example: [(0, 0), (0, 1), (1, 1), (1, 0)]
     color = TextField(null=True)
+    name = CharField(null=True, unique=True)
+    fabric_state = TextField(null=True)
 
 
 class RadarObject(_Model):

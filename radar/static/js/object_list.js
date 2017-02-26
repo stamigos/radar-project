@@ -1,7 +1,3 @@
-/**
- * Created by 1234 on 26.10.2016.
- */
-
 $(window).on('load', function() {
     object_list_tbl.Init();
 });

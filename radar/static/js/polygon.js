@@ -1,10 +1,8 @@
-
-
-
 prototypefabric.polygon = {
     drawPolygon : function() {
         polygonMode = true;
         pointArray = [];
+        pointArrayApi = [];
         lineArray = [];
         activeLine = false;
     },
@@ -12,11 +10,21 @@ prototypefabric.polygon = {
         var random = Math.floor(Math.random() * (max - min + 1)) + min;
         var id = new Date().getTime() + random;
         var pointer = canvas.getPointer(options.e);
-        var points,polygon;
+        var points, pointsApi, polygon;
 
-        if(pointArray.length){var pt = activeShape.get("points"); points = [pt[pointArray.length].x,pt[pointArray.length].y,pointer.x,pointer.y];}
-        else{points = [pointer.x,pointer.y,pointer.x,pointer.y];}
-
+        if (pointArray.length) {
+            var pt = activeShape.get("points");
+            points = [pt[pointArray.length].x,pt[pointArray.length].y,pointer.x,pointer.y];
+            pointArrayApi.push('('+pt[pointArray.length].x+', '+pt[pointArray.length].y+')');
+            pointArrayApi.push('('+pointer.x+', '+pointer.y+')');
+            // pointsApi = '[('+pt[pointArray.length].x+', ('+pt[pointArray.length].y+'), '+pointer.x+', '+pointer.y+')]';
+        }
+        else {
+            points = [pointer.x,pointer.y,pointer.x,pointer.y];
+            pointArrayApi.push('('+pointer.x+', '+pointer.y+')');
+            pointArrayApi.push('('+pointer.x+', '+pointer.y+')');
+            // pointsApi = '[('+pointer.x+', '+pointer.y+'), ('+pointer.x+', '+pointer.y+')]'
+        }
 
         var circle = new fabric.Circle({
             radius: 5,
@@ -40,8 +48,8 @@ prototypefabric.polygon = {
 
         var line = new fabric.Line(points, {
             strokeWidth: 2,
-            fill: 'black',
-            stroke: 'black',
+            fill: '#88c757',
+            stroke: '#88c757',
             class:'line',
             originX:'center',
             originY:'center',
@@ -103,6 +111,7 @@ prototypefabric.polygon = {
         canvas.selection = false;
     },
     generatePolygon : function(pointArray){
+        console.log("in generate")
         var points = [];
         $.each(pointArray,function(index,point){
             points.push({
@@ -121,8 +130,8 @@ prototypefabric.polygon = {
 
         var lineend = new fabric.Line(points_line, {
             strokeWidth: 6,
-            fill: 'black',
-            stroke: 'black',
+            fill: '#88c757',
+            stroke: '#88c757',
             class:'line',
             originX:'center',
             originY:'center',
@@ -134,7 +143,7 @@ prototypefabric.polygon = {
         //canvas.add(linet);
 
         var polygon = new fabric.Polygon(points,{
-            stroke:'black',
+            stroke:'#88c757',
             strokeWidth:0,
             fill: 'none',
             opacity: 0.1,

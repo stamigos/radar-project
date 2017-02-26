@@ -5,36 +5,46 @@ function PageState(state){
     switch (state) {
         case "modify_alarm_zone":
             document.getElementById("id_Creat_Alarm_Zone").disabled = true;
-            $("#id_Modify_Alarm_Zone").attr("value", "Save");
-            document.getElementById('id_Alarm_Zone_Setting_Wind').style.visibility='visible';
+            $("#id_Modify_Alarm_Zone").attr("action", "Save");
+            $("#id_Modify_Alarm_Zone i").removeClass("fa-pencil").addClass("fa-floppy-o");
+            document.getElementById("id_Alarm_Zone_Color").disabled = false;
+            document.getElementById("id_Alarm_Zone_Name").disabled = false;
+            // document.getElementById('id_Alarm_Zone_Setting_Wind').style.visibility='visible';
             break;
 
         case "save_alarm_zone":
-            $("#id_Modify_Alarm_Zone").attr("value","Modify");
-            document.getElementById("id_Creat_Alarm_Zone").disabled=false;
-            document.getElementById("id_Delete_Alarm_Zone").disabled=true;
-            document.getElementById("id_Modify_Alarm_Zone").disabled=true;
-            document.getElementById("id_Upload_Image").disabled=false;
-            document.getElementById("file_upp").disabled=false;
-            document.getElementById('id_Alarm_Zone_Setting_Wind').style.visibility='hidden';
+            $("#id_Modify_Alarm_Zone").attr("action","Modify");
+            $("#id_Modify_Alarm_Zone i").removeClass("fa-floppy-o").addClass("fa-pencil");
+            document.getElementById("id_Alarm_Zone_Color").disabled = true;
+            document.getElementById("id_Alarm_Zone_Name").disabled = true;
+            document.getElementById("id_Creat_Alarm_Zone").disabled = false;
+            document.getElementById("id_Delete_Alarm_Zone").disabled = true;
+            document.getElementById("id_Modify_Alarm_Zone").disabled = true;
+            document.getElementById("id_Upload_Image").disabled = false;
+            document.getElementById("file_upp").disabled = false;
+            // document.getElementById('id_Alarm_Zone_Setting_Wind').style.visibility='hidden';
             break;
 
         case "delete_alarm_zone":
-            $("#id_Modify_Alarm_Zone").attr("value","Modify");
+            $("#id_Modify_Alarm_Zone").attr("action","Modify");
+            $("#id_Modify_Alarm_Zone i").removeClass("fa-floppy-o").addClass("fa-pencil");
             document.getElementById("id_Creat_Alarm_Zone").disabled=false;
             document.getElementById("id_Delete_Alarm_Zone").disabled=true;
             document.getElementById("id_Modify_Alarm_Zone").disabled=true;
             document.getElementById("id_Upload_Image").disabled=false;
             document.getElementById("file_upp").disabled=false;
-            document.getElementById('id_Alarm_Zone_Setting_Wind').style.visibility='hidden';
+            // document.getElementById('id_Alarm_Zone_Setting_Wind').style.visibility='hidden';
             break;
 
 
         case "draw_alarm_zone_end":
+            document.getElementById("id_Alarm_Zone_Color").disabled = false;
+            document.getElementById("id_Alarm_Zone_Name").disabled = false;
             document.getElementById("id_Creat_Alarm_Zone").disabled=true;
             document.getElementById("id_Modify_Alarm_Zone").disabled=false;
             document.getElementById("id_Delete_Alarm_Zone").disabled=false;
-            document.getElementById('id_Alarm_Zone_Setting_Wind').style.visibility='visible';
+            // document.getElementById('id_Alarm_Zone_Setting_Wind').style.visibility='visible';
+            $("#id_Modify_Alarm_Zone i").removeClass("fa-pencil").addClass("fa-floppy-o");
             break;
 
 
@@ -94,16 +104,10 @@ function PageState(state){
 
         default: break;
 
-
-
-
-
-
-
-
-
     }
 }
+
+
 
 
 

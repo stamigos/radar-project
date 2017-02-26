@@ -9,6 +9,7 @@
 
         <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.1.1.min.js')}}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/paint.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/api.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.mousewheel.min.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/script.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/object_list.js') }}"></script>
@@ -22,6 +23,7 @@
         <script type="text/javascript" src="{{ url_for('static', filename='js/db_object.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/page_state.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/button.js') }}"></script>
+
     </head>
 
 
@@ -52,7 +54,7 @@
                         <button class="btn-main" id="id_Save_Image">Save</button>
                     </div>
                 </div>
-                <div class="content">
+                <div class="content" style="padding-left: 10px !important;">
                     <table class="canv_tabl"><tr><td>
                         <div id="id_Canv_Grid_Left_Div"><canvas id="id_Canv_Grid_Left_Canv" width="35" height="525" class="canv_grid"></canvas></div>
                         <td class="bottom">
@@ -86,16 +88,31 @@
                         <table>
                             <thead>
                                   <tr>
-                                    <th class="polygon-name-header">Name</th>
-                                    <th>Color</th>
-                                    <th>Modify</th>
-                                    <th>Delete</th>
+                                    <th class="polygon-name-header"><input type='text' class='pol-name' id='id_Alarm_Zone_Name' value='' disabled/></th>
+                                    <th class="dropdown-alarm-type">
+                                          <select class="alarm-type" id="id_Alarm_Type_Select" >
+                                             <option value="0" selected="selected">INSIDE</option>
+                                             <option value="1">OUT</option>
+                                             <option value="2">IN</option>
+                                          </select>
+                                    </th>
+                                    <th><div class='circle' id='color-picker' style='background: #88c757;'></div><input type='color' value='#88c757' id='id_Alarm_Zone_Color' onchange='ChangeAlarmZoneColor()' disabled/></th>
+                                    <th><button type='button' class='btn-wrapper' id='id_Modify_Alarm_Zone' action='Modify'><i class='fa fa-pencil' aria-hidden='true'></i></button></th>
+                                    <th><button type='button' class='btn-wrapper' id='id_Delete_Alarm_Zone'><i class='fa fa-times' aria-hidden='true'></i></button></th>
+                                    <th><form style="display: none;" name='form' onsubmit='return validate_url()' action="" ><input type='text' name='http'  id="id_Alarm_URL"><span style='color:red' id='httpf'></span><input type='submit' value='send'  style="display:none" ></form></th>
                                   </tr>
                             </thead>
                         </table>
                     </div>
                     <div class="content-table-body alarm-zones">
                         <table id="Box_Alarm_Zones_Div">
+                            <tbody id="alarm_zones_ul">
+{#                            {% for alarm_zone in alarm_zones %}#}
+{#                                <tr>#}
+{#                                    <td class='polygon-name'>{{ alarm_zone.name }}</td>#}
+{#                                </tr>#}
+{#                            {% endfor %}#}
+                            </tbody>
                         </table>
                     </div>
                     <div class="content-header">
@@ -130,13 +147,100 @@
                     </div>
                 </div>
             </div>
+            <div class="panel">
+                <div class="content-header">
+                    <h1>Real time radar objects</h1><br>
+                </div>
+                <div class="content">
+                    <div class="content-table-header">
+                        <table>
+                            <thead>
+                                  <tr>
+                                      <th>#</th>
+                                      <th>Object ID</th>
+                                      <th>Quality</th>
+                                      <th>Distance X(m)</th>
+                                      <th>Distance Y(m)</th>
+                                      <th>Velocity X(km/h)</th>
+                                      <th>Velocity Y(km/h)</th>
+                                      <th>Object Type</th>
+                                      <th>Distance Polar(m)</th>
+                                      <th>Speed Polar(km/h)</th>
+                                      <th>Angle()</th>
+                                  </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="content-table-body">
+                        <table class="radar-objects">
+                            <tbody>
+                                {% for radar_object in radar_objects %}
+                                  <tr>
+                                      <td>{{ loop.index }}</td>
+                                      <td>{{ radar_object.id }}</td>
+                                      <td>{{ radar_object.quality }}</td>
+                                      <td>{{ radar_object.c_distance_x }}</td>
+                                      <td>{{ radar_object.c_distance_y }}</td>
+                                      <td>{{ radar_object.c_velocity_x }}</td>
+                                      <td>{{ radar_object.c_velocity_y }}</td>
+                                      <td>1</td>
+                                      <td>{{ radar_object.p_distance }}</td>
+                                      <td>{{ radar_object.p_velocity }}</td>
+                                      <td>{{ radar_object.p_angle }}</td>
+                                  </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="content-header">
+                    <h1>Alarm history</h1><br>
+                </div>
+                <div class="content">
+                    <div class="content-table-header">
+                        <table>
+                            <thead>
+                                  <tr>
+                                      <th>#</th>
+                                      <th>Alarm zone</th>
+                                      <th>Time</th>
+                                      <th>Object Type</th>
+                                      <th>Object ID</th>
+                                      <th>Distance X</th>
+                                      <th>Distance Y</th>
+                                      <th>Delete</th>
+                                  </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="content-table-body">
+                        <table class="alarm-logs">
+                            <tbody>
+                            {% for alarm_log in alarm_logs %}
+                                  <tr>
+                                      <td>{{ loop.index }}</td>
+                                      <td>{{ alarm_log.alarm_zone.name }}</td>
+                                      <td>{{ alarm_log.timestamp }}</td>
+                                      <td>1</td>
+                                      <td>{{ alarm_log.radar_object.id }}</td>
+                                      <td>{{ alarm_log.radar_object.c_distance_x }}</td>
+                                      <td>{{ alarm_log.radar_object.c_distance_y }}</td>
+                                      <td><i class='fa fa-times' aria-hidden='true'></i></td>
+                                  </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
 
 
-
-    <table class="tblWind">
+    <table>
         <!--<table>-->
-        <tr><td rowspan="2" style="display: inline-block;">
+{#        <tr><td rowspan="2" style="display: inline-block;">#}
                 <!-- ############################################################################################## -->
 {#            <div id="Paint_second"><canvas id = "c2" width = "700" height = "525" ></canvas></div>#}
 {#                <div class="image_drop">#}
@@ -174,34 +278,34 @@
             <!-- ############################################################################################## -->
             <td style="display: inline-block; vertical-align: middle;">
                 <!-- ############################################################################################## -->
-                <div class="wind_alarm_zones" style="width:300px">
-                    <div id="Title_Alarm_Zones_Div" ></div>
-                    <div id="Box_Alarm_Zones_Div" class="tzSelect">
-                    </div>
+{#                <div class="wind_alarm_zones" style="width:300px">#}
+{#                    <div id="Title_Alarm_Zones_Div" ></div>#}
+{#                    <div id="Box_Alarm_Zones_Div" class="tzSelect">#}
+{#                    </div>#}
+{##}
+{#                    <button type = "button" id = "id_Creat_Alarm_Zone"  value = "Add New" class="button" style="width: 30%" >Add New</button>#}
+{#                    <input  type = "button" id = "id_Modify_Alarm_Zone" value = "Modify"  class="button" style="width: 30%" />#}
+{#                    <input  type = "button" id = "id_Delete_Alarm_Zone" value = "Delete"  class="button" style="width: 30%" />#}
+{#                </div>#}
+{##}
+{#            <div class="wind_wait_url hidden" id='id_Wait_URL_Wind'>#}
+{#                WAIT VERIFIED URL#}
+{#            </div>#}
 
-                    <button type = "button" id = "id_Creat_Alarm_Zone"  value = "Add New" class="button" style="width: 30%" >Add New</button>
-                    <input  type = "button" id = "id_Modify_Alarm_Zone" value = "Modify"  class="button" style="width: 30%" />
-                    <input  type = "button" id = "id_Delete_Alarm_Zone" value = "Delete"  class="button" style="width: 30%" />
-                </div>
-
-            <div class="wind_wait_url hidden" id='id_Wait_URL_Wind'>
-                WAIT VERIFIED URL
-            </div>
-
-            <div class="wind_alarm_zones_setting hidden" id='id_Alarm_Zone_Setting_Wind' style="width:300px">
-                <table class="alarm_zones_setting_tabl">
-                    <tr><td><h3>NAME:</h3></td><td><input type='text' id='id_Alarm_Zone_Name' value = '' /></td></tr>
-                    <tr><td><h3>COLOR:</h3></td><td><input type="color"  value="#000000" id='id_Alarm_Zone_Color' onchange='ChangeAlarmZoneColor()' /></td></tr>
-                    <tr><td><h3>ALARM:</h3></td><td>
-                        <select id="id_Alarm_Type_Select" >
-                            <option value="0" selected="selected">INSIDE</option>
-                            <option value="1">OUT</option>
-                            <option value="2">IN</option>
-                        </select>
-                    </td></tr>
-                    <tr><td><h3>URL:</h3></td><td><form name='form' onsubmit='return validate_url()' action="" ><input type='text' name='http'  id="id_Alarm_URL"><span style='color:red' id='httpf'></span><input type='submit' value='send'  style="display:none" ></form></td></tr>
-                </table>
-            </div>
+{#            <div class="wind_alarm_zones_setting hidden" id='id_Alarm_Zone_Setting_Wind' style="width:300px">#}
+{#                <table class="alarm_zones_setting_tabl">#}
+{#                    <tr><td><h3>NAME:</h3></td><td><input type='text' id='id_Alarm_Zone_Name' value = '' /></td></tr>#}
+{#                    <tr><td><h3>COLOR:</h3></td><td><input type="color"  value="#000000" id='id_Alarm_Zone_Color' onchange='ChangeAlarmZoneColor()' /></td></tr>#}
+{#                    <tr><td><h3>ALARM:</h3></td><td>#}
+{#                        <select id="id_Alarm_Type_Select" >#}
+{#                            <option value="0" selected="selected">INSIDE</option>#}
+{#                            <option value="1">OUT</option>#}
+{#                            <option value="2">IN</option>#}
+{#                        </select>#}
+{#                    </td></tr>#}
+{#                    <tr><td><h3>URL:</h3></td><td><form name='form' onsubmit='return validate_url()' action="" ><input type='text' name='http'  id="id_Alarm_URL"><span style='color:red' id='httpf'></span><input type='submit' value='send'  style="display:none" ></form></td></tr>#}
+{#                </table>#}
+{#            </div>#}
 
                 <!--http:// <input type='text' name='http'> <br />-->
             <div id = "id_Alarm_Text"></div>
@@ -209,17 +313,17 @@
                 <!-- ############################################################################################## -->
             <td style="display: inline-block;">
                 <!-- ############################################################################################## -->
-            <div class="wind_alarm_zones" style="width:220px">
-                <table class="radar_tabl">
-                    <tr><td>Installation Height  </td><td><input type="number"  step="0.1" id = "Radar_Height" class = "radar_inpt" value = "360.0" /></td></tr>
-                    <tr><td>Installation Offset X</td><td><input type="number"  step="0.1" id = "Radar_Offset_X" class = "radar_inpt" value = "0.0" /></td></tr>
-                    <tr><td>Installation Offset Y</td><td><input type="number"  step="0.1" id = "Radar_Offset_Y" class = "radar_inpt" value = "0.0" /></td></tr>
-                    <tr><td>Radar Azimuth Angle  </td><td><input type="number"  step="0.1" id = "Radar_Azimuth_Angle" class = "radar_inpt" value = "60.0" /></td></tr>
-                    <tr><td>Radar Elevation Angle</td><td><input type="number"  step="0.1" id = "Radar_Elevation_Angle" class = "radar_inpt" value = "00.0" /></td></tr>
-                </table>
-                <input type = "button" id = "id_Create_Radar" name = "creat_radar" value = "Save Radar"  class="button" style="width: 40%" />
-                <input type = "button" id = "id_Clear_Object_Database" value = "Clear"  class="button" style="width: 200px" />
-            </div>
+{#            <div class="wind_alarm_zones" style="width:220px">#}
+{#                <table class="radar_tabl">#}
+{#                    <tr><td>Installation Height  </td><td><input type="number"  step="0.1" id = "Radar_Height" class = "radar_inpt" value = "360.0" /></td></tr>#}
+{#                    <tr><td>Installation Offset X</td><td><input type="number"  step="0.1" id = "Radar_Offset_X" class = "radar_inpt" value = "0.0" /></td></tr>#}
+{#                    <tr><td>Installation Offset Y</td><td><input type="number"  step="0.1" id = "Radar_Offset_Y" class = "radar_inpt" value = "0.0" /></td></tr>#}
+{#                    <tr><td>Radar Azimuth Angle  </td><td><input type="number"  step="0.1" id = "Radar_Azimuth_Angle" class = "radar_inpt" value = "60.0" /></td></tr>#}
+{#                    <tr><td>Radar Elevation Angle</td><td><input type="number"  step="0.1" id = "Radar_Elevation_Angle" class = "radar_inpt" value = "00.0" /></td></tr>#}
+{#                </table>#}
+{#                <input type = "button" id = "id_Create_Radar" name = "creat_radar" value = "Save Radar"  class="button" style="width: 40%" />#}
+{#                <input type = "button" id = "id_Clear_Object_Database" value = "Clear"  class="button" style="width: 200px" />#}
+{#            </div>#}
             <!-- ############################################################################################## -->
         <tr><td  colspan="2">
         <div class="wind_object_list2">
@@ -324,11 +428,9 @@
 
 
 
-
-
-
-
     <script>
+        var alarm_zones = {{ alarm_zones|tojson|safe }};
+{#        var radar = {{  }}#}
         var req=new XMLHttpRequest();
         var ind_txt=(-1);
         var text_json_Test_Old;

@@ -1,13 +1,5 @@
-/**
- * Created by 1234 on 21.11.2016.
- */
-
 $(window).on('load', function() {
     /*########################################################################################################## BUTTON:ADD ALARM ZONE */
-    /*########################################################################################################## BUTTON:ADD ALARM ZONE*/
-    /*########################################################################################################## BUTTON:ADD ALARM ZONE*/
-    /*########################################################################################################## BUTTON:ADD ALARM ZONE*/
-    /*########################################################################################################## BUTTON:ADD ALARM ZONE*/
     document.getElementById('id_Creat_Alarm_Zone').addEventListener('click', function() {
         DisplayAlarmZones(null);
         if(Count_Alarm_Zones>4){alert("Max Alarm Zones!!!"); PageState('creat_alarm_zone_max'); return false;}//если зон уже 5 выходим.
@@ -17,18 +9,15 @@ $(window).on('load', function() {
         fl_alarm_zome=true;
         PageState('creat_alarm_zone');
     });
-    /*########################################################################################################## BUTTON:DELETE */
-    /*########################################################################################################## BUTTON:DELETE*/
-    /*########################################################################################################## BUTTON:DELETE*/
-    /*########################################################################################################## BUTTON:DELETE*/
     /*########################################################################################################## BUTTON:DELETE*/
     document.getElementById('id_Delete_Alarm_Zone').addEventListener('click', function() {
         var i,t;
         if(Select_Alarm_Zone>=0){
             canvas.remove(Alarm_Zones[Select_Alarm_Zone]['polygon']);
             canvas_down.remove(Alarm_Zones[Select_Alarm_Zone]['polygon_down']);
+            delete_alarm_zone(Alarm_Zones[Select_Alarm_Zone]['name']);
 
-            for(i in Alarm_Zones){object_db.delete_row(""+i+"");}
+            // for(i in Alarm_Zones){object_db.delete_row(""+i+"");}
 
             delete Alarm_Zones[Select_Alarm_Zone];
             t=0;for(i in Alarm_Zones){Alarm_Zones[t]=Alarm_Zones[i]; if(t!=i){delete Alarm_Zones[i];} t++;}
@@ -41,7 +30,7 @@ $(window).on('load', function() {
 
 
 
-            for(i in Alarm_Zones){object_db.add_row(""+i+"",'{"alarm_zone":['+JSON.stringify(Alarm_Zones[i]['polygon'])+','+JSON.stringify(Alarm_Zones[i]['polygon_down'])+']}',Alarm_Zones[i]['name'],Alarm_Zones[i]['color'], '0', '0', '0', '0', '0');}
+            // for(i in Alarm_Zones){object_db.add_row(""+i+"",'{"alarm_zone":['+JSON.stringify(Alarm_Zones[i]['polygon'])+','+JSON.stringify(Alarm_Zones[i]['polygon_down'])+']}',Alarm_Zones[i]['name'],Alarm_Zones[i]['color'], '0', '0', '0', '0', '0');}
 
             Alarm_Zone_Select=null;
 
@@ -52,19 +41,12 @@ $(window).on('load', function() {
         }
 
     }, false);
-    /*########################################################################################################## BUTTON:MODIFY */
-    /*########################################################################################################## BUTTON:MODIFY*/
-    /*########################################################################################################## BUTTON:MODIFY*/
-    /*########################################################################################################## BUTTON:MODIFY*/
+
     /*########################################################################################################## BUTTON:MODIFY*/
     document.getElementById('id_Modify_Alarm_Zone').addEventListener('click', function() {
         Modify_Alarm_Zone();
     }, false);
 
-    /*########################################################################################################## BUTTON:LOAD IMAGE */
-    /*########################################################################################################## BUTTON:LOAD IMAGE*/
-    /*########################################################################################################## BUTTON:LOAD IMAGE*/
-    /*########################################################################################################## BUTTON:LOAD IMAGE*/
     /*########################################################################################################## BUTTON:LOAD IMAGE*/
     document.getElementById('id_Upload_Image').addEventListener("change", function (e) {
         var file = e.target.files[0];
@@ -91,19 +73,9 @@ $(window).on('load', function() {
     });
 
     /*########################################################################################################## BUTTON:Create_Radar */
-    /*########################################################################################################## BUTTON:Create_Radar*/
-    /*########################################################################################################## BUTTON:Create_Radar*/
-    /*########################################################################################################## BUTTON:Create_Radar*/
-    /*########################################################################################################## BUTTON:Create_Radar*/
     document.getElementById('id_Create_Radar').addEventListener('click', function(){
         Create_Radar();
     });
-
-
-
-
-
-
 
 });
 

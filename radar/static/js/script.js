@@ -13,7 +13,8 @@ var canvas_height = 525;            //высота окна canvas
 
 //********************************************************************
 var ctx_canvas_down;
-var pointArray = [];    //в этот массив записываются точки при рисовании полигона
+var pointArray = [];    // в этот массив записываются точки при рисовании полигона
+var pointArrayApi = []; // polygon array points in api format
 var lineArray = [];     //в этот массив записываются линии при рисовании полигона
 var activeLine;         //текущая линия при рисовании полигона
 
@@ -25,7 +26,7 @@ var canvas_grid_left;        //объект для работы с canvas лев
 var Alarm_Zones = {};               //тут хранятся тут хранится информация и сами объекты
 var Alarm_Zone_Temp = {};           //тут хранятся полигон который нарисовали но еще не сохранили
 var Select_Alarm_Zone=null;         //тут хранятся имя полигона который пользователь выбрал в окне "Alarm Zone" на странице
-var radar_obj_save = false;         //тут храним объект радар(используется когда добовляются элементы или картинка, чтоб его положение было выше картинки и ниже полигонов)
+var radar_obj_save = false;         //тут храним объект радар(используется когда добавляются элементы или картинка, чтоб его положение было выше картинки и ниже полигонов)
 var radar_down_obj_save = false;    //тут храним объект радар для canvas_down
 var image_save = false;
 var Obj_Old={};
@@ -57,20 +58,19 @@ $(window).on('load', function() {
 var prototypefabric = new function () {
     this.initCanvas = function () {
         var canv_wind = $('#c'); // ещё пригодится для обработки событий
-        canvas = new fabric.Canvas('c',{renderOnAddRemove: false}); canvas.scale = 1;//обязательно для массштабирования
-        canvas_grid_bottom = new fabric.Canvas('id_Canv_Grid_Bottom_Canv',{renderOnAddRemove: false}); canvas_grid_bottom.scale = 1;//обязательно для массштабирования
-        canvas_grid_left = new fabric.Canvas('id_Canv_Grid_Left_Canv',{renderOnAddRemove: false});   canvas_grid_left.scale = 1;//обязательно для массштабирования
+        canvas = new fabric.Canvas('c',{renderOnAddRemove: false});
+        canvas.scale = 1;//обязательно для массштабирования
+        canvas_grid_bottom = new fabric.Canvas('id_Canv_Grid_Bottom_Canv',{renderOnAddRemove: false});
+        canvas_grid_bottom.scale = 1;//обязательно для массштабирования
+        canvas_grid_left = new fabric.Canvas('id_Canv_Grid_Left_Canv',{renderOnAddRemove: false});
+        canvas_grid_left.scale = 1;//обязательно для массштабирования
 
         canvas_down = new fabric.Canvas('c2',{renderOnAddRemove: false}); canvas_down.scale = 1;
         var container = $(canvas.wrapperEl);
-        pointArray[0]=[];
-        ctx_canvas_down    = canvas_down.getContext('2d');
+        pointArray[0] = [];
+        ctx_canvas_down = canvas_down.getContext('2d');
 
-        /*########################################################################################################## MOUSE:DOWN */
-        /*########################################################################################################## MOUSE:DOWN */
-        /*########################################################################################################## MOUSE:DOWN */
-        /*########################################################################################################## MOUSE:DOWN */
-        /*########################################################################################################## MOUSE:DOWN */
+     /*########################################################################################################## MOUSE:DOWN */
         canvas.on('mouse:down', function (options) {
 
 /*            var ctx = canvas_down.getContext('2d');
@@ -87,11 +87,21 @@ var prototypefabric = new function () {
                 prototypefabric.polygon.addPoint(options);
             }
 
-            if((fl_draw_scale_line=='start_draw_line')||(fl_draw_scale_line=='draw_line')){scaling.line.addPoint(options);}
-            if ((fl_draw_scale_line=='modify_line')&&(options.target && options.target.id == arr_pointLine[0].id)) {scaling.line.addPoint(options);}
-            if ((fl_draw_scale_line=='modify_line')&&(options.target && options.target.id == arr_pointLine[1].id)) {scaling.line.addPoint(options);}
-            if(fl_draw_scale_line=='modify_point_0'){scaling.line.addPoint(options);}
-            if(fl_draw_scale_line=='modify_point_1'){scaling.line.addPoint(options);}
+            if((fl_draw_scale_line=='start_draw_line')||(fl_draw_scale_line=='draw_line')) {
+                scaling.line.addPoint(options);
+            }
+            if ((fl_draw_scale_line=='modify_line')&&(options.target && options.target.id == arr_pointLine[0].id)) {
+                scaling.line.addPoint(options);
+            }
+            if ((fl_draw_scale_line=='modify_line')&&(options.target && options.target.id == arr_pointLine[1].id)) {
+                scaling.line.addPoint(options);
+            }
+            if(fl_draw_scale_line=='modify_point_0') {
+                scaling.line.addPoint(options);
+            }
+            if(fl_draw_scale_line=='modify_point_1') {
+                scaling.line.addPoint(options);
+            }
         });
 
         /*########################################################################################################## MOUSEWHEEL */
@@ -156,10 +166,6 @@ var prototypefabric = new function () {
 
         });
         /*########################################################################################################## MOUSE:MOVE */
-        /*########################################################################################################## MOUSE:MOVE */
-        /*########################################################################################################## MOUSE:MOVE */
-        /*########################################################################################################## MOUSE:MOVE */
-        /*########################################################################################################## MOUSE:MOVE */
         canvas.on('mouse:move', function (options) {
             var pointer;
 
@@ -200,10 +206,6 @@ var prototypefabric = new function () {
 
         });
 
-        /*########################################################################################################## OBJECT:SELECTED */
-        /*########################################################################################################## OBJECT:SELECTED*/
-        /*########################################################################################################## OBJECT:SELECTED*/
-        /*########################################################################################################## OBJECT:SELECTED*/
         /*########################################################################################################## OBJECT:SELECTED*/
         canvas.on('object:selected', function(options) {
             if(options.target==image_save){
@@ -217,10 +219,6 @@ var prototypefabric = new function () {
                 }
                 }
         });
-        /*########################################################################################################## OBJECT:MOVING */
-        /*########################################################################################################## OBJECT:MOVING*/
-        /*########################################################################################################## OBJECT:MOVING*/
-        /*########################################################################################################## OBJECT:MOVING*/
         /*########################################################################################################## OBJECT:MOVING*/
         canvas.on('object:moving', function(options) {
             options.target.setCoords();
@@ -257,10 +255,6 @@ var prototypefabric = new function () {
 
         });
 
-        /*########################################################################################################## BUTTON:CLEAR */
-        /*########################################################################################################## BUTTON:CLEAR*/
-        /*########################################################################################################## BUTTON:CLEAR*/
-        /*########################################################################################################## BUTTON:CLEAR*/
         /*########################################################################################################## BUTTON:CLEAR*/
         fabric.util.addListener(window, 'keyup', function (e) {
             if ((e.keyCode === 27)&&(pointArray.length>1)) {prototypefabric.polygon.generatePolygon(pointArray);}
@@ -269,11 +263,6 @@ var prototypefabric = new function () {
     };
 };
 
-
-/*########################################################################################################## Create_Radar */
-/*########################################################################################################## Create_Radar */
-/*########################################################################################################## Create_Radar */
-/*########################################################################################################## Create_Radar */
 /*########################################################################################################## Create_Radar Z*/
 function Create_Radar() {
     var
@@ -290,7 +279,8 @@ function Create_Radar() {
         radar_angle = Math.floor(parseInt(rdr_elevation_angle, 10)),
         radar_fill = '#d6e6ff';
 
-    scale_wind.setScale(0.9, 100, 100); canvas.renderAll();
+    scale_wind.setScale(0.9, 100, 100);
+    canvas.renderAll();
 
     radar_left+=parseInt(canvas.width, 10)/2;
     radar_top+=canvas.height;
@@ -321,24 +311,24 @@ function Create_Radar() {
             });
     }
 
-    if(radar_obj_save){canvas.remove(radar_obj_save);canvas_down.remove(radar_down_obj_save);}
+    if (radar_obj_save){
+        canvas.remove(radar_obj_save);
+        canvas_down.remove(radar_down_obj_save);
+    }
     var triangle = createTriangle(radar_left, radar_top, radar_angle);
-    canvas.add(triangle);
+        canvas.add(triangle);
     var triangle_down=createTriangle(radar_left, radar_top, radar_angle);
-    triangle_down.set({opacity: 10/255});
-    canvas_down.add(triangle_down);
-    radar_obj_save=triangle;
-    radar_down_obj_save=triangle_down;
+        triangle_down.set({opacity: 10/255});
+        canvas_down.add(triangle_down);
+        radar_obj_save=triangle;
+        radar_down_obj_save=triangle_down;
 
     Render_All_Canvas();
+    update_radar(1, rdr_height, rdr_offset_x, rdr_offset_y, rdr_azimuth_angle, rdr_elevation_angle);
 
-    object_db.delete_row('radar');
-    object_db.add_row('radar','{"objects":['+JSON.stringify(triangle)+']}', '0', '0', '0', '0', rdr_height, rdr_offset_x, rdr_offset_y, rdr_azimuth_angle, rdr_elevation_angle);
+    // object_db.delete_row('radar');
+    // object_db.add_row('radar','{"objects":['+JSON.stringify(triangle)+']}', '0', '0', '0', '0', rdr_height, rdr_offset_x, rdr_offset_y, rdr_azimuth_angle, rdr_elevation_angle);
 }
-/*########################################################################################################## Paint_Resive_Obj */
-/*########################################################################################################## Paint_Resive_Obj */
-/*########################################################################################################## Paint_Resive_Obj */
-/*########################################################################################################## Paint_Resive_Obj */
 /*########################################################################################################## Paint_Resive_Obj Z*/
 function Paint_Resive_Obj() {
     //document.getElementById('Obj_Data').value =text_json_Test;
@@ -485,24 +475,16 @@ function Paint_Resive_Obj() {
 }
 
 /*########################################################################################################## Paint_Resive_Obj */
-/*########################################################################################################## Paint_Resive_Obj */
-/*########################################################################################################## Paint_Resive_Obj */
-/*########################################################################################################## Paint_Resive_Obj */
-/*########################################################################################################## Paint_Resive_Obj */
 function Render_All_Canvas() {
-if(radar_obj_save){
-    canvas.sendToBack(radar_obj_save);
-    if(image_save){canvas.sendToBack(image_save);}
-    canvas_down.bringToFront(radar_down_obj_save);
-} else{
-    canvas.renderAll();
-    canvas_down.renderAll();
+    if(radar_obj_save){
+        canvas.sendToBack(radar_obj_save);
+        if(image_save){canvas.sendToBack(image_save);}
+        canvas_down.bringToFront(radar_down_obj_save);
+    } else{
+        canvas.renderAll();
+        canvas_down.renderAll();
+    }
 }
-}
-/*########################################################################################################## Check_Alarm_Zones */
-/*########################################################################################################## Check_Alarm_Zones */
-/*########################################################################################################## Check_Alarm_Zones */
-/*########################################################################################################## Check_Alarm_Zones */
 /*########################################################################################################## Check_Alarm_Zones */
 /**
  * @return {string}
@@ -582,10 +564,6 @@ if (txt_alarm){return  txt_alarm+"<br>";}else{return txt_alarm;}
 
 }
 /*########################################################################################################## Check_Alarm_Zones_Outside */
-/*########################################################################################################## Check_Alarm_Zones_Outside */
-/*########################################################################################################## Check_Alarm_Zones_Outside */
-/*########################################################################################################## Check_Alarm_Zones_Outside */
-/*########################################################################################################## Check_Alarm_Zones_Outside */
 /**
  * @return {string}
  */
@@ -620,18 +598,8 @@ function Check_Alarm_Zones_Outside(obj_id) {
 
 }
 
-
-
-/*########################################################################################################## SendAlrm_HandleServerResponse */
-/*########################################################################################################## SendAlrm_HandleServerResponse */
-/*########################################################################################################## SendAlrm_HandleServerResponse */
-/*########################################################################################################## SendAlrm_HandleServerResponse */
 /*########################################################################################################## SendAlrm_HandleServerResponse */
 function SendAlrm_HandleServerResponse(){}
-/*########################################################################################################## SendAlrm */
-/*########################################################################################################## SendAlrm */
-/*########################################################################################################## SendAlrm */
-/*########################################################################################################## SendAlrm */
 /*########################################################################################################## SendAlrm */
 function SendAlrm(alrm){
     var st=alrm;
@@ -641,24 +609,17 @@ function SendAlrm(alrm){
     req_alrm.send();
 }
 
-
-
-/*########################################################################################################## Modify_Alarm_Zone */
-/*########################################################################################################## Modify_Alarm_Zone */
-/*########################################################################################################## Modify_Alarm_Zone */
-/*########################################################################################################## Modify_Alarm_Zone */
 /*########################################################################################################## Modify_Alarm_Zone */
 /**
  * @return {boolean}
  */
 function Modify_Alarm_Zone() {
-    if(document.getElementById('id_Modify_Alarm_Zone').value == 'Modify'){
+    if (document.getElementById('id_Modify_Alarm_Zone').getAttribute("action") == 'Modify') {
         ModifyAlarmZone(Select_Alarm_Zone);
         PageState('modify_alarm_zone');
         object_status = 'modify_enable';
         count_check_url=5;
     } else {
-
         if (ValidateName()==false){return false;}
 
         document.getElementById("id_Modify_Alarm_Zone").disabled = true;
@@ -697,20 +658,10 @@ function Modify_Alarm_Zone() {
 }
 
 
-
-
-/*########################################################################################################## window.onresize */
-/*########################################################################################################## window.onresize */
-/*########################################################################################################## window.onresize */
-/*########################################################################################################## window.onresize */
 /*########################################################################################################## window.onresize */
 window.onresize = function(){
     Resize_Canvas();
 };
-/*########################################################################################################## Resize_Canvas */
-/*########################################################################################################## Resize_Canvas */
-/*########################################################################################################## Resize_Canvas */
-/*########################################################################################################## Resize_Canvas */
 /*########################################################################################################## Resize_Canvas */
 function Resize_Canvas() {
     var canv_temp,context,tempContext;
