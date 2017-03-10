@@ -263,457 +263,534 @@ var prototypefabric = new function () {
     };
 };
 
-/*########################################################################################################## Create_Radar Z*/
-function Create_Radar() {
-    var
-        rdr_height = document.getElementById('Radar_Height').value,
-        rdr_offset_x = document.getElementById('Radar_Offset_X').value,
-        rdr_offset_y = document.getElementById('Radar_Offset_Y').value,
-        rdr_azimuth_angle = document.getElementById('Radar_Azimuth_Angle').value,
-        rdr_elevation_angle = document.getElementById('Radar_Elevation_Angle').value,
+    /*########################################################################################################## Create_Radar Z*/
+    function Create_Radar() {
+        var
+            rdr_height = document.getElementById('Radar_Height').value,
+            rdr_offset_x = document.getElementById('Radar_Offset_X').value,
+            rdr_offset_y = document.getElementById('Radar_Offset_Y').value,
+            rdr_azimuth_angle = document.getElementById('Radar_Azimuth_Angle').value,
+            rdr_elevation_angle = document.getElementById('Radar_Elevation_Angle').value,
 
-        radar_height = Math.floor((parseInt(rdr_height, 10)/350)*canvas.height),
-        radar_width = (radar_height*Math.tan(parseInt(rdr_azimuth_angle, 10) * Math.PI/360))*2,
-        radar_left = Math.floor((parseInt(rdr_offset_x, 10)/300)*canvas.width-radar_width/2),
-        radar_top = Math.floor((parseInt(rdr_offset_y, 10)/350)*canvas.height),
-        radar_angle = Math.floor(parseInt(rdr_elevation_angle, 10)),
-        radar_fill = '#d6e6ff';
+            radar_height = Math.floor((parseInt(rdr_height, 10)/350)*canvas.height),
+            radar_width = (radar_height*Math.tan(parseInt(rdr_azimuth_angle, 10) * Math.PI/360))*2,
+            radar_left = Math.floor((parseInt(rdr_offset_x, 10)/300)*canvas.width-radar_width/2),
+            radar_top = Math.floor((parseInt(rdr_offset_y, 10)/350)*canvas.height),
+            radar_angle = Math.floor(parseInt(rdr_elevation_angle, 10)),
+            radar_fill = '#d6e6ff';
 
-    scale_wind.setScale(0.9, 100, 100);
-    canvas.renderAll();
+        scale_wind.setScale(0.9, 100, 100);
+        canvas.renderAll();
 
-    radar_left+=parseInt(canvas.width, 10)/2;
-    radar_top+=canvas.height;
-    radar_angle+=180;
+        radar_left+=parseInt(canvas.width, 10)/2;
+        radar_top+=canvas.height;
+        radar_angle+=180;
 
 
-    function createTriangle(x, y, angle)
-    {
-        var pos = fabric.util.rotatePoint(
-            new fabric.Point(x, y),
-            new fabric.Point(x+radar_width/2, y),
-            fabric.util.degreesToRadians(angle)
-        );
-        return new fabric.Triangle(
-            {
-                width: radar_width,
-                height: radar_height,
-                selectable: false,//запрещаем выделение
-                fill: radar_fill,
-                opacity: 0.5,
-                left: pos.x,
-                top: pos.y,
-                evented: false, //курсор
-                hasControls: false,
+        function createTriangle(x, y, angle)
+        {
+            var pos = fabric.util.rotatePoint(
+                new fabric.Point(x, y),
+                new fabric.Point(x+radar_width/2, y),
+                fabric.util.degreesToRadians(angle)
+            );
+            return new fabric.Triangle(
+                {
+                    width: radar_width,
+                    height: radar_height,
+                    selectable: false,//запрещаем выделение
+                    fill: radar_fill,
+                    opacity: 0.5,
+                    left: pos.x,
+                    top: pos.y,
+                    evented: false, //курсор
+                    hasControls: false,
+                    hasBorders: false,
+                    angle: angle,
+                    id: 'radar'
+                });
+        }
+
+        if (radar_obj_save){
+            canvas.remove(radar_obj_save);
+            canvas_down.remove(radar_down_obj_save);
+        }
+        var triangle = createTriangle(radar_left, radar_top, radar_angle);
+            canvas.add(triangle);
+        var triangle_down=createTriangle(radar_left, radar_top, radar_angle);
+            triangle_down.set({opacity: 10/255});
+            canvas_down.add(triangle_down);
+            radar_obj_save=triangle;
+            radar_down_obj_save=triangle_down;
+
+        Render_All_Canvas();
+        update_radar(1, rdr_height, rdr_offset_x, rdr_offset_y, rdr_azimuth_angle, rdr_elevation_angle);
+
+        // object_db.delete_row('radar');
+        // object_db.add_row('radar','{"objects":['+JSON.stringify(triangle)+']}', '0', '0', '0', '0', rdr_height, rdr_offset_x, rdr_offset_y, rdr_azimuth_angle, rdr_elevation_angle);
+    }
+    /*########################################################################################################## Paint_Resive_Obj Z*/
+    function Paint_Resive_Obj() {
+        //document.getElementById('Obj_Data').value = text_json_Test;
+        var display_alr_page=document.getElementById('id_Alarm_Text');
+        var contact = JSON.parse(text_json_Test);
+
+            create_radar_object(contact);
+
+        var num_obj = contact.objects.length;
+        var alarm_str = "ALARM:<br>";
+        var i, int, fl_new_alarm = false;
+        var Alarm_Obj_New = {};
+        var circle_obj_resive;
+        var now_date_time  = new Date().toLocaleString().replace("W", "/").replace(",", " ");
+
+        if (scale_to_set != 1) {
+            scale_wind.setScale(0.9, anchor_x, anchor_y);
+        }
+        var color = {};
+        for (i in Obj_Old) {
+            color[Obj_Old[i]['color']] = Obj_Old[i]['color'];
+        }
+        for (i=0; i<num_obj; i++) {
+            var id = contact.objects[i].object_id;
+                Obj_New[id] = {};
+                Obj_New[id]['id'] = contact.objects[i].object_id;
+                Obj_New[id]['type'] = contact.objects[i].object_type;
+                Obj_New[id]['x'] = Math.floor((contact.objects[i].distance_x*canvas.width)/300) + canvas.width/2;
+                Obj_New[id]['y'] = canvas.height - Math.floor((contact.objects[i].distance_y*canvas.height)/350);
+
+            if (id in Obj_Old) {
+                Obj_New[id]['color'] = Obj_Old[id]['color'];
+            }
+            else {
+                for (var ii in color_resive_obj){
+                    if (!color_resive_obj.hasOwnProperty(ii)){
+                        continue;
+                    }
+                    if(!(color_resive_obj[ii] in color)) {
+                        Obj_New[id]['color'] = color[color_resive_obj[ii]] = color_resive_obj[ii];
+                        break;
+                    }
+                }
+            }
+        }
+
+        for(i in Obj_Old) {
+            canvas.remove(Obj_Old[i]['object']);
+        }
+        Obj_Old={};
+
+
+        for(i in Obj_New) {
+
+            circle_obj_resive = new fabric.Circle({
+                strokeWidth: 0,
+                radius: 10, fill: Obj_New[i]['color'],
+                originX: 'center',
+                originY: 'center',
+                left: Obj_New[i]['x'],
+                top: Obj_New[i]['y'],
                 hasBorders: false,
-                angle: angle,
-                id: 'radar'
+                perPixelTargetFind: true,
+                hasControls: false,
+                id: Obj_New[i]['id']
             });
+
+
+            var x = Obj_New[i]['x'];
+            var x1 = x - 10;
+            var x2 = x + 10;
+            var y = Obj_New[i]['y'];
+            var y1 = y - 10;
+            var y2 = y + 10;
+
+            var Point = {};
+            Point[0] = ctx_canvas_down.getImageData(x1, y, 1, 1).data;
+            Point[1] = ctx_canvas_down.getImageData(x2, y, 1, 1).data;
+            Point[2] = ctx_canvas_down.getImageData(x, y1, 1, 1).data;
+            Point[3] = ctx_canvas_down.getImageData(x, y2, 1, 1).data;
+            console.log("Point:", Point);
+
+            if (((Point[0][3] > 17)&&(Point[0][2] > 17)) || ((Point[1][3] > 17)&&(Point[1][2] > 17)) || ((Point[2][3] > 17)&&(Point[2][2] > 17)) || ((Point[3][3] > 17)&&(Point[3][2] > 17))) {
+                var name_zone_alarm = [];
+
+                for (int=0; int<4; int++) {
+                    if (Point[int][3] > 17) {
+                        var clr_temp = Point[int][3]*Point[int][0] / 16;
+                        clr_temp = (Math.round(clr_temp / 5) * 5) / 15;
+                        if (clr_temp > 25) {
+                            clr_temp = Math.ceil(clr_temp);
+                        } else {
+                            clr_temp = Math.floor(clr_temp);
+                        }
+
+                        for (var alrm_ind=0; alrm_ind<5; alrm_ind++) {
+                            if (!Alarm_Zones.hasOwnProperty(alrm_ind)){continue;}
+                            if (((1 << alrm_ind) & clr_temp) && (name_zone_alarm.indexOf(Alarm_Zones[alrm_ind]['name']) == -1)) {
+                                name_zone_alarm.push(Alarm_Zones[alrm_ind]['name']);
+
+                            }
+                        }
+                    }
+                }
+
+                name_zone_alarm.sort();
+                var name_zone_for_history='';
+
+                for (int=0; int<name_zone_alarm.length; int++){
+                    name_zone_for_history += name_zone_alarm[int]+', ';
+                }
+                name_zone_for_history = name_zone_for_history.slice(0,-2);
+                if (Obj_New[i]['id'] == 3) {
+                    console.info(name_zone_for_history);
+                }
+                alarm_str += Check_Alarm_Zones(name_zone_alarm,Obj_New[i]['id']);
+
+                Alarm_Obj_New[i] = {};
+                Alarm_Obj_New[i]['alarm_zone'] = name_zone_for_history;
+                Alarm_Obj_New[i]['object_type'] = Obj_New[i]['type'];
+                Alarm_Obj_New[i]['object_id'] = Obj_New[i]['id'];
+                Alarm_Obj_New[i]['distance_x'] = Obj_New[i]['x'];
+                Alarm_Obj_New[i]['distance_y'] = Obj_New[i]['y'];
+                Alarm_Obj_New[i]['time_alarm'] = now_date_time;
+                Alarm_Obj_New[i]['id_row_db'] = new Date().getTime();
+            }
+
+            Obj_Old[i] = {};
+            Obj_Old[i]['object'] = circle_obj_resive;
+            Obj_Old[i]['x'] = Obj_New[i]['x'];
+            Obj_Old[i]['y'] = Obj_New[i]['y'];
+            Obj_Old[i]['color'] = Obj_New[i]['color'];
+            Obj_Old[i]['id'] = Obj_New[i]['id'];
+        }
+      //****************************** HISTORY****************************************************
+        var temp_arr=[];
+        for (i in Alarm_Obj_Old) {
+            temp_arr.push(Alarm_Obj_Old[i]['alarm_zone']);
+        }
+        var Alarm_Obj_New_Temp={};
+        for (i in Alarm_Obj_New){
+            if(temp_arr.indexOf(Alarm_Obj_New[i]['alarm_zone']) == -1) {
+                fl_new_alarm = true;
+                alarm_history_db.add_row(Alarm_Obj_New[i]['id_row_db'],
+                                         Alarm_Obj_New[i]['alarm_zone'],
+                                         now_date_time,
+                                         Alarm_Obj_New[i]['object_type'],
+                                         Alarm_Obj_New[i]['object_id'],
+                                         Alarm_Obj_New[i]['distance_x'],
+                                         Alarm_Obj_New[i]['distance_y']);
+                Alarm_Obj_New_Temp[i]={};
+                Alarm_Obj_New_Temp[i]=Alarm_Obj_New[i];
+            }
+        }
+
+        if (fl_new_alarm) {
+            Count_Alarm_History_Row_DB += Object.keys(Alarm_Obj_New_Temp).length;
+            alarm_history_tbl.add_row_arr(true, Alarm_Obj_New_Temp);
+        }
+
+        //if(fl_new_alarm){alarm_history_tbl.sort(1);alarm_history_tbl.sort(1);}
+        //****************************** PAGE TEXT ALARM ****************************************************
+        for (i in Alarm_Obj_Old) {
+            if (!(i in Alarm_Obj_New)) {
+                alarm_str+=Check_Alarm_Zones_Outside(i);
+                delete Alarm_Obj_Old[i];
+            }
+        }
+
+
+        for (i in Alarm_Obj_New){
+            if (!(i in Alarm_Obj_Old)) {
+                Alarm_Obj_Old[i]={};
+            }
+            Alarm_Obj_Old[i]['alarm_zone']=Alarm_Obj_New[i]['alarm_zone'];
+            Alarm_Obj_Old[i]['object_type']=Alarm_Obj_New[i]['object_type'];
+            Alarm_Obj_Old[i]['object_id']=Alarm_Obj_New[i]['object_id'];
+            Alarm_Obj_Old[i]['distance_x']=Alarm_Obj_New[i]['distance_x'];
+            Alarm_Obj_Old[i]['distance_y']=Alarm_Obj_New[i]['distance_y'];
+        }
+
+        if (alarm_str != "ALARM!!!!!<br>") {
+            display_alr_page.innerHTML=alarm_str;
+            cont_disp=2;
+        }
+        else {
+            cont_disp--;
+            if (cont_disp==0) {
+                display_alr_page.innerHTML='';
+            }
+        }
+
+
+        for (i in Obj_Old){
+            canvas.add(Obj_Old[i]['object']);
+        }
+        if (scale_to_set!=1) {
+            scale_wind.setScale(scale_to_set, anchor_x, anchor_y);
+        }
+        canvas.renderAll();
+        object_list_tbl.change_row(contact);
+
+
     }
 
-    if (radar_obj_save){
-        canvas.remove(radar_obj_save);
-        canvas_down.remove(radar_down_obj_save);
+/*########################################################################################################## Paint_Resive_Obj */
+    function Render_All_Canvas() {
+        if(radar_obj_save){
+            canvas.sendToBack(radar_obj_save);
+            if(image_save){canvas.sendToBack(image_save);}
+            canvas_down.bringToFront(radar_down_obj_save);
+        } else{
+            canvas.renderAll();
+            canvas_down.renderAll();
+        }
     }
-    var triangle = createTriangle(radar_left, radar_top, radar_angle);
-        canvas.add(triangle);
-    var triangle_down=createTriangle(radar_left, radar_top, radar_angle);
-        triangle_down.set({opacity: 10/255});
-        canvas_down.add(triangle_down);
-        radar_obj_save=triangle;
-        radar_down_obj_save=triangle_down;
+/*########################################################################################################## Check_Alarm_Zones */
+    /**
+     * @return {string}
+     */
+    function Check_Alarm_Zones(alarm_zones,obj_id) {
 
-    Render_All_Canvas();
-    update_radar(1, rdr_height, rdr_offset_x, rdr_offset_y, rdr_azimuth_angle, rdr_elevation_angle);
-
-    // object_db.delete_row('radar');
-    // object_db.add_row('radar','{"objects":['+JSON.stringify(triangle)+']}', '0', '0', '0', '0', rdr_height, rdr_offset_x, rdr_offset_y, rdr_azimuth_angle, rdr_elevation_angle);
-}
-/*########################################################################################################## Paint_Resive_Obj Z*/
-function Paint_Resive_Obj() {
-    //document.getElementById('Obj_Data').value =text_json_Test;
-    var display_alr_page=document.getElementById('id_Alarm_Text');
-    var contact = JSON.parse(text_json_Test);
-    var num_obj = contact.objects.length;
-    var alarm_str="ALARM!!!!!<br>";
-    var i,int,fl_new_alarm=false;
-    var Alarm_Obj_New={};
-    var circle_obj_resive;
-    var now_date_time  = new Date().toLocaleString().replace("W", "/").replace(",", " ");
-
-    if(scale_to_set!=1){scale_wind.setScale(0.9, anchor_x, anchor_y);}
-    var color={};
-    for (i in Obj_Old) {color[Obj_Old[i]['color']]=Obj_Old[i]['color'];}
-    for(i=0;i<num_obj;i++) {
-        var id = contact.objects[i].object_id;
-        Obj_New[id]={};
-        Obj_New[id]['id'] = contact.objects[i].object_id;
-        Obj_New[id]['type'] = contact.objects[i].object_type;
-        Obj_New[id]['x'] = Math.floor((contact.objects[i].distance_x*canvas.width)/300) + canvas.width/2;
-        Obj_New[id]['y'] = canvas.height - Math.floor((contact.objects[i].distance_y*canvas.height)/350);
-
-        if (id in Obj_Old) {Obj_New[id]['color'] = Obj_Old[id]['color'];}
-        else {for(var ii in color_resive_obj){if (!color_resive_obj.hasOwnProperty(ii)){continue;}  if(!(color_resive_obj[ii] in color)) {Obj_New[id]['color'] = color[color_resive_obj[ii]]=color_resive_obj[ii]; break;}}}
-    }
-
-    for(i in Obj_Old) {canvas.remove(Obj_Old[i]['object']);}
-    Obj_Old={};
-
-
-    for(i in Obj_New) {
-
-        circle_obj_resive = new fabric.Circle({
-            strokeWidth: 0,
-            radius: 10, fill: Obj_New[i]['color'],
-            originX: 'center',
-            originY: 'center',
-            left: Obj_New[i]['x'],
-            top: Obj_New[i]['y'],
-            hasBorders: false,
-            perPixelTargetFind: true,
-            hasControls: false,
-            id: Obj_New[i]['id']
-        });
-
-
-        var x = Obj_New[i]['x'];
-        var x1 = x - 10;
-        var x2 = x + 10;
-        var y = Obj_New[i]['y'];
-        var y1 = y - 10;
-        var y2 = y + 10;
-
-        var Point={};
-        Point[0]=ctx_canvas_down.getImageData(x1, y, 1, 1).data;
-        Point[1]=ctx_canvas_down.getImageData(x2, y, 1, 1).data;
-        Point[2]=ctx_canvas_down.getImageData(x, y1, 1, 1).data;
-        Point[3]=ctx_canvas_down.getImageData(x, y2, 1, 1).data;
-
-        if (((Point[0][3] > 17)&&(Point[0][2] > 17)) || ((Point[1][3] > 17)&&(Point[1][2] > 17)) || ((Point[2][3] > 17)&&(Point[2][2] > 17)) || ((Point[3][3] > 17)&&(Point[3][2] > 17))) {
-            var name_zone_alarm=[];
-
-            for (int=0; int<4; int++) {
-                if (Point[int][3] > 17) {
-                    var clr_temp = Point[int][3]*Point[int][0] / 16;
-                    clr_temp = (Math.round(clr_temp / 5) * 5) / 15;
-                    if(clr_temp>25){clr_temp=Math.ceil(clr_temp);}else{clr_temp=Math.floor(clr_temp);}
-
-                    for (var alrm_ind = 0; alrm_ind < 5; alrm_ind++) {
-                        if (!Alarm_Zones.hasOwnProperty(alrm_ind)){continue;}
-                        if (((1 << alrm_ind) & clr_temp) && (name_zone_alarm.indexOf(Alarm_Zones[alrm_ind]['name']) == -1)) {
-                            name_zone_alarm.push(Alarm_Zones[alrm_ind]['name']);
-
+        var i, ii, obj_inside=[], obj_in=[], obj_out=[], name_zone_old, txt_alarm="";
+        if (obj_id in Alarm_Obj_Old) {
+            //alert("obj_id существует.");
+            for(i in Alarm_Zones){
+                ii = jQuery.inArray(Alarm_Zones[i]['name'], alarm_zones);
+                if ((ii != -1)&&(Alarm_Zones[i]['name']==alarm_zones[ii])&&(Alarm_Zones[i]["type_alarm"]==0)) {
+                    obj_inside.push(alarm_zones[ii]);
+                    //if(Alarm_Zones[ii]["url"]!=''){SendAlrm(obj_id+": INSIDE "+alarm_zones[ii]);}
+                }
+            }
+            for(i in Alarm_Obj_Old[obj_id]['zones']) {
+                if (!Alarm_Obj_Old[obj_id]['zones'].hasOwnProperty(i)){
+                    continue;
+                }
+                name_zone_old = Alarm_Obj_Old[obj_id]['zones'][i];
+                for(ii in Alarm_Zones){
+                    if((Alarm_Zones[ii]['name']==name_zone_old)&&(Alarm_Zones[ii]["type_alarm"]==1)&&(alarm_zones.indexOf(name_zone_old)==-1))
+                    {obj_out.push(name_zone_old);
+                        if(Alarm_Zones[ii]["url"]!=''){
+                            SendAlrm(Alarm_Zones[ii]["url"]+"?"+obj_id+":_OUT_"+name_zone_old);
                         }
                     }
                 }
             }
-
-            name_zone_alarm.sort();
-            var name_zone_for_history='';
-
-            for (int=0; int<name_zone_alarm.length; int++){name_zone_for_history+=name_zone_alarm[int]+', ';}
-            name_zone_for_history=name_zone_for_history.slice(0,-2);
-            if(Obj_New[i]['id']==3){console.info(name_zone_for_history);}
-            alarm_str+=Check_Alarm_Zones(name_zone_alarm,Obj_New[i]['id']);
-
-            Alarm_Obj_New[i]={};
-            Alarm_Obj_New[i]['alarm_zone']=name_zone_for_history;
-            Alarm_Obj_New[i]['object_type']=Obj_New[i]['type'];
-            Alarm_Obj_New[i]['object_id']=  Obj_New[i]['id'];
-            Alarm_Obj_New[i]['distance_x']= Obj_New[i]['x'];
-            Alarm_Obj_New[i]['distance_y']= Obj_New[i]['y'];
-            Alarm_Obj_New[i]['time_alarm']=now_date_time;
-            Alarm_Obj_New[i]['id_row_db']= new Date().getTime();
-        }
-
-        Obj_Old[i]={};
-        Obj_Old[i]['object']=circle_obj_resive;
-        Obj_Old[i]['x']=    Obj_New[i]['x'];
-        Obj_Old[i]['y']=    Obj_New[i]['y'];
-        Obj_Old[i]['color']=Obj_New[i]['color'];
-        Obj_Old[i]['id']=   Obj_New[i]['id'];
-    }
-  //****************************** HISTORY****************************************************
-    var temp_arr=[]; for(i in Alarm_Obj_Old){temp_arr.push(Alarm_Obj_Old[i]['alarm_zone']);}
-    var Alarm_Obj_New_Temp={};
-    for(i in Alarm_Obj_New){
-        if(temp_arr.indexOf(Alarm_Obj_New[i]['alarm_zone'])==-1){ fl_new_alarm=true;
-            alarm_history_db.add_row(Alarm_Obj_New[i]['id_row_db'], Alarm_Obj_New[i]['alarm_zone'], now_date_time, Alarm_Obj_New[i]['object_type'], Alarm_Obj_New[i]['object_id'], Alarm_Obj_New[i]['distance_x'], Alarm_Obj_New[i]['distance_y']);
-            Alarm_Obj_New_Temp[i]={};
-            Alarm_Obj_New_Temp[i]=Alarm_Obj_New[i];
-        }
-    }
-
-    if(fl_new_alarm){Count_Alarm_History_Row_DB+=Object.keys(Alarm_Obj_New_Temp).length; alarm_history_tbl.add_row_arr(true,Alarm_Obj_New_Temp);}
-
-    //if(fl_new_alarm){alarm_history_tbl.sort(1);alarm_history_tbl.sort(1);}
-    //****************************** PAGE TEXT ALARM****************************************************
-    for (i in Alarm_Obj_Old) {if (!(i in Alarm_Obj_New)){alarm_str+=Check_Alarm_Zones_Outside(i); delete Alarm_Obj_Old[i];}}
-
-
-    for (i in Alarm_Obj_New){
-        if(!(i in Alarm_Obj_Old)){Alarm_Obj_Old[i]={};}
-        Alarm_Obj_Old[i]['alarm_zone']=Alarm_Obj_New[i]['alarm_zone'];
-        Alarm_Obj_Old[i]['object_type']=Alarm_Obj_New[i]['object_type'];
-        Alarm_Obj_Old[i]['object_id']=Alarm_Obj_New[i]['object_id'];
-        Alarm_Obj_Old[i]['distance_x']=Alarm_Obj_New[i]['distance_x'];
-        Alarm_Obj_Old[i]['distance_y']=Alarm_Obj_New[i]['distance_y'];
-    }
-
-
-
-    if(alarm_str!="ALARM!!!!!<br>"){display_alr_page.innerHTML=alarm_str; cont_disp=2;}
-    else{cont_disp--; if(cont_disp==0){display_alr_page.innerHTML='';}}
-
-
-    for (i in Obj_Old){canvas.add(Obj_Old[i]['object']);}
-    if(scale_to_set!=1){scale_wind.setScale(scale_to_set, anchor_x, anchor_y);}
-    canvas.renderAll();
-    object_list_tbl.change_row(contact);
-
-
-}
-
-/*########################################################################################################## Paint_Resive_Obj */
-function Render_All_Canvas() {
-    if(radar_obj_save){
-        canvas.sendToBack(radar_obj_save);
-        if(image_save){canvas.sendToBack(image_save);}
-        canvas_down.bringToFront(radar_down_obj_save);
-    } else{
-        canvas.renderAll();
-        canvas_down.renderAll();
-    }
-}
-/*########################################################################################################## Check_Alarm_Zones */
-/**
- * @return {string}
- */
-function Check_Alarm_Zones(alarm_zones,obj_id) {
-    var i,ii,obj_inside=[],obj_in=[],obj_out=[],name_zone_old,txt_alarm="";
-    if (obj_id in Alarm_Obj_Old) {
-        //alert("obj_id существует.");
-        for(i in Alarm_Zones){
-            ii=jQuery.inArray(Alarm_Zones[i]['name'], alarm_zones);
-            if ((ii != -1)&&(Alarm_Zones[i]['name']==alarm_zones[ii])&&(Alarm_Zones[i]["type_alarm"]==0)) {
-                obj_inside.push(alarm_zones[ii]);
-                //if(Alarm_Zones[ii]["url"]!=''){SendAlrm(obj_id+": INSIDE "+alarm_zones[ii]);}
-            }
-        }
-        for(i in Alarm_Obj_Old[obj_id]['zones']) {
-            if (!Alarm_Obj_Old[obj_id]['zones'].hasOwnProperty(i)){continue;}
-            name_zone_old = Alarm_Obj_Old[obj_id]['zones'][i];
-            for(ii in Alarm_Zones){
-                if((Alarm_Zones[ii]['name']==name_zone_old)&&(Alarm_Zones[ii]["type_alarm"]==1)&&(alarm_zones.indexOf(name_zone_old)==-1))
-                {obj_out.push(name_zone_old);
-                    if(Alarm_Zones[ii]["url"]!=''){SendAlrm(Alarm_Zones[ii]["url"]+"?"+obj_id+":_OUT_"+name_zone_old);}
+        } else {
+            for(i in Alarm_Zones){
+                ii=jQuery.inArray(Alarm_Zones[i]['name'], alarm_zones);
+                if ((ii != -1)&&(Alarm_Zones[i]['name']==alarm_zones[ii])&&(Alarm_Zones[i]["type_alarm"]==2)) {
+                    obj_in.push(alarm_zones[ii]);
+                    if(Alarm_Zones[ii]["url"]!=''){SendAlrm(Alarm_Zones[ii]["url"]+"?"+obj_id+":_IN_"+alarm_zones[ii]);}
+                }
+                if ((ii != -1)&&(Alarm_Zones[i]['name']==alarm_zones[ii])&&(Alarm_Zones[i]["type_alarm"]==0)) {
+                    obj_inside.push(alarm_zones[ii]);
+                    if(Alarm_Zones[ii]["url"]!=''){SendAlrm(Alarm_Zones[ii]["url"]+"?"+obj_id+":_INSIDE_"+alarm_zones[ii]);}
                 }
             }
         }
-    } else {
-        for(i in Alarm_Zones){
-            ii=jQuery.inArray(Alarm_Zones[i]['name'], alarm_zones);
-            if ((ii != -1)&&(Alarm_Zones[i]['name']==alarm_zones[ii])&&(Alarm_Zones[i]["type_alarm"]==2)) {
-                obj_in.push(alarm_zones[ii]);
-                if(Alarm_Zones[ii]["url"]!=''){SendAlrm(Alarm_Zones[ii]["url"]+"?"+obj_id+":_IN_"+alarm_zones[ii]);}
-            }
-            if ((ii != -1)&&(Alarm_Zones[i]['name']==alarm_zones[ii])&&(Alarm_Zones[i]["type_alarm"]==0)) {
-                obj_inside.push(alarm_zones[ii]);
-                if(Alarm_Zones[ii]["url"]!=''){SendAlrm(Alarm_Zones[ii]["url"]+"?"+obj_id+":_INSIDE_"+alarm_zones[ii]);}
-            }
+
+        //delete Alarm_Obj_Old[obj_id];
+        if (!(obj_id in Alarm_Obj_Old)){
+            Alarm_Obj_Old[obj_id] = {};
         }
+        Alarm_Obj_Old[obj_id]['zones']={};
+
+        for(i in alarm_zones) {
+            if (!alarm_zones.hasOwnProperty(i)) {
+                continue;
+            }
+            Alarm_Obj_Old[obj_id]['zones'][i]=alarm_zones[i];
+        }
+
+     if ((obj_inside.length)||(obj_in.length)) {
+        txt_alarm = "ID:"+obj_id;
+
+         if(obj_in.length){
+             txt_alarm += "  IN:";
+             for(i in obj_in){
+                 txt_alarm += obj_in[i] + ", ";
+             }
+             txt_alarm=txt_alarm.slice(0,-2);
+         }
+         if(obj_inside.length){
+             txt_alarm+= "  INSIDE:";
+             for(i in obj_inside){
+                 txt_alarm+=obj_inside[i]+", ";
+             }
+             txt_alarm=txt_alarm.slice(0,-2);
+         }
+         if(obj_out.length){
+             txt_alarm+= "  OUT:";
+             for(i in obj_out){
+                 txt_alarm+=obj_out[i]+", ";
+             }
+             txt_alarm=txt_alarm.slice(0,-2);
+         }
+     }
+
+     if (txt_alarm) {
+         return txt_alarm+"<br>";
+     } else {
+         return txt_alarm;
+     }
+
+    }
+    /*########################################################################################################## Check_Alarm_Zones_Outside */
+    /**
+     * @return {string}
+     */
+    function Check_Alarm_Zones_Outside(obj_id) {
+        var i,ii,obj_out=[],name_zone_old,txt_alarm="";
+
+            //alert("obj_id существует.");
+            for(i in Alarm_Obj_Old[obj_id]['zones']){
+                if (!Alarm_Obj_Old[obj_id]['zones'].hasOwnProperty(i)){continue;}
+                name_zone_old=Alarm_Obj_Old[obj_id]['zones'][i];
+
+                for(ii in Alarm_Zones){
+                 if((Alarm_Zones[ii]['name']==name_zone_old)&&(Alarm_Zones[ii]['type_alarm']==1)) {
+                     obj_out.push(name_zone_old);
+                     if(Alarm_Zones[ii]['url']!='') {
+                         SendAlrm(Alarm_Zones[ii]['url']+"?"+obj_id+":_OUT_"+name_zone_old);
+                     }
+                    }
+                 }
+            }
+
+
+            if (obj_out.length){
+                txt_alarm = "ID:"+obj_id;
+                txt_alarm += "  OUT:";
+                for (i in obj_out){
+                    txt_alarm += obj_out[i] + ", ";
+                }
+                txt_alarm=txt_alarm.slice(0,-2);
+            }
+
+        if (txt_alarm){
+            return  txt_alarm+"<br>";
+        } else {
+            return txt_alarm;
+        }
+
     }
 
-    //delete Alarm_Obj_Old[obj_id];
-    if(!(obj_id in Alarm_Obj_Old)){Alarm_Obj_Old[obj_id]={};}
-    Alarm_Obj_Old[obj_id]['zones']={};
-
-    for(i in alarm_zones) {
-        if (!alarm_zones.hasOwnProperty(i)){continue;}
-        Alarm_Obj_Old[obj_id]['zones'][i]=alarm_zones[i];
+    /*########################################################################################################## SendAlrm_HandleServerResponse */
+    function SendAlrm_HandleServerResponse(){}
+    /*########################################################################################################## SendAlrm */
+    function SendAlrm(alrm){
+        var st=alrm;
+        var req_alrm=new XMLHttpRequest();
+        req_alrm.open('GET',st,true);
+        req_alrm.onreadystatechange = SendAlrm_HandleServerResponse; // Подключаем функцию для обработки данных
+        req_alrm.send();
     }
 
- if((obj_inside.length)||(obj_in.length)){
-    txt_alarm="ID:"+obj_id;
+    /*########################################################################################################## Modify_Alarm_Zone */
+    /**
+     * @return {boolean}
+     */
+    function Modify_Alarm_Zone() {
+        if (document.getElementById('id_Modify_Alarm_Zone').getAttribute("action") == 'Modify') {
+            ModifyAlarmZone(Select_Alarm_Zone);
+            PageState('modify_alarm_zone');
+            object_status = 'modify_enable';
+            count_check_url=5;
+        } else {
+            if (ValidateName()==false){return false;}
 
-     if(obj_in.length){
-         txt_alarm+= "  IN:";
-         for(i in obj_in){
-             txt_alarm+=obj_in[i]+", ";
-         }
-         txt_alarm=txt_alarm.slice(0,-2);
-     }
-     if(obj_inside.length){
-         txt_alarm+= "  INSIDE:";
-         for(i in obj_inside){
-             txt_alarm+=obj_inside[i]+", ";
-         }
-         txt_alarm=txt_alarm.slice(0,-2);
-     }
-     if(obj_out.length){
-         txt_alarm+= "  OUT:";
-         for(i in obj_out){
-             txt_alarm+=obj_out[i]+", ";
-         }
-         txt_alarm=txt_alarm.slice(0,-2);
-     }
- }
-
-if (txt_alarm){return  txt_alarm+"<br>";}else{return txt_alarm;}
-
-
-}
-/*########################################################################################################## Check_Alarm_Zones_Outside */
-/**
- * @return {string}
- */
-function Check_Alarm_Zones_Outside(obj_id) {
-    var i,ii,obj_out=[],name_zone_old,txt_alarm="";
-
-        //alert("obj_id существует.");
-        for(i in Alarm_Obj_Old[obj_id]['zones']){
-            if (!Alarm_Obj_Old[obj_id]['zones'].hasOwnProperty(i)){continue;}
-            name_zone_old=Alarm_Obj_Old[obj_id]['zones'][i];
-
-
-         for(ii in Alarm_Zones){
-         if((Alarm_Zones[ii]['name']==name_zone_old)&&(Alarm_Zones[ii]['type_alarm']==1))
-         {obj_out.push(name_zone_old);
-         if(Alarm_Zones[ii]['url']!=''){SendAlrm(Alarm_Zones[ii]['url']+"?"+obj_id+":_OUT_"+name_zone_old);}
-         }
-         }
-         }
-
-
-        if(obj_out.length){
-            txt_alarm="ID:"+obj_id;
-            txt_alarm+= "  OUT:";
-            for(i in obj_out){
-                txt_alarm+=obj_out[i]+", ";
+            document.getElementById("id_Modify_Alarm_Zone").disabled = true;
+            if (flag_url == false) {
+                count_check_url = 5;
+                flag_url = 'wait';
+                ValidateUrl();
             }
-            txt_alarm=txt_alarm.slice(0,-2);
-        }
+            if (flag_url != 'wait') {
+                document.getElementById("id_Modify_Alarm_Zone").disabled = false;
+            }
+            if (flag_url == 'err') {
+                flag_url = false;
+                return false;
+            }
+            if (flag_url != 'ok') {
+                return false;
+            }
 
-    if (txt_alarm){return  txt_alarm+"<br>";}else{return txt_alarm;}
 
-}
-
-/*########################################################################################################## SendAlrm_HandleServerResponse */
-function SendAlrm_HandleServerResponse(){}
-/*########################################################################################################## SendAlrm */
-function SendAlrm(alrm){
-    var st=alrm;
-    var req_alrm=new XMLHttpRequest();
-    req_alrm.open('GET',st,true);
-    req_alrm.onreadystatechange = SendAlrm_HandleServerResponse; // Подключаем функцию для обработки данных
-    req_alrm.send();
-}
-
-/*########################################################################################################## Modify_Alarm_Zone */
-/**
- * @return {boolean}
- */
-function Modify_Alarm_Zone() {
-    if (document.getElementById('id_Modify_Alarm_Zone').getAttribute("action") == 'Modify') {
-        ModifyAlarmZone(Select_Alarm_Zone);
-        PageState('modify_alarm_zone');
-        object_status = 'modify_enable';
-        count_check_url=5;
-    } else {
-        if (ValidateName()==false){return false;}
-
-        document.getElementById("id_Modify_Alarm_Zone").disabled = true;
-        if (flag_url == false) {
-            count_check_url = 5;
-            flag_url = 'wait';
-            ValidateUrl();
-        }
-        if (flag_url != 'wait') {
-            document.getElementById("id_Modify_Alarm_Zone").disabled = false;
-        }
-        if (flag_url == 'err') {
             flag_url = false;
-            return false;
-        }
-        if (flag_url != 'ok') {
-            return false;
+            if (object_status == 'object_add') {
+                SaveAddAlarmZone(Count_Alarm_Zones);
+            }
+            else if (object_status == 'modify_enable') {
+                SaveModifyAlarmZone(Select_Alarm_Zone);
+            }
+
+            object_status = 'modify_enable';
+            Select_Alarm_Zone=null;
+            DisplayAlarmZones(Select_Alarm_Zone);
+            PageState('save_alarm_zone');
         }
 
-
-        flag_url = false;
-        if (object_status == 'object_add') {
-            SaveAddAlarmZone(Count_Alarm_Zones);
-        }
-        else if (object_status == 'modify_enable') {
-            SaveModifyAlarmZone(Select_Alarm_Zone);
-        }
-
-        object_status = 'modify_enable';
-        Select_Alarm_Zone=null;
-        DisplayAlarmZones(Select_Alarm_Zone);
-        PageState('save_alarm_zone');
+        return false;
     }
 
-    return false;
-}
+
+    /*########################################################################################################## window.onresize */
+    window.onresize = function(){
+        Resize_Canvas();
+    };
+    /*########################################################################################################## Resize_Canvas */
+    function Resize_Canvas() {
+        var canv_temp,context,tempContext;
+        var tempCanvas = document.createElement('canvas');
 
 
-/*########################################################################################################## window.onresize */
-window.onresize = function(){
-    Resize_Canvas();
-};
-/*########################################################################################################## Resize_Canvas */
-function Resize_Canvas() {
-    var canv_temp,context,tempContext;
-    var tempCanvas = document.createElement('canvas');
+        canv_temp = document.getElementById('id_Canv_Grid_Bottom_Canv');
+        context = canv_temp.getContext('2d');
+        tempCanvas.width = canvas_grid_bottom_width;
+        tempCanvas.height = canvas_grid_bottom_height;
+        tempContext = tempCanvas.getContext("2d");
 
+        tempContext.drawImage(context.canvas, 0, 0);
+        canv_temp.width = canvas_grid_bottom_width;
+        canv_temp.height = canvas_grid_bottom_height;
+        context.drawImage(tempContext.canvas, 0, 0);
+        canvas_grid_bottom.renderAll();
 
-    canv_temp = document.getElementById('id_Canv_Grid_Bottom_Canv');
-    context = canv_temp.getContext('2d');
-    tempCanvas.width = canvas_grid_bottom_width;
-    tempCanvas.height = canvas_grid_bottom_height;
-    tempContext = tempCanvas.getContext("2d");
+        canv_temp = document.getElementById('id_Canv_Grid_Left_Canv');
+        context = canv_temp.getContext('2d');
+        tempCanvas.width = canvas_grid_left_width;
+        tempCanvas.height = canvas_grid_left_height;
+        tempContext = tempCanvas.getContext("2d");
 
-    tempContext.drawImage(context.canvas, 0, 0);
-    canv_temp.width = canvas_grid_bottom_width;
-    canv_temp.height = canvas_grid_bottom_height;
-    context.drawImage(tempContext.canvas, 0, 0);
-    canvas_grid_bottom.renderAll();
+        tempContext.drawImage(context.canvas, 0, 0);
+        canv_temp.width = canvas_grid_left_width;
+        canv_temp.height = canvas_grid_left_height;
+        context.drawImage(tempContext.canvas, 0, 0);
+        canvas_grid_left.renderAll();
 
-    canv_temp = document.getElementById('id_Canv_Grid_Left_Canv');
-    context = canv_temp.getContext('2d');
-    tempCanvas.width = canvas_grid_left_width;
-    tempCanvas.height = canvas_grid_left_height;
-    tempContext = tempCanvas.getContext("2d");
+        canv_temp = document.getElementById('c');
+        context = canv_temp.getContext('2d');
+        tempCanvas.width = canvas_width;
+        tempCanvas.height = canvas_height;
+        tempContext = tempCanvas.getContext("2d");
 
-    tempContext.drawImage(context.canvas, 0, 0);
-    canv_temp.width = canvas_grid_left_width;
-    canv_temp.height = canvas_grid_left_height;
-    context.drawImage(tempContext.canvas, 0, 0);
-    canvas_grid_left.renderAll();
+        tempContext.drawImage(context.canvas, 0, 0);
+        canv_temp.width = canvas_width;
+        canv_temp.height = canvas_height;
+        context.drawImage(tempContext.canvas, 0, 0);
+        canvas.renderAll();
 
-    canv_temp = document.getElementById('c');
-    context = canv_temp.getContext('2d');
-    tempCanvas.width = canvas_width;
-    tempCanvas.height = canvas_height;
-    tempContext = tempCanvas.getContext("2d");
+        canv_temp = document.getElementById('c2');
+        context = canv_temp.getContext('2d');
+        tempCanvas.width = canvas_width;
+        tempCanvas.height = canvas_height;
+        tempContext = tempCanvas.getContext("2d");
 
-    tempContext.drawImage(context.canvas, 0, 0);
-    canv_temp.width = canvas_width;
-    canv_temp.height = canvas_height;
-    context.drawImage(tempContext.canvas, 0, 0);
-    canvas.renderAll();
+        tempContext.drawImage(context.canvas, 0, 0);
+        canv_temp.width = canvas_width;
+        canv_temp.height = canvas_height;
+        context.drawImage(tempContext.canvas, 0, 0);
+        canvas_down.renderAll();
 
-    canv_temp = document.getElementById('c2');
-    context = canv_temp.getContext('2d');
-    tempCanvas.width = canvas_width;
-    tempCanvas.height = canvas_height;
-    tempContext = tempCanvas.getContext("2d");
-
-    tempContext.drawImage(context.canvas, 0, 0);
-    canv_temp.width = canvas_width;
-    canv_temp.height = canvas_height;
-    context.drawImage(tempContext.canvas, 0, 0);
-    canvas_down.renderAll();
-
-}
+    }

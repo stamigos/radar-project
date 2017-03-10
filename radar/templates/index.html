@@ -173,37 +173,77 @@
                     </div>
                     <div class="content-table-body">
                         <table class="radar-objects">
-                            <tbody>
-                                {% for radar_object in radar_objects %}
-                                  <tr>
-                                      <td>{{ loop.index }}</td>
-                                      <td>{{ radar_object.id }}</td>
-                                      <td>{{ radar_object.quality }}</td>
-                                      <td>{{ radar_object.c_distance_x }}</td>
-                                      <td>{{ radar_object.c_distance_y }}</td>
-                                      <td>{{ radar_object.c_velocity_x }}</td>
-                                      <td>{{ radar_object.c_velocity_y }}</td>
-                                      <td>1</td>
-                                      <td>{{ radar_object.p_distance }}</td>
-                                      <td>{{ radar_object.p_velocity }}</td>
-                                      <td>{{ radar_object.p_angle }}</td>
-                                  </tr>
-                                {% endfor %}
+                            <tbody id="id_Table_Object_Tbody">
+{#                                {% for radar_object in radar_objects %}#}
+{#                                  <tr>#}
+{#                                      <td>{{ loop.index }}</td>#}
+{#                                      <td>{{ radar_object.id }}</td>#}
+{#                                      <td>{{ radar_object.quality }}</td>#}
+{#                                      <td>{{ radar_object.c_distance_x }}</td>#}
+{#                                      <td>{{ radar_object.c_distance_y }}</td>#}
+{#                                      <td>{{ radar_object.c_velocity_x }}</td>#}
+{#                                      <td>{{ radar_object.c_velocity_y }}</td>#}
+{#                                      <td>1</td>#}
+{#                                      <td>{{ radar_object.p_distance }}</td>#}
+{#                                      <td>{{ radar_object.p_velocity }}</td>#}
+{#                                      <td>{{ radar_object.p_angle }}</td>#}
+{#                                  </tr>#}
+{#                                {% endfor %}#}
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
             <div class="panel">
+{#                <div id="id_Alarm_Text"></div>#}
                 <div class="content-header">
                     <h1>Alarm history</h1><br>
+                    <div id="controls">
+                        <div id="perpage">
+                            <span>Show</span>
+                            <select id="id_Sorter_Size_Select" class="alarm-type" onchange="sorter.size(this.value)">
+                                <option value="5" selected="selected">5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                            <span>entries</span>
+                        </div>
+{#                        <div id="navigation">#}
+{#                            <img src="/static/img/first.gif" width="16" height="16" alt="First Page" onclick="sorter.move(-1,true)" />#}
+{#                            <img src="/static/img/previous.gif" width="16" height="16" alt="First Page" onclick="sorter.move(-1)" />#}
+{#                            <img src="/static/img/next.gif" width="16" height="16" alt="First Page" onclick="sorter.move(1)" />#}
+{#                            <img src="static/img/last.gif" width="16" height="16" alt="Last Page" onclick="sorter.move(1,true)" />#}
+{#                        </div>#}
+                        <span id="text">Displaying Page <span id="currentpage"></span> of <span id="pagelimit"></span></span>
+                        <a href="alarm_history.html" target="_blank"><input type="button" id="id_Full_Alarm_History" value="Alarm History" class="btn-main" style="float: right; width: auto; margin-top: 0;" /></a>
+                        <input type="button" id = "id_Clear_Alarm_History" value="Clear"  class="btn-simple" style="float: right; width: auto; margin-top: 0;" />
+                        <input style="display:none" type="button" id="id_Sort_Alarm_History" value="Sort" class="btn-simple" />
+                    </div>
                 </div>
                 <div class="content">
                     <div class="content-table-header">
-                        <table>
-                            <thead>
+{#                        <table>#}
+{#                            <thead>#}
+{#                                  <tr>#}
+{#                                      <th>#</th>#}
+{#                                      <th>Alarm zone</th>#}
+{#                                      <th>Time</th>#}
+{#                                      <th>Object Type</th>#}
+{#                                      <th>Object ID</th>#}
+{#                                      <th>Distance X</th>#}
+{#                                      <th>Distance Y</th>#}
+{#                                      <th>Delete</th>#}
+{#                                  </tr>#}
+{#                            </thead>#}
+{#                        </table>#}
+                    </div>
+                    <div class="content-table-body">
+                        <table id="id_Alarm_List_Table" class="alarm-logs">
+                            <thead id="id_Alarm_List_Thead">
                                   <tr>
-                                      <th>#</th>
+{#                                      <th>#</th>#}
                                       <th>Alarm zone</th>
                                       <th>Time</th>
                                       <th>Object Type</th>
@@ -213,24 +253,21 @@
                                       <th>Delete</th>
                                   </tr>
                             </thead>
-                        </table>
-                    </div>
-                    <div class="content-table-body">
-                        <table class="alarm-logs">
-                            <tbody>
-                            {% for alarm_log in alarm_logs %}
-                                  <tr>
-                                      <td>{{ loop.index }}</td>
-                                      <td>{{ alarm_log.alarm_zone.name }}</td>
-                                      <td>{{ alarm_log.timestamp }}</td>
-                                      <td>1</td>
-                                      <td>{{ alarm_log.radar_object.id }}</td>
-                                      <td>{{ alarm_log.radar_object.c_distance_x }}</td>
-                                      <td>{{ alarm_log.radar_object.c_distance_y }}</td>
-                                      <td><i class='fa fa-times' aria-hidden='true'></i></td>
-                                  </tr>
-                            {% endfor %}
-                            </tbody>
+                            <tbody id="id_Alarm_List_Tbody"></tbody>
+{#                            <tbody>#}
+{#                            {% for alarm_log in alarm_logs %}#}
+{#                                  <tr>#}
+{#                                      <td>{{ loop.index }}</td>#}
+{#                                      <td>{{ alarm_log.alarm_zone.name }}</td>#}
+{#                                      <td>{{ alarm_log.timestamp }}</td>#}
+{#                                      <td>1</td>#}
+{#                                      <td>{{ alarm_log.radar_object.id }}</td>#}
+{#                                      <td>{{ alarm_log.radar_object.c_distance_x }}</td>#}
+{#                                      <td>{{ alarm_log.radar_object.c_distance_y }}</td>#}
+{#                                      <td><i class='fa fa-times' aria-hidden='true'></i></td>#}
+{#                                  </tr>#}
+{#                            {% endfor %}#}
+{#                            </tbody>#}
                         </table>
                     </div>
                 </div>
@@ -308,10 +345,10 @@
 {#            </div>#}
 
                 <!--http:// <input type='text' name='http'> <br />-->
-            <div id = "id_Alarm_Text"></div>
+            <div id="id_Alarm_Text" style="display:none;"></div>
             <!--<input type="text" id = "id_Alarm_Text" />-->
                 <!-- ############################################################################################## -->
-            <td style="display: inline-block;">
+{#            <td style="display: inline-block;">#}
                 <!-- ############################################################################################## -->
 {#            <div class="wind_alarm_zones" style="width:220px">#}
 {#                <table class="radar_tabl">#}
@@ -325,89 +362,89 @@
 {#                <input type = "button" id = "id_Clear_Object_Database" value = "Clear"  class="button" style="width: 200px" />#}
 {#            </div>#}
             <!-- ############################################################################################## -->
-        <tr><td  colspan="2">
-        <div class="wind_object_list2">
-            <table  style="width:1290px; margin:0" class="sortable">
-                <!-- Заголовки //-->
-                <thead>
-                <tr>
-                    <td style="width:23px;"></td>
-                    <td class="width_cell"><h3>Object ID</h3></td>
-                    <td class="width_cell"><h3>Quality</h3></td>
-                    <td class="width_cell"><h3>Distance X(m)</h3></td>
-                    <td class="width_cell"><h3>Distance Y(m)</h3></td>
-                    <td class="width_cell"><h3>Velocity X(km/h)</h3></td>
-                    <td class="width_cell"><h3>Velocity Y(km/h)</h3></td>
-                    <td class="width_cell"><h3>Object Type</h3></td>
-                    <td class="width_cell"><h3>Distance Polar(m)</h3></td>
-                    <td class="width_cell"><h3>Speed Polar(km/h)</h3></td>
-                    <td class="width_cell"><h3>Angle()</h3></td>
-                </tr>
-                </thead>
-            </table>
-        </div>
-            <div class="wind_object_list">
-                    <table  style="width:1290px" class="sortable">
-                        <thead>
-                        <tr>
-                            <td style="width:30px;"><h3></h3></td>
-                            <td><h3>Object ID</h3></td>
-                            <td><h3>Quality</h3></td>
-                            <td><h3>Distance X(m)</h3></td>
-                            <td><h3>Distance Y(m)</h3></td>
-                            <td><h3>Velocity X(km/h)</h3></td>
-                            <td><h3>Velocity Y(km/h)</h3></td>
-                            <td><h3>Object Type</h3></td>
-                            <td><h3>Distance Polar(m)</h3></td>
-                            <td><h3>Speed Polar(km/h)</h3></td>
-                            <td><h3>Angle()</h3></td>
-                        </tr>
-                        </thead>
-                        <!-- Сюда будем добавлять строки //-->
-                        <tbody id="id_Table_Object_Tbody"></tbody>
-                    </table>
-            </div>
+{#        <tr><td  colspan="2">#}
+{#        <div class="wind_object_list2">#}
+{#            <table  style="width:1290px; margin:0" class="sortable">#}
+{#                <!-- Заголовки //-->#}
+{#                <thead>#}
+{#                <tr>#}
+{#                    <td style="width:23px;"></td>#}
+{#                    <td class="width_cell"><h3>Object ID</h3></td>#}
+{#                    <td class="width_cell"><h3>Quality</h3></td>#}
+{#                    <td class="width_cell"><h3>Distance X(m)</h3></td>#}
+{#                    <td class="width_cell"><h3>Distance Y(m)</h3></td>#}
+{#                    <td class="width_cell"><h3>Velocity X(km/h)</h3></td>#}
+{#                    <td class="width_cell"><h3>Velocity Y(km/h)</h3></td>#}
+{#                    <td class="width_cell"><h3>Object Type</h3></td>#}
+{#                    <td class="width_cell"><h3>Distance Polar(m)</h3></td>#}
+{#                    <td class="width_cell"><h3>Speed Polar(km/h)</h3></td>#}
+{#                    <td class="width_cell"><h3>Angle()</h3></td>#}
+{#                </tr>#}
+{#                </thead>#}
+{#            </table>#}
+{#        </div>#}
+{#            <div class="wind_object_list">#}
+{#                    <table  style="width:1290px" class="sortable">#}
+{#                        <thead>#}
+{#                        <tr>#}
+{#                            <td style="width:30px;"><h3></h3></td>#}
+{#                            <td><h3>Object ID</h3></td>#}
+{#                            <td><h3>Quality</h3></td>#}
+{#                            <td><h3>Distance X(m)</h3></td>#}
+{#                            <td><h3>Distance Y(m)</h3></td>#}
+{#                            <td><h3>Velocity X(km/h)</h3></td>#}
+{#                            <td><h3>Velocity Y(km/h)</h3></td>#}
+{#                            <td><h3>Object Type</h3></td>#}
+{#                            <td><h3>Distance Polar(m)</h3></td>#}
+{#                            <td><h3>Speed Polar(km/h)</h3></td>#}
+{#                            <td><h3>Angle()</h3></td>#}
+{#                        </tr>#}
+{#                        </thead>#}
+{#                        <!-- Сюда будем добавлять строки //-->#}
+{#                        <tbody id="id_Table_Object_Tbody"></tbody>#}
+{#                    </table>#}
+{#            </div>#}
         <!-- ############################################################################################## -->
-        <tr><td>
+{#        <tr><td>#}
         <div style="width:1290px">
-                <table  id="id_Alarm_List_Table" class="sortable" style="width:1290px;float:left;" >
-                    <thead id="id_Alarm_List_Thead">
-                    <tr>
-                        <td><h3>Alarm Zone</h3></td>
-                        <td><h3>Time</h3></td>
-                        <td><h3>Object Type</h3></td>
-                        <td><h3>Object Id</h3></td>
-                        <td><h3>Distance X</h3></td>
-                        <td><h3>Distance Y</h3></td>
-                        <td class="nosort"><h3>         </h3></td>
+{#                <table  id="id_Alarm_List_Table" class="sortable" style="width:1290px;float:left;" >#}
+{#                    <thead id="id_Alarm_List_Thead">#}
+{#                    <tr>#}
+{#                        <td><h3>Alarm Zone</h3></td>#}
+{#                        <td><h3>Time</h3></td>#}
+{#                        <td><h3>Object Type</h3></td>#}
+{#                        <td><h3>Object Id</h3></td>#}
+{#                        <td><h3>Distance X</h3></td>#}
+{#                        <td><h3>Distance Y</h3></td>#}
+{#                        <td class="nosort"><h3>         </h3></td>#}
+{##}
+{#                    </tr>#}
+{#                    </thead>#}
+{#                    <!-- Сюда будем добавлять строки //-->#}
+{#                    <tbody id="id_Alarm_List_Tbody"></tbody>#}
+{#                </table>#}
 
-                    </tr>
-                    </thead>
-                    <!-- Сюда будем добавлять строки //-->
-                    <tbody id="id_Alarm_List_Tbody"></tbody>
-                </table>
-
-                <div id="controls">
-                    <div id="perpage">
-                        <select id="id_Sorter_Size_Select" onchange="sorter.size(this.value)">
-                            <option value="5" selected="selected">5</option>
-                            <option value="10">10</option>
-                            <option value="20">20</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                        </select>
-                        <span>Entries Per Page</span>
-                    </div>
-                    <div id="navigation">
-                        <img src="img/first.gif" width="16" height="16" alt="First Page" onclick="sorter.move(-1,true)" />
-                        <img src="img/previous.gif" width="16" height="16" alt="First Page" onclick="sorter.move(-1)" />
-                        <img src="img/next.gif" width="16" height="16" alt="First Page" onclick="sorter.move(1)" />
-                        <img src="img/last.gif" width="16" height="16" alt="Last Page" onclick="sorter.move(1,true)" />
-                    </div>
-                    <div id="text">Displaying Page <span id="currentpage"></span> of <span id="pagelimit"></span></div>
-                    <input type = "button" id = "id_Clear_Alarm_History" value = "Clear"  class="button" style="width: 200px" />
-                    <a href="alarm_history.html" target="_blank"><input type = "button" id = "id_Full_Alarm_History" value = "Alarm History"  class="button" style="width: 200px" /></a>
-                    <input style="display:none" type = "button" id = "id_Sort_Alarm_History" value = "Sort"  class="button" style="width: 200px" />
+{#                <div id="controls">#}
+{#                    <div id="perpage">#}
+{#                        <select id="id_Sorter_Size_Select" onchange="sorter.size(this.value)">#}
+{#                            <option value="5" selected="selected">5</option>#}
+{#                            <option value="10">10</option>#}
+{#                            <option value="20">20</option>#}
+{#                            <option value="50">50</option>#}
+{#                            <option value="100">100</option>#}
+{#                        </select>#}
+{#                        <span>Entries Per Page</span>#}
+{#                    </div>#}
+{#                    <div id="navigation">#}
+{#                        <img src="img/first.gif" width="16" height="16" alt="First Page" onclick="sorter.move(-1,true)" />#}
+{#                        <img src="img/previous.gif" width="16" height="16" alt="First Page" onclick="sorter.move(-1)" />#}
+{#                        <img src="img/next.gif" width="16" height="16" alt="First Page" onclick="sorter.move(1)" />#}
+{#                        <img src="img/last.gif" width="16" height="16" alt="Last Page" onclick="sorter.move(1,true)" />#}
+{#                    </div>#}
+{#                    <div id="text">Displaying Page <span id="currentpage"></span> of <span id="pagelimit"></span></div>#}
+{#                    <input type = "button" id = "id_Clear_Alarm_History" value = "Clear"  class="button" style="width: 200px" />#}
+{#                    <a href="alarm_history.html" target="_blank"><input type = "button" id = "id_Full_Alarm_History" value = "Alarm History"  class="button" style="width: 200px" /></a>#}
+{#                    <input style="display:none" type = "button" id = "id_Sort_Alarm_History" value = "Sort"  class="button" style="width: 200px" />#}
                 </div>
         </div>
 
@@ -430,7 +467,6 @@
 
     <script>
         var alarm_zones = {{ alarm_zones|tojson|safe }};
-{#        var radar = {{  }}#}
         var req=new XMLHttpRequest();
         var ind_txt=(-1);
         var text_json_Test_Old;
@@ -442,21 +478,24 @@
             }
         }
 
-{#        function INDEX_askServer(){#}
-{#            req.open('GET','//caloric2.prometrix.se/radar/radar.php', true); ///radar/radar.php#}
-{#            //req.withCredentials = true;#}
-{#            req.onreadystatechange = INDEX_handleServerResponse; // Подключаем функцию для обработки данных#}
-{#            req.send();#}
-{#            if(ind_txt!=-1) {#}
-{#                if(text_json_Test!=text_json_Test_Old){Paint_Resive_Obj();}text_json_Test=text_json_Test_Old;#}
-{#            }#}
-{#            window.setTimeout(INDEX_askServer,300);#}
-{#        }#}
+        function INDEX_askServer(){
+            req.open('GET','//caloric2.prometrix.se/radar/radar.php', true); ///radar/radar.php
+            //req.withCredentials = true;
+            req.onreadystatechange = INDEX_handleServerResponse; // Подключаем функцию для обработки данных
+            req.send();
+            if(ind_txt!=-1) {
+                if (text_json_Test != text_json_Test_Old){
+                    Paint_Resive_Obj();
+                }
+                text_json_Test=text_json_Test_Old;
+            }
+            window.setTimeout(INDEX_askServer,300);
+        }
 
 
     </script>
 
-{#<script>INDEX_askServer();</script>#}
+    <script>INDEX_askServer();</script>
     </body>
 
 

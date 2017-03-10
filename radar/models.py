@@ -129,6 +129,9 @@ class RadarObject(_Model):
     p_velocity = CharField(null=True)
     p_angle = CharField(null=True)
 
+    def __unicode__(self):
+        return self.id
+
 
 class AlarmLog(_Model):
 

@@ -60,19 +60,24 @@ function update_radar(id, height, off_x_distance, off_y_distance, az_angle, el_a
         }
     )
 }
-// function update_fabric_state(fabric_state, name) {
-//     $.post(url+'update-fabric-state/',
-//         {
-//             alarm_zone_name: name,
-//             fabric_state: JSON.stringify(fabric_state)
-//         },
-//         function (r) {
-//             console.log("response:", r)
-//         }
-//     )
-// }
-
-//
-// function get_alarm_zones() {
-//     $.post
-// }
+function create_radar_object(received_obj) {
+    for (var obj in received_obj.objects) {
+         $.post(url+'radar-object/',
+            {
+                object_id: received_obj.objects[obj].object_id,
+                // timestamp_upper: timestamp_upper,
+                // timestamp_lower: timestamp_lower,
+                quality: received_obj.objects[obj].quality,
+                c_distance_x: received_obj.objects[obj].distance_x,
+                c_distance_y: received_obj.objects[obj].distance_y,
+                c_velocity_x: received_obj.objects[obj].velocity_x,
+                c_velocity_y: received_obj.objects[obj].velocity_y,
+                p_distance: received_obj.objects[obj].distance_polar,
+                p_velocity: received_obj.objects[obj].speed_polar,
+                p_angle: received_obj.objects[obj].angle
+            },
+        function (r) {
+            console.log("create_radar_object:", r)
+        })
+    }
+}

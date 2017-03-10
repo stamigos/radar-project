@@ -13,6 +13,7 @@ from radar.controllers.login import LoginController
 from radar.controllers.logout import LogoutController
 from radar.controllers.radar_objects import GetRadarObjectsController
 from radar.controllers._radar import RadarController
+from radar.controllers.radar_object import RadarObjectController
 from radar.controllers.update_fabric_state import UpdateFabricStateController
 from radar.decorators import login_required
 
@@ -48,6 +49,12 @@ def index():
 @login_required
 def radar(pk):
     return RadarController(request)(pk)
+
+
+@app.route('/radar-object/', methods=['POST'])
+@login_required
+def radar_object():
+    return RadarObjectController(request)()
 
 
 @app.route('/i/')

@@ -10,6 +10,10 @@
     font-family: 'Roboto Bold';
     src: url('../fonts/roboto-2014/Roboto-Bold.ttf')
 }
+@font-face {
+    font-family: 'Roboto Regular';
+    src: url('../fonts/roboto-2014/Roboto-Regular.ttf')
+}
 h1, h2 {
     font-family: 'Roboto Light';
     display: inline;
@@ -18,6 +22,11 @@ h1, h2 {
     font-weight: 300;
     margin: 0;
     line-height: 24px;
+}
+span {
+    font-family: 'Roboto Regular';
+    font-size: 13px;
+    color: #737373;
 }
 h1.bordered {
     border-bottom: 2px solid #dddddd;
@@ -704,10 +713,13 @@ a:hover{
 .obj_list_inpt{
 	width: 100%;
 	border:none;
-	font:15px Calibri,Arial,sans-serif;
-	font-weight:bold;
-	background: #84acbc;
-	text-align: center;
+    margin-top: 0;
+    padding: 0;
+    outline: none;
+	/*font:15px Calibri,Arial,sans-serif;*/
+	/*font-weight:bold;*/
+	background: transparent;
+	/*text-align: center;*/
 }
 
 .wind_object_list{
@@ -953,14 +965,31 @@ canvas {
 
 
 
-#controls {width:980px; margin:0 auto; height:20px}
-#perpage {float:left; width:200px}
-#perpage select {float:left; font-size:11px}
-#perpage span {float:left; margin:2px 0 0 5px}
+#controls {
+    width:980px;
+    height:60px
+}
+#perpage {
+    float:left;
+    width:200px
+}
+#perpage select {
+    float:left;
+    font-size: 11px;
+    margin-right: 5px;
+}
+#perpage span {
+    float:left;
+    margin: 14px 5px 0 0;
+}
 #navigation {float:left; width:580px; text-align:center}
 #navigation img {cursor:pointer}
-#text {float:left; width:200px; text-align:right; margin-top:2px}
-
+#text {
+    float:left;
+    width:200px;
+    text-align:right;
+    margin-top:14px
+}
 
 
 .alarm_zones_setting_tabl td {font-size:15px; padding:0; text-align:left; vertical-align: middle;}

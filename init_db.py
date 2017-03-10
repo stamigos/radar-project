@@ -37,20 +37,20 @@ def fill_test_data():
                                view_scaling=1.5)
         radar_view.save()
 
-    for i in range(1, 8):
-        radar_object = RadarObject(object_id=str(1+i),
-                                   timestamp_upper=str(3+i),
-                                   timestamp_lower=str(2+i),
-                                   quality=random.choice([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
-                                   c_distance_x=str(random.choice([10, 20, 60])+i),
-                                   c_distance_y=str(random.choice([20, 36, 19])+i),
-                                   c_velocity_x=str(random.choice([4, 6, 9])+i),
-                                   c_velocity_y=str(random.choice([5, 6, 7])+i),
-                                   p_distance=str(random.choice([10, 5])+i),
-                                   p_velocity=str(random.choice([12, 7])+i),
-                                   p_angle=str(random.choice([0.25, 0.3, 0.1]))
-                                   )
-        radar_object.save()
+    # for i in range(1, 8):
+    #     radar_object = RadarObject(object_id=str(1+i),
+    #                                timestamp_upper=str(3+i),
+    #                                timestamp_lower=str(2+i),
+    #                                quality=random.choice([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+    #                                c_distance_x=str(random.choice([10, 20, 60])+i),
+    #                                c_distance_y=str(random.choice([20, 36, 19])+i),
+    #                                c_velocity_x=str(random.choice([4, 6, 9])+i),
+    #                                c_velocity_y=str(random.choice([5, 6, 7])+i),
+    #                                p_distance=str(random.choice([10, 5])+i),
+    #                                p_velocity=str(random.choice([12, 7])+i),
+    #                                p_angle=str(random.choice([0.25, 0.3, 0.1]))
+    #                                )
+    #     radar_object.save()
 
     # for i in range(1, 3):
     #     alarm_zone = AlarmZone(index=i,
