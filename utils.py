@@ -1,10 +1,12 @@
 import datetime
 from hashlib import sha1
 import random
+import requests
 
 from peewee import ForeignKeyField
 from peewee import Model
 
+import config
 
 def hash_pwd(password):
     return sha1(password).hexdigest()
@@ -58,3 +60,10 @@ def get_dictionary_from_model(model, fields=None, exclude=None):
         else:
             data[field_name] = field_data
     return data
+
+
+def pull_radar_objects():
+    r = requests.get(config.RADAR_OBJECTS_URL)
+    return r.json()
+
+

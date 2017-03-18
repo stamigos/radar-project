@@ -70,7 +70,7 @@ var object_db = new function () {
             type = fabric_state.type;
             todo_id = fabric_state.ID;
 
-            if(type == "radar"){
+            if (type == "radar"){
                 //var radr={objects:[{type:"text", originX:"center", originY:"center", left:100, top:60, width:200, height:30, fill:"rgb(0,0,0)", overlayFill:null, stroke:null, strokeWidth:1, strokeDashArray:null, scaleX:1, scaleY:1, angle:0, flipX:false, flipY:false, opacity:1, selectable:true, hasControls:true, hasBorders:true, hasRotatingPoint:true, transparentCorners:true, perPixelTargetFind:false, shadow:null, visible:true, text:"Test Text", fontSize:30, fontWeight:"normal", fontFamily:"Arial", fontStyle:"", lineHeight:1.3, textDecoration:"", textShadow:"", textAlign:"left", strokeStyle:"", backgroundColor:"", textBackgroundColor:"", useNative:true}]};
                 var radr=JSON.parse(fabric_state.obj);
                 var radr_obj=fabric.util.getKlass(radr.objects[0].type).fromObject(radr.objects[0]);
@@ -206,7 +206,7 @@ var object_db = new function () {
         $('#Radar_Offset_Y').val(rdr_offset_y);
         $('#Radar_Azimuth_Angle').val(rdr_azimuth_angle);
         $('#Radar_Elevation_Angle').val(rdr_elevation_angle);
-        if(!fl_radar){
+        if (!fl_radar){
             Create_Radar();
         }
     }

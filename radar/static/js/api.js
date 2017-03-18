@@ -1,4 +1,4 @@
-var url = 'http://54.194.155.176:8000/';
+var url = 'http://0.0.0.0:8008/';
 
 function set_alarm_zone(name, points, color, fabric_state) {
     $.post(url+'alarm-zone/',
@@ -60,24 +60,24 @@ function update_radar(id, height, off_x_distance, off_y_distance, az_angle, el_a
         }
     )
 }
-function create_radar_object(received_obj) {
-    for (var obj in received_obj.objects) {
-         $.post(url+'radar-object/',
-            {
-                object_id: received_obj.objects[obj].object_id,
-                // timestamp_upper: timestamp_upper,
-                // timestamp_lower: timestamp_lower,
-                quality: received_obj.objects[obj].quality,
-                c_distance_x: received_obj.objects[obj].distance_x,
-                c_distance_y: received_obj.objects[obj].distance_y,
-                c_velocity_x: received_obj.objects[obj].velocity_x,
-                c_velocity_y: received_obj.objects[obj].velocity_y,
-                p_distance: received_obj.objects[obj].distance_polar,
-                p_velocity: received_obj.objects[obj].speed_polar,
-                p_angle: received_obj.objects[obj].angle
-            },
-        function (r) {
-            console.log("create_radar_object:", r)
-        })
-    }
-}
+// function create_radar_object(received_obj) {
+//     for (var obj in received_obj.objects) {
+//          $.post(url+'radar-object/',
+//             {
+//                 object_id: received_obj.objects[obj].object_id,
+//                 // timestamp_upper: timestamp_upper,
+//                 // timestamp_lower: timestamp_lower,
+//                 quality: received_obj.objects[obj].quality,
+//                 c_distance_x: received_obj.objects[obj].distance_x,
+//                 c_distance_y: received_obj.objects[obj].distance_y,
+//                 c_velocity_x: received_obj.objects[obj].velocity_x,
+//                 c_velocity_y: received_obj.objects[obj].velocity_y,
+//                 p_distance: received_obj.objects[obj].distance_polar,
+//                 p_velocity: received_obj.objects[obj].speed_polar,
+//                 p_angle: received_obj.objects[obj].angle
+//             },
+//         function (r) {
+//             console.log("create_radar_object:", r)
+//         })
+//     }
+// }

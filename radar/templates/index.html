@@ -464,64 +464,38 @@
     </div>
 
 
+    <script src="https://cdn.socket.io/socket.io-1.0.0.js"></script>
 
     <script>
         var alarm_zones = {{ alarm_zones|tojson|safe }};
-        var req=new XMLHttpRequest();
-        var ind_txt=(-1);
         var text_json_Test_Old;
-        function INDEX_handleServerResponse(){
-            var ingd_txt=req.responseText.indexOf('{"objects":');
-            if(ingd_txt!=-1) {
-                ind_txt=ingd_txt;
-                text_json_Test=req.responseText;
-            }
-        }
 
-        function INDEX_askServer(){
-            req.open('GET','//caloric2.prometrix.se/radar/radar.php', true); ///radar/radar.php
-            //req.withCredentials = true;
-            req.onreadystatechange = INDEX_handleServerResponse; // Подключаем функцию для обработки данных
-            req.send();
-            if(ind_txt!=-1) {
-                if (text_json_Test != text_json_Test_Old){
-                    Paint_Resive_Obj();
-                }
-                text_json_Test=text_json_Test_Old;
-            }
-            window.setTimeout(INDEX_askServer,300);
+        function socketioClient() {
+                var url = 'http://' + document.domain + ':' + location.port + '/test';
+                console.log(url);
+                var socket = io.connect(url);
+                socket.on('my_response', function(response) {
+                    console.log("Received:", response.data);
+                    if (response.data.hasOwnProperty("objects")) {
+                        text_json_Test = response.data;
+                        if (text_json_Test != text_json_Test_Old){
+                            Paint_Resive_Obj();
+                        }
+                        text_json_Test=text_json_Test_Old;
+                    }
+                });
+
         }
 
 
     </script>
-
-    <script>INDEX_askServer();</script>
-    </body>
-
-
-<!--
     <script>
-    function _j(get, code) {
-    var s = document.createElement('script');
-    s.type = 'text/javascript';
-    s.src = get + '?rnd=' + Math.random();
-    document.body.appendChild(s);
-    var f = function () {eval(code);document.body.removeChild(s);}
-    if (navigator.appName !== "Microsoft Internet Explorer") {
-    s.onload = function () {f();}
-    } else {
-    s.onreadystatechange = function () {
-    if (s.readyState === 'loaded') {f();}
-    }
-    }
-    }
+        $(document).ready(function(){
+            socketioClient();
+        });
     </script>
--->
 
-<!--    <script> _j('http://caloric2.prometrix.se/radar/radar.php','alert(data)');</script>-->
-
-
-
+    </body>
 </html>
 
 

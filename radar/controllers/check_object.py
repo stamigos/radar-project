@@ -1,27 +1,38 @@
+import math
+from ast import literal_eval
 from matplotlib.path import Path
 
 from flask import jsonify
 
 from radar import models
-from . import BaseController
 
 
-class CheckObjectController(BaseController):
-    def __init__(self, request):
-        super(CheckObjectController, self).__init__(request)
+class CheckObjectController(object):
+    def __call__(self, _object):
+        width = 700
+        height = 525
+        point_x = math.floor((float(_object['distance_x'])*width)/300) + width/2
+        point_y = height - math.floor((float(_object['distance_y'])*height)/350)
+        print("OBJECT_ID: ", _object['object_id'])
+        print("POINT x y : ", point_x, " ", point_y)
+        alarm_zones = [az for az in models.AlarmZone.select()]
+        result = self._check_alarm_zones(point_x, point_y, alarm_zones)
+        print("INTERSECTED ZONES: ", result)
+        return result
 
-    def _call(self):
-        point_x = self._verify_field("point_x")
-        point_y = self._verify_field("point_y")
-        azone_name = self._verify_field("alarmzone_name")
-        return jsonify({"result": self._check_point(point_x, point_y, azone_name)})
+    def _get_polygon(self, alarm_zone):
+        points_dict = [(float(literal_eval(point)[0]), float(literal_eval(point)[1]))
+                       for point in literal_eval(alarm_zone.polygon)]
+        return Path(points_dict) #[(0, 0), (0, 1), (1, 1), (1, 0)])
 
-    def _get_polygon(self, azone_name):
-        alarm_zone = models.AlarmZone.get(name=azone_name)
-        print(alarm_zone.polygon)
-        return Path(alarm_zone.polygon) #[(0, 0), (0, 1), (1, 1), (1, 0)])
-
-    def _check_point(self, point_x, point_y, azone_name):
-        polygon = self._get_polygon(azone_name)
+    def _check_point(self, point_x, point_y, alarm_zone):
+        polygon = self._get_polygon(alarm_zone)
         return polygon.contains_point((point_x, point_y))
+
+    def _check_alarm_zones(self, point_x, point_y, alarm_zones):
+        intersected_zones = []
+        for az in alarm_zones:
+            if self._check_point(point_x, point_y, az):
+                intersected_zones.append(az.name)
+        return intersected_zones
 

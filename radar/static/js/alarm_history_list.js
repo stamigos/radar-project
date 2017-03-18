@@ -10,8 +10,12 @@ function T$$(e,p) {
 }
 
 
-TINY.table=function(){
-    function sorter(n){this.n=n; this.pagesize=20; this.paginate=0}
+TINY.table = function(){
+    function sorter(n) {
+        this.n = n;
+        this.pagesize = 20;
+        this.paginate = 0
+    }
 
 
     sorter.prototype.init = function(id_tbl, f){
@@ -22,7 +26,7 @@ TINY.table=function(){
 
         this.Id_Table = id_tbl;
         this.RowsLenght = Table.Rows.length;
-        Table.a=[];
+        Table.a = [];
         Table.RowHead = T$$('thead', T$(id_tbl))[0].rows[0];
         Table.CellsLenght = Table.RowHead.cells.length;
 
@@ -48,7 +52,7 @@ TINY.table=function(){
         }
 
         for (i=0;i<this.RowsLenght;i++) {
-            Table.a[i]={};
+            Table.a[i] = {};
         }
 
         //if(f!=null){var a=new Function(this.n+'.wk('+f+')'); a();}
@@ -206,13 +210,13 @@ var alarm_history_tbl = new function () {
     // Вешаем обработчик на элемент управления кол-вом строк
     this.add_row_arr = function (fl_highlight, tbl_arr, orientation) {
         var rowTpl = document.createElement("TR"),
-            RowHead=T$$('thead',T$("id_Alarm_List_Table"))[0].rows[0],
+            RowHead = T$$('thead',T$("id_Alarm_List_Table"))[0].rows[0],
             tbody = document.getElementById("id_Alarm_List_Tbody"),
-            btn_full_histr=document.getElementById('id_Full_Alarm_History'),
+            btn_full_histr = document.getElementById('id_Full_Alarm_History'),
             rowNum = 0,
             sort_size = document.getElementById("id_Sorter_Size_Select"),
             fields = {1:"val1", 2:"val2", 3:"val3", 4:"val4",5:"val5", 6:"val6", 7:"val7"},
-            TD,i,txt,sortNum = null;
+            TD, i, txt, sortNum = null;
 
         for (var field in fields) {
             if (false === fields.hasOwnProperty(field)) {
@@ -239,8 +243,8 @@ var alarm_history_tbl = new function () {
             if (!tbl_arr.hasOwnProperty(i)) {
                 continue;
             }
-            var elem=rowTpl.cloneNode(true);
-            elem.id=tbl_arr[i]['id_row_db'];
+            var elem = rowTpl.cloneNode(true);
+            elem.id = tbl_arr[i]['id_row_db'];
             elem.cells[0].innerText = tbl_arr[i]["alarm_zone"];
             elem.cells[1].innerText = tbl_arr[i]["time_alarm"];
             elem.cells[2].innerText = tbl_arr[i]["object_type"];
@@ -294,23 +298,30 @@ var alarm_history_tbl = new function () {
     /*########################################################################################################## change_row_arr */
     this.change_row_arr = function (fl_highlight, tbl_arr, orientation) {
         var rowTpl = document.createElement("TR"),
-            RowHead=T$$('thead',T$("id_Alarm_List_Table"))[0].rows[0],
+            RowHead = T$$('thead',T$("id_Alarm_List_Table"))[0].rows[0],
             tbody = document.getElementById("id_Alarm_List_Tbody"),
-            btn_full_histr=document.getElementById('id_Full_Alarm_History'),
+            btn_full_histr = document.getElementById('id_Full_Alarm_History'),
             sort_size = document.getElementById("id_Sorter_Size_Select"),
             rowNum = 0,
-            fields = {1:"val1", 2:"val2", 3:"val3", 4:"val4",5:"val5", 6:"val6", 7:"val7"},
-            TD,i,txt,sortNum=null,end_row;
+            fields = {1:"val1", 2:"val2", 3:"val3", 4:"val4", 5:"val5", 6:"val6", 7:"val7"},
+            TD, i, txt, sortNum = null, end_row;
 
         for (var field in fields) {
-            if (false === fields.hasOwnProperty(field)) {continue;}
+            if (false === fields.hasOwnProperty(field)) {
+                continue;
+            }
             TD = document.createElement("TD");
             rowTpl.appendChild(TD);
         }
 
         for (i in RowHead.children) {
-            if (!RowHead.children.hasOwnProperty(i)){continue;}
-            if ((RowHead.children[i].className=="asc")||(RowHead.children[i].className=="desc")){sortNum=i; break;}
+            if (!RowHead.children.hasOwnProperty(i)){
+                continue;
+            }
+            if ((RowHead.children[i].className == "asc")||(RowHead.children[i].className == "desc")){
+                sortNum = i;
+                break;
+            }
         }
 
 
@@ -362,28 +373,26 @@ var alarm_history_tbl = new function () {
                 c.className = "head";
             }
         }
-
-        RowHead.cells[parseInt(row)].className=orientation;
-
+        RowHead.cells[parseInt(row)].className = orientation;
     };
 
 
 
     this.sort = function (coll) {
         var sort_size = document.getElementById("id_Sorter_Size_Select");
-        sorter = new TINY.table.sorter("sorter");
-        sorter.head = "head";
-        sorter.asc = "asc";
-        sorter.desc = "desc";
-        sorter.even = "evenrow";
-        sorter.odd = "oddrow";
-        sorter.evensel = "evenselected";
-        sorter.oddsel = "oddselected";
-        sorter.paginate = true;
-        sorter.currentid = "currentpage";
-        sorter.limitid = "pagelimit";
-        sorter.init("id_Alarm_List_Table",coll);
-        sorter.size(sort_size.value);
+            sorter = new TINY.table.sorter("sorter");
+            sorter.head = "head";
+            sorter.asc = "asc";
+            sorter.desc = "desc";
+            sorter.even = "evenrow";
+            sorter.odd = "oddrow";
+            sorter.evensel = "evenselected";
+            sorter.oddsel = "oddselected";
+            sorter.paginate = true;
+            sorter.currentid = "currentpage";
+            sorter.limitid = "pagelimit";
+            sorter.init("id_Alarm_List_Table",coll);
+            sorter.size(sort_size.value);
     }
 
 };
@@ -394,19 +403,20 @@ var alarm_history_tbl = new function () {
  */
 function Del_Row_Alarm_History(id) {
     var tbl = document.getElementById("id_Alarm_List_Tbody");
-    var RowHead=T$$('thead',T$("id_Alarm_List_Table"))[0].rows[0];
-    var coll=null,orientation_sort=null;
+    var RowHead = T$$('thead',T$("id_Alarm_List_Table"))[0].rows[0];
+    var coll = null,
+        orientation_sort = null;
 
     for (var i in RowHead.children) {
         if (!RowHead.children.hasOwnProperty(i)) {
             continue;
         }
         if ((RowHead.children[i].className == "asc")||(RowHead.children[i].className == "desc")) {
-            coll=i;
+            coll = i;
             if (RowHead.children[i].className == "asc") {
                 orientation_sort="ASC";
             }
-            if (RowHead.children[i].className=="desc"){
+            if (RowHead.children[i].className == "desc"){
                 orientation_sort="DESC";
             }
             break;
@@ -414,7 +424,7 @@ function Del_Row_Alarm_History(id) {
     }
 
 
-    var el =document.getElementById(id);
+    var el = document.getElementById(id);
     $(el).addClass('dellight').delay(100).queue(function(del) {
         alarm_history_db.delete_row(id,coll,orientation_sort);
         del();
