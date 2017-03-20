@@ -59,14 +59,12 @@ def get_dictionary_from_model(model, fields=None, exclude=None):
             continue
         field_obj = model_class._meta.fields[field_name]
         field_data = model._data.get(field_name)
-        print("model._data: ", model._data)
         if isinstance(field_obj, ForeignKeyField) and field_data and field_obj.rel_model in fields:
             rel_obj = getattr(model, field_name)
             data[field_name] = get_dictionary_from_model(rel_obj, fields, exclude)
         else:
-            print("field_data: ", field_data)
             data[field_name] = field_data
-    print "CLEAN DATA", type(data)
+
     return clean_data(data)
 
 
