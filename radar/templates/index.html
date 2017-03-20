@@ -469,20 +469,26 @@
     <script>
         var alarm_zones = {{ alarm_zones|tojson|safe }};
         var text_json_Test_Old;
+        var alarm_logs = [];
 
         function socketioClient() {
-                var url = 'http://' + document.domain + ':' + location.port + '/test';
-                console.log(url);
+                var url = 'http://' + document.domain + ':' + location.port + '/radar';
                 var socket = io.connect(url);
                 socket.on('my_response', function(response) {
-                    console.log("Received:", response.data);
-                    if (response.data.hasOwnProperty("objects")) {
-                        text_json_Test = response.data;
+                    console.log("Received objects:", response.objects);
+                    console.log("Received:", response);
+                    if (response.objects) {
+                        text_json_Test = response;
                         if (text_json_Test != text_json_Test_Old){
                             Paint_Resive_Obj();
                         }
-                        text_json_Test=text_json_Test_Old;
+                        text_json_Test = text_json_Test_Old;
                     }
+                    if ((response.hasOwnProperty("alarm_logs")) && (response.alarm_logs.updated)) {
+                        alarm_logs = response.alarm_logs.list;
+                        alarm_history_db.get_data_arr();
+                    }
+
                 });
 
         }

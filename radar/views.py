@@ -9,30 +9,34 @@ from radar.controllers.alarm_zones.alarm_zones import GetAlarmZonesController
 from radar.controllers.alarm_zones.delete_alarm_zone import DeleteAlarmZoneController
 from radar.controllers.alarm_zones.edit_alarm_zone import EditAlarmZoneController
 from radar.controllers.alarm_zones.set_alarm_zone import SetAlarmZoneController
-from radar.controllers.check_object import CheckObjectController
 from radar.controllers.login import LoginController
 from radar.controllers.logout import LogoutController
 from radar.controllers.radar_objects import GetRadarObjectsController
 from radar.controllers._radar import RadarController
-from radar.controllers.radar_object import RadarObjectController
 from radar.controllers.update_fabric_state import UpdateFabricStateController
 from radar.decorators import login_required
-from utils import pull_radar_objects
+from radar.models.radar_object import RadarObject
+from utils import get_dictionary_from_model
 
 
 def background_thread():
     """Send server generated events to clients."""
     count = 0
     while True:
-        socketio.sleep(5)
-        result_json = pull_radar_objects()
-        for _object in result_json['objects']:
-            print(CheckObjectController()(_object))
-        # RadarObjectController()(result_json['objects'])
+        radar_objects = RadarObject.pull_objects_and_save()  # pulling and saving radar objects into database
+        socketio.sleep(1)
+        alarm_logs, contains = RadarObject.contains_in_alarm_zones(radar_objects)  # check if contains in alarm zones
         count += 1
         socketio.emit('my_response',
-                      {'data': result_json, 'count': count},
-                      namespace='/test')
+                      {
+                          'objects': [r.json() for r in radar_objects],
+                          'alarm_logs': {
+                              'list': alarm_logs,
+                              'updated': contains
+                          },
+                          'count': count
+                      },
+                      namespace='/radar')
 
 # thread = socketio.start_background_task(target=background_thread)
 
@@ -71,18 +75,6 @@ def radar(pk):
     return RadarController(request)(pk)
 
 
-# @app.route('/radar-object/', methods=['POST'])
-# @login_required
-# def radar_object():
-#     return RadarObjectController(request)()
-
-
-# @app.route('/i/')
-# @login_required
-# def index_old():
-#     return render_template("index_old.html")
-
-
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
     return LoginController(request)()
@@ -98,23 +90,6 @@ def logout():
 @login_required
 def update_fabric_state():
     return UpdateFabricStateController(request)()
-
-# @app.route('/radar-objects/', methods=['GET'])
-# @login_required
-# def radar_objects():
-#     return GetRadarObjectsController(request)()
-
-
-# @app.route('/alarm-logs/', methods=['GET'])
-# @login_required
-# def alarm_logs():
-#     return GetAlarmLogsController(request)()
-
-
-# @app.route('/check-object/', methods=['POST'])
-# @login_required
-# def check_object():
-#     return CheckObjectController(request)()
 
 
 @app.route('/alarm-zone/', methods=['POST'])
@@ -148,7 +123,7 @@ def img(name):
     return send_file(MEDIA_ROOT + '/' + name, mimetype="image/jpg")
 
 
-@socketio.on('connect', namespace='/test')
+@socketio.on('connect', namespace='/radar')
 def test_connect():
     global thread
     if thread is None:
@@ -157,7 +132,7 @@ def test_connect():
     emit('my_response', {'data': 'Connected', 'count': 0}, broadcast=True)
 
 
-@socketio.on('disconnect', namespace='/test')
+@socketio.on('disconnect', namespace='/radar')
 def test_disconnect():
     print('Client disconnected')
 

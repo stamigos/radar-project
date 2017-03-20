@@ -10,5 +10,6 @@ class DeleteAlarmZoneController(BaseController):
     def _call(self):
         az_name = self._verify_field("az_name")
         alarm_zone = AlarmZone.get(name=az_name)
-        alarm_zone.delete_instance()
+        if alarm_zone:
+            alarm_zone.delete_instance()
         return jsonify({"result": "OK"})

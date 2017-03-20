@@ -30,7 +30,7 @@ TINY.table = function(){
         Table.RowHead = T$$('thead', T$(id_tbl))[0].rows[0];
         Table.CellsLenght = Table.RowHead.cells.length;
 
-        if(f != null) {
+        if (f != null) {
             for (i; i < Table.CellsLenght; i++) {
                 cell = Table.RowHead.cells[i];
                 if (cell.className != 'nosort') {
@@ -38,10 +38,12 @@ TINY.table = function(){
                     cell.onclick = new Function(this.n + '.wk(this.cellIndex)');
                 }
             }
-        }else{
+        } else {
             for (i; i < Table.CellsLenght; i++) {
                 cell = Table.RowHead.cells[i];
-                if ((cell.className == 'desc')||(cell.className == 'asc')){cell.onclick = new Function(this.n + '.wk(this.cellIndex)');}
+                if ((cell.className == 'desc')||(cell.className == 'asc')) {
+                    cell.onclick = new Function(this.n + '.wk(this.cellIndex)');
+                }
                 else if (cell.className != 'nosort') {
                     cell.className = this.head;
                     cell.onclick = new Function(this.n + '.wk(this.cellIndex)');
@@ -51,7 +53,7 @@ TINY.table = function(){
 
         }
 
-        for (i=0;i<this.RowsLenght;i++) {
+        for (i = 0; i < this.RowsLenght; i++) {
             Table.a[i] = {};
         }
 
@@ -75,7 +77,7 @@ TINY.table = function(){
 
         if (y != null) {
             var x = Table.RowHead.cells[y];
-            for (i=0; i<this.RowsLenght; i++){
+            for (i = 0; i < this.RowsLenght; i++){
                 var v = Table.Rows[i].cells[y];
                 //Table.Rows[i].style.display='';
                 while (v.hasChildNodes()) {
@@ -125,12 +127,12 @@ TINY.table = function(){
             }
 
         } else {
-            for(i=0; i<this.RowsLenght; i++) {
+            for(i = 0; i < this.RowsLenght; i++) {
                 row_temp = Table.Rows[i].cloneNode(true);
                 el_tbody.appendChild(row_temp);
                 row_temp.className = i % 2 == 0 ? this.even : this.odd;
                 cells = T$$('td', row_temp);
-                var sortNum=null;
+                var sortNum = null;
                 for (var ii in Table.RowHead.cells) {
                     if (!Table.RowHead.cells.hasOwnProperty(ii)) {
                         continue;
@@ -140,7 +142,7 @@ TINY.table = function(){
                     }
                 }
 
-                for(z=0; z<Table.CellsLenght; z++){
+                for(z = 0; z < Table.CellsLenght; z++){
                     cells[z].className = sortNum == z ? i % 2 == 0 ? this.evensel : this.oddsel:'';
                 }
             }
@@ -158,11 +160,11 @@ TINY.table = function(){
     sorter.prototype.page = function(s){
         var t = ge(this.Id_Table),
             i = 0,
-            l = s+parseInt(this.pagesize);
+            l = s + parseInt(this.pagesize);
         if (this.currentid && this.limitid) {
             T$(this.currentid).innerHTML = this.g
         }
-        for(i; i<this.RowsLenght; i++){
+        for(i; i < this.RowsLenght; i++){
             t.Rows[i].style.display = i >= s && i < l ? '' : 'none'
         }
     };
@@ -185,9 +187,9 @@ TINY.table = function(){
     };
 
     function ge(e) {
-        var tabl=T$(e);
-            tabl.b=T$$('tbody',tabl)[0];
-            tabl.Rows=tabl.b.rows;
+        var tabl = T$(e);
+            tabl.b = T$$('tbody',tabl)[0];
+            tabl.Rows = tabl.b.rows;
         return tabl
     }
 
@@ -244,16 +246,17 @@ var alarm_history_tbl = new function () {
                 continue;
             }
             var elem = rowTpl.cloneNode(true);
-            elem.id = tbl_arr[i]['id_row_db'];
-            elem.cells[0].innerText = tbl_arr[i]["alarm_zone"];
-            elem.cells[1].innerText = tbl_arr[i]["time_alarm"];
-            elem.cells[2].innerText = tbl_arr[i]["object_type"];
-            elem.cells[3].innerText = tbl_arr[i]["object_id"];
-            elem.cells[4].innerText = tbl_arr[i]["distance_x"];
-            elem.cells[5].innerText = tbl_arr[i]["distance_y"];
-            elem.cells[6].innerHTML = "<a onclick='Del_Row_Alarm_History("+elem.id+")'> Delete </a><div class='clear'></div>";
+                elem.id = tbl_arr[i]['id_row_db'];
+                elem.cells[0].innerText = tbl_arr[i]["alarm_zone"];
+                elem.cells[1].innerText = tbl_arr[i]["time_alarm"];
+                elem.cells[2].innerText = tbl_arr[i]["object_type"];
+                elem.cells[3].innerText = tbl_arr[i]["object_id"];
+                elem.cells[4].innerText = tbl_arr[i]["distance_x"];
+                elem.cells[5].innerText = tbl_arr[i]["distance_y"];
+                elem.cells[6].innerHTML = "<a onclick='Del_Row_Alarm_History("+elem.id+")'> Delete </a>" +
+                                          "<div class='clear'></div>";
 
-            if((orientation != null)&&(orientation == "bottom")) {
+            if ((orientation != null)&&(orientation == "bottom")) {
                 tbody.appendChild(elem);
             } else {
                 tbody.insertBefore(elem,tbody.children[0]);
@@ -261,35 +264,37 @@ var alarm_history_tbl = new function () {
 
             $(tbody.children[sort_size.value]).addClass('disp_none');
 
-            if(fl_highlight){
-                if(rowNum){
+            if (fl_highlight){
+                if (rowNum){
                     $(elem).addClass('highlight').delay(1000).queue(function(next){
                         $(this).removeClass('highlight');
-                        next();});
+                        next();
+                    });
                 }else{
                     $(elem).addClass('highlight').delay(1000).queue(function(next){
                         $(this).removeClass('highlight');
                         alarm_history_tbl.sort();
-                        next();});
+                        next();
+                    });
                 }
             }
             rowNum++;
         }
 
 
-        if (tbody.children.length>20) {
-            var end=tbody.children.length;
-            for(i=20;i<end;i++) {
+        if (tbody.children.length > 20) {
+            var end = tbody.children.length;
+            for(i = 20;i < end; i++) {
                 tbody.removeChild(tbody.children[tbody.children.length-1]);
             }
         }
         if (Count_Alarm_History_Row_DB) {
-            txt="Alarm History ("+Count_Alarm_History_Row_DB+")";
+            txt = "Alarm History ("+Count_Alarm_History_Row_DB+")";
         } else {
-            txt="Alarm History";
+            txt = "Alarm History";
         }
-        btn_full_histr.value=txt;
-        if ((!fl_highlight)&&(rowNum)) {
+        btn_full_histr.value = txt;
+        if ((!fl_highlight) && (rowNum)) {
             alarm_history_tbl.sort();
         }
 
@@ -326,12 +331,18 @@ var alarm_history_tbl = new function () {
 
 
         for (i in tbl_arr){
-            if (!tbl_arr.hasOwnProperty(i)){continue;}
+            if (!tbl_arr.hasOwnProperty(i)) {
+                continue;
+            }
             var elem;
-            if (rowNum<tbody.children.length){elem=tbody.children[i];}
-            else{elem=rowTpl.cloneNode(true);}
+            if (rowNum<tbody.children.length) {
+                elem=tbody.children[i];
+            }
+            else {
+                elem=rowTpl.cloneNode(true);
+            }
 
-            elem.id=tbl_arr[i]['id_row_db'];
+            elem.id = tbl_arr[i]['id_row_db'];
             elem.cells[0].innerText = tbl_arr[i]["alarm_zone"];
             elem.cells[1].innerText = tbl_arr[i]["time_alarm"];
             elem.cells[2].innerText = tbl_arr[i]["object_type"];
@@ -365,9 +376,11 @@ var alarm_history_tbl = new function () {
 
     /*########################################################################################################## change_sort */
     this.change_sort = function (row, orientation) {
-        var RowHead=document.getElementById("id_Alarm_List_Thead").rows[0];
+        var RowHead = document.getElementById("id_Alarm_List_Thead").rows[0];
         for (var i in RowHead.children) {
-            if (!RowHead.children.hasOwnProperty(i)){continue;}
+            if (!RowHead.children.hasOwnProperty(i)) {
+                continue;
+            }
             var c = RowHead.cells[i];
             if (c.className != 'nosort') {
                 c.className = "head";

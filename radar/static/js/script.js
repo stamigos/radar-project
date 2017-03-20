@@ -237,21 +237,28 @@ var prototypefabric = new function () {
                 //arr_pointLine[0].set({left: arr_pointLine[0].get('left')+image_save.get('left')-Left_Img, top: });
                 //arr_pointLine[1].set({left: arr_pointLine[1].get('left')+image_save.get('left')-Left_Img, top: arr_pointLine[1].get('top')+image_save.get('top')-Top_Img});
 
-                var left=[], top=[];
-                left[0]=arr_pointLine[0].get('left');
-                left[1]=arr_pointLine[1].get('left');
-                top[0]=arr_pointLine[0].get('top');
-                top[1]=arr_pointLine[1].get('top');
-                canvas.remove(arr_pointLine[0],arr_pointLine[1]);
-                arr_pointLine[0].left=left[0]+image_save.get('left')-Left_Img;
-                arr_pointLine[1].left=left[1]+image_save.get('left')-Left_Img;
-                arr_pointLine[0].top=top[0]+image_save.get('top')-Top_Img;
-                arr_pointLine[1].top=top[1]+image_save.get('top')-Top_Img;
-                canvas.add(arr_pointLine[0],arr_pointLine[1]);
-                active_scale_line.set({ x1: arr_pointLine[0].get('left'), y1: arr_pointLine[0].get('top'), x2: arr_pointLine[1].get('left'), y2: arr_pointLine[1].get('top') });
+                var left = [],
+                    top = [];
 
-                Left_Img=image_save.get('left');
-                Top_Img=image_save.get('top');
+                left[0] = arr_pointLine[0].get('left');
+                left[1] = arr_pointLine[1].get('left');
+                top[0] = arr_pointLine[0].get('top');
+                top[1] = arr_pointLine[1].get('top');
+                canvas.remove(arr_pointLine[0], arr_pointLine[1]);
+                arr_pointLine[0].left = left[0] + image_save.get('left') - Left_Img;
+                arr_pointLine[1].left = left[1] + image_save.get('left') - Left_Img;
+                arr_pointLine[0].top = top[0] + image_save.get('top') - Top_Img;
+                arr_pointLine[1].top = top[1] + image_save.get('top') - Top_Img;
+                canvas.add(arr_pointLine[0], arr_pointLine[1]);
+                active_scale_line.set({
+                    x1: arr_pointLine[0].get('left'),
+                    y1: arr_pointLine[0].get('top'),
+                    x2: arr_pointLine[1].get('left'),
+                    y2: arr_pointLine[1].get('top')
+                });
+
+                Left_Img = image_save.get('left');
+                Top_Img = image_save.get('top');
             }
             }
 
@@ -278,10 +285,10 @@ var prototypefabric = new function () {
             rdr_azimuth_angle = document.getElementById('Radar_Azimuth_Angle').value,
             rdr_elevation_angle = document.getElementById('Radar_Elevation_Angle').value,
 
-            radar_height = Math.floor((parseInt(rdr_height, 10)/350)*canvas.height),
-            radar_width = (radar_height*Math.tan(parseInt(rdr_azimuth_angle, 10) * Math.PI/360))*2,
-            radar_left = Math.floor((parseInt(rdr_offset_x, 10)/300)*canvas.width-radar_width/2),
-            radar_top = Math.floor((parseInt(rdr_offset_y, 10)/350)*canvas.height),
+            radar_height = Math.floor((parseInt(rdr_height, 10)/350) * canvas.height),
+            radar_width = (radar_height * Math.tan(parseInt(rdr_azimuth_angle, 10) * Math.PI/360)) * 2,
+            radar_left = Math.floor((parseInt(rdr_offset_x, 10)/300) * canvas.width - radar_width/2),
+            radar_top = Math.floor((parseInt(rdr_offset_y, 10)/350) * canvas.height),
             radar_angle = Math.floor(parseInt(rdr_elevation_angle, 10)),
             radar_fill = '#d6e6ff';
 
@@ -297,7 +304,7 @@ var prototypefabric = new function () {
         {
             var pos = fabric.util.rotatePoint(
                 new fabric.Point(x, y),
-                new fabric.Point(x+radar_width/2, y),
+                new fabric.Point(x + radar_width/2, y),
                 fabric.util.degreesToRadians(angle)
             );
             return new fabric.Triangle(
@@ -323,11 +330,13 @@ var prototypefabric = new function () {
         }
         var triangle = createTriangle(radar_left, radar_top, radar_angle);
             canvas.add(triangle);
-        var triangle_down=createTriangle(radar_left, radar_top, radar_angle);
-            triangle_down.set({opacity: 10/255});
+        var triangle_down = createTriangle(radar_left, radar_top, radar_angle);
+            triangle_down.set({
+                opacity: 10/255
+            });
             canvas_down.add(triangle_down);
-            radar_obj_save=triangle;
-            radar_down_obj_save=triangle_down;
+            radar_obj_save = triangle;
+            radar_down_obj_save = triangle_down;
 
         Render_All_Canvas();
         update_radar(1, rdr_height, rdr_offset_x, rdr_offset_y, rdr_azimuth_angle, rdr_elevation_angle);
@@ -337,7 +346,6 @@ var prototypefabric = new function () {
     }
     /*########################################################################################################## Paint_Resive_Obj Z*/
     function Paint_Resive_Obj() {
-        console.log("Paint_Resive_Obj")
         //document.getElementById('Obj_Data').value = text_json_Test;
         var display_alr_page = document.getElementById('id_Alarm_Text');
         var contact = text_json_Test;
@@ -358,17 +366,13 @@ var prototypefabric = new function () {
         for (i in Obj_Old) {
             color[Obj_Old[i]['color']] = Obj_Old[i]['color'];
         }
-        for (i=0; i < num_obj; i++) {
+        for (i = 0; i < num_obj; i++) {
             var id = contact.objects[i].object_id;
                 Obj_New[id] = {};
                 Obj_New[id]['id'] = contact.objects[i].object_id;
-                Obj_New[id]['type'] = contact.objects[i].object_type;
-                Obj_New[id]['x'] = Math.floor((contact.objects[i].distance_x*canvas.width)/300) + canvas.width/2;
-                Obj_New[id]['y'] = canvas.height - Math.floor((contact.objects[i].distance_y*canvas.height)/350);
-                console.log("X:", Obj_New[id]['x']);
-                console.log("Y:", Obj_New[id]['y']);
-                console.log("canvas.width:", canvas.width);
-                console.log("canvas.height:", canvas.height)
+                Obj_New[id]['type'] = 7; // contact.objects[i].object_type;
+                Obj_New[id]['x'] = Math.floor((contact.objects[i].c_distance_x*canvas.width)/300) + canvas.width/2;
+                Obj_New[id]['y'] = canvas.height - Math.floor((contact.objects[i].c_distance_y*canvas.height)/350);
 
             if (id in Obj_Old) {
                 Obj_New[id]['color'] = Obj_Old[id]['color'];
@@ -447,7 +451,7 @@ var prototypefabric = new function () {
                 }
 
                 name_zone_alarm.sort();
-                var name_zone_for_history='';
+                var name_zone_for_history = '';
 
                 for (int=0; int < name_zone_alarm.length; int++){
                     name_zone_for_history += name_zone_alarm[int]+', ';
@@ -476,23 +480,23 @@ var prototypefabric = new function () {
             Obj_Old[i]['id'] = Obj_New[i]['id'];
         }
       //****************************** HISTORY****************************************************
-        var temp_arr=[];
+        var temp_arr = [];
         for (i in Alarm_Obj_Old) {
             temp_arr.push(Alarm_Obj_Old[i]['alarm_zone']);
         }
-        var Alarm_Obj_New_Temp={};
+        var Alarm_Obj_New_Temp = {};
         for (i in Alarm_Obj_New){
             if(temp_arr.indexOf(Alarm_Obj_New[i]['alarm_zone']) == -1) {
                 fl_new_alarm = true;
-                alarm_history_db.add_row(Alarm_Obj_New[i]['id_row_db'],
-                                         Alarm_Obj_New[i]['alarm_zone'],
-                                         now_date_time,
-                                         Alarm_Obj_New[i]['object_type'],
-                                         Alarm_Obj_New[i]['object_id'],
-                                         Alarm_Obj_New[i]['distance_x'],
-                                         Alarm_Obj_New[i]['distance_y']);
-                Alarm_Obj_New_Temp[i]={};
-                Alarm_Obj_New_Temp[i]=Alarm_Obj_New[i];
+                // alarm_history_db.add_row(Alarm_Obj_New[i]['id_row_db'],
+                //                          Alarm_Obj_New[i]['alarm_zone'],
+                //                          now_date_time,
+                //                          Alarm_Obj_New[i]['object_type'],
+                //                          Alarm_Obj_New[i]['object_id'],
+                //                          Alarm_Obj_New[i]['distance_x'],
+                //                          Alarm_Obj_New[i]['distance_y']);
+                Alarm_Obj_New_Temp[i] = {};
+                Alarm_Obj_New_Temp[i] = Alarm_Obj_New[i];
             }
         }
 
@@ -505,30 +509,30 @@ var prototypefabric = new function () {
         //****************************** PAGE TEXT ALARM ****************************************************
         for (i in Alarm_Obj_Old) {
             if (!(i in Alarm_Obj_New)) {
-                alarm_str+=Check_Alarm_Zones_Outside(i);
+                alarm_str += Check_Alarm_Zones_Outside(i);
                 delete Alarm_Obj_Old[i];
             }
         }
 
 
-        for (i in Alarm_Obj_New){
+        for (i in Alarm_Obj_New) {
             if (!(i in Alarm_Obj_Old)) {
-                Alarm_Obj_Old[i]={};
+                Alarm_Obj_Old[i] = {};
             }
-            Alarm_Obj_Old[i]['alarm_zone']=Alarm_Obj_New[i]['alarm_zone'];
-            Alarm_Obj_Old[i]['object_type']=Alarm_Obj_New[i]['object_type'];
-            Alarm_Obj_Old[i]['object_id']=Alarm_Obj_New[i]['object_id'];
-            Alarm_Obj_Old[i]['distance_x']=Alarm_Obj_New[i]['distance_x'];
-            Alarm_Obj_Old[i]['distance_y']=Alarm_Obj_New[i]['distance_y'];
+            Alarm_Obj_Old[i]['alarm_zone'] = Alarm_Obj_New[i]['alarm_zone'];
+            Alarm_Obj_Old[i]['object_type'] = Alarm_Obj_New[i]['object_type'];
+            Alarm_Obj_Old[i]['object_id'] = Alarm_Obj_New[i]['object_id'];
+            Alarm_Obj_Old[i]['distance_x'] = Alarm_Obj_New[i]['distance_x'];
+            Alarm_Obj_Old[i]['distance_y'] = Alarm_Obj_New[i]['distance_y'];
         }
 
         if (alarm_str != "ALARM!!!!!<br>") {
-            display_alr_page.innerHTML=alarm_str;
-            cont_disp=2;
+            display_alr_page.innerHTML = alarm_str;
+            cont_disp = 2;
         }
         else {
             cont_disp--;
-            if (cont_disp==0) {
+            if (cont_disp == 0) {
                 display_alr_page.innerHTML='';
             }
         }
@@ -537,7 +541,7 @@ var prototypefabric = new function () {
         for (i in Obj_Old){
             canvas.add(Obj_Old[i]['object']);
         }
-        if (scale_to_set!=1) {
+        if (scale_to_set != 1) {
             scale_wind.setScale(scale_to_set, anchor_x, anchor_y);
         }
         canvas.renderAll();
@@ -578,8 +582,8 @@ var prototypefabric = new function () {
                 }
                 name_zone_old = Alarm_Obj_Old[obj_id]['zones'][i];
                 for(ii in Alarm_Zones){
-                    if((Alarm_Zones[ii]['name']==name_zone_old)&&(Alarm_Zones[ii]["type_alarm"]==1)&&(alarm_zones.indexOf(name_zone_old)==-1))
-                    {obj_out.push(name_zone_old);
+                    if ((Alarm_Zones[ii]['name'] == name_zone_old) && (Alarm_Zones[ii]["type_alarm"] == 1) && (alarm_zones.indexOf(name_zone_old)==-1)) {
+                        obj_out.push(name_zone_old);
                         if(Alarm_Zones[ii]["url"]!=''){
                             SendAlrm(Alarm_Zones[ii]["url"]+"?"+obj_id+":_OUT_"+name_zone_old);
                         }
@@ -665,17 +669,17 @@ var prototypefabric = new function () {
                 name_zone_old = Alarm_Obj_Old[obj_id]['zones'][i];
 
                 for (ii in Alarm_Zones) {
-                 if ((Alarm_Zones[ii]['name'] == name_zone_old) && (Alarm_Zones[ii]['type_alarm']==1)) {
+                 if ((Alarm_Zones[ii]['name'] == name_zone_old) && (Alarm_Zones[ii]['type_alarm'] == 1)) {
                      obj_out.push(name_zone_old);
-                     if (Alarm_Zones[ii]['url']!='') {
-                         SendAlrm(Alarm_Zones[ii]['url']+"?"+obj_id+":_OUT_"+name_zone_old);
+                     if (Alarm_Zones[ii]['url'] != '') {
+                         SendAlrm(Alarm_Zones[ii]['url']+"?"+obj_id+":_OUT_" + name_zone_old);
                      }
                     }
                  }
             }
 
             if (obj_out.length){
-                txt_alarm = "ID:"+obj_id;
+                txt_alarm = "ID:" +obj_id;
                 txt_alarm += "  OUT:";
                 for (i in obj_out){
                     txt_alarm += obj_out[i] + ", ";

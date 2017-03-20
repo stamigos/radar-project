@@ -1,5 +1,5 @@
 from flask import jsonify
-from radar.models import AlarmLog
+from radar.models import AlarmLog, RadarObject
 from radar.controllers import BaseController
 
 
