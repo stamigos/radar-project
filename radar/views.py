@@ -38,7 +38,7 @@ def background_thread():
                       },
                       namespace='/radar')
 
-# thread = socketio.start_background_task(target=background_thread)
+thread = socketio.start_background_task(target=background_thread)
 
 
 def dated_url_for(endpoint, **values):
@@ -125,10 +125,9 @@ def img(name):
 
 @socketio.on('connect', namespace='/radar')
 def test_connect():
-    global thread
-    if thread is None:
-        thread = socketio.start_background_task(target=background_thread)
-
+    # global thread
+    # if thread is None:
+    #     thread = socketio.start_background_task(target=background_thread)
     emit('my_response', {'data': 'Connected', 'count': 0}, broadcast=True)
 
 

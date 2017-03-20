@@ -84,7 +84,6 @@ class RadarObject(_Model):
                         p_angle=_object['angle']
                     )
                     r_objects.append(r_object)
-        print([r.c_distance_x for r in r_objects])
         return r_objects
 
     @staticmethod
