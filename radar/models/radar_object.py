@@ -54,6 +54,7 @@ class RadarObject(_Model):
         """
         r_objects = []
         for _object in objects:
+            print "_object: ", _object
             try:
                 with db.atomic():
                     try:
