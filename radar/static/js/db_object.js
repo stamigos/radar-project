@@ -116,7 +116,6 @@ var object_db = new function () {
                 canvas.add(group);
                 canvas_down.add(polygon_obj_down);
             }
-            console.log(Alarm_Zones)
         }
         // Object_Database.transaction(function (tx) {
         //     tx.executeSql("SELECT * FROM todo", [], function (tx, result) {

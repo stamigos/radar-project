@@ -70,7 +70,6 @@ var alarm_history_db = new function () {
             // tx.executeSql("SELECT * FROM todo ORDER BY time_alarm ASC", [], function (tx, result) {
                 var txt = "", Tbl = {};
                 for (var i = 0; (i < alarm_logs.length)&&(i < 20); i++) {
-                    console.log("alarm_logs[i]:", alarm_logs[i]);
                     Tbl[i]={};
                     Tbl[i]["alarm_zone"] = alarm_logs[i].alarm_zone.name;
                     Tbl[i]["time_alarm"] = alarm_logs[i].timestamp;

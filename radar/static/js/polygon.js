@@ -111,7 +111,6 @@ prototypefabric.polygon = {
         canvas.selection = false;
     },
     generatePolygon : function(pointArray){
-        console.log("in generate")
         var points = [];
         $.each(pointArray,function(index,point){
             points.push({
