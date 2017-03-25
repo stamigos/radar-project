@@ -475,8 +475,6 @@
                 var url = 'http://' + document.domain + ':' + location.port + '/radar';
                 var socket = io.connect(url);
                 socket.on('my_response', function(response) {
-                    console.log("Received objects:", response.objects);
-                    console.log("Received:", response);
                     if (response.objects) {
                         text_json_Test = response;
                         if (text_json_Test != text_json_Test_Old){
