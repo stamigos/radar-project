@@ -83,7 +83,8 @@ def init_db():
         [m.create_table() for m in [Account, Radar, RadarView, RadarObject, AlarmZone, AlarmLog]]
         fill_test_data()
         print "tables created"
-    except:
+    except Exception as e:
+        print("error message: ", e.message)
         db.rollback()
         raise
 
