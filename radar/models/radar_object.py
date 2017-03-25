@@ -56,7 +56,7 @@ class RadarObject(_Model):
         for _object in objects:
             print "_object: ", _object
             try:
-                with db.atomic():
+                with db.transaction():
                     try:
                         r_object = RadarObject.get(
                             object_id=_object['object_id']
@@ -78,7 +78,7 @@ class RadarObject(_Model):
 
             except RadarObject.DoesNotExist:
                 print("Does not exits")
-                with db.atomic():
+                with db.transaction():
                     try:
                         r_object = RadarObject.create(
                             object_id=_object['object_id'],
