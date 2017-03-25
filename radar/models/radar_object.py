@@ -57,43 +57,39 @@ class RadarObject(_Model):
             print "_object: ", _object
             try:
                 with db.transaction() as txn:
-                    try:
-                        r_object = RadarObject.get(
-                            object_id=_object['object_id']
-                        )
-                        print("r_object: ", r_object)
-                        RadarObject.update(
-                            quality=_object['quality'],
-                            c_distance_x=_object['distance_x'],
-                            c_distance_y=_object['distance_y'],
-                            c_velocity_x=_object['velocity_x'],
-                            c_velocity_y=_object['velocity_y'],
-                            p_distance=_object['distance_polar'],
-                            p_velocity=_object['speed_polar'],
-                            p_angle=_object['angle']
-                        ).execute()
-                        r_objects.append(r_object)
-                    except:
-                        txn.rollback()
+                    r_object = RadarObject.get(
+                        object_id=_object['object_id']
+                    )
+                    print("r_object: ", r_object)
+                    RadarObject.update(
+                        quality=_object['quality'],
+                        c_distance_x=_object['distance_x'],
+                        c_distance_y=_object['distance_y'],
+                        c_velocity_x=_object['velocity_x'],
+                        c_velocity_y=_object['velocity_y'],
+                        p_distance=_object['distance_polar'],
+                        p_velocity=_object['speed_polar'],
+                        p_angle=_object['angle']
+                    ).execute()
+                    r_objects.append(r_object)
 
             except RadarObject.DoesNotExist:
                 print("Does not exits")
                 with db.transaction() as txn:
-                    try:
-                        r_object = RadarObject.create(
-                            object_id=_object['object_id'],
-                            quality=_object['quality'],
-                            c_distance_x=_object['distance_x'],
-                            c_distance_y=_object['distance_y'],
-                            c_velocity_x=_object['velocity_x'],
-                            c_velocity_y=_object['velocity_y'],
-                            p_distance=_object['distance_polar'],
-                            p_velocity=_object['speed_polar'],
-                            p_angle=_object['angle']
-                        )
-                        r_objects.append(r_object)
-                    except:
-                        txn.rollback()
+                    # try:
+                    r_object = RadarObject.create(
+                        object_id=_object['object_id'],
+                        quality=_object['quality'],
+                        c_distance_x=_object['distance_x'],
+                        c_distance_y=_object['distance_y'],
+                        c_velocity_x=_object['velocity_x'],
+                        c_velocity_y=_object['velocity_y'],
+                        p_distance=_object['distance_polar'],
+                        p_velocity=_object['speed_polar'],
+                        p_angle=_object['angle']
+                    )
+                    r_objects.append(r_object)
+
         print "r_objects:", r_objects
         return r_objects
 
