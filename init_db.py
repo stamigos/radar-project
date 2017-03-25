@@ -7,9 +7,10 @@ from utils import random_coord
 
 def fill_test_data():
     for i in range(1, 3):
-        account = Account(email="radar@example.com%s" % (i if i != 1 else ""),
-                          password=sha1("123").hexdigest())
-        account.save()
+        with db.transaction():
+            account = Account(email="radar@example.com%s" % (i if i != 1 else ""),
+                              password=sha1("123").hexdigest())
+            account.save()
 
     for i in range(1, 5):
         radar = Radar(index=i,
@@ -27,15 +28,15 @@ def fill_test_data():
                       level="3")
         radar.save()
 
-    for i in range(1, 5):
-        radar_view = RadarView(index=i,
-                               enabled=random.choice([True, False]),
-                               description="RadarView %s" % i,
-                               visible=random.choice([True, False]),
-                               location="gps coordinates for radar view %s" % i,
-                               type=random.choice([1, 2, 3]),
-                               view_scaling=1.5)
-        radar_view.save()
+    # for i in range(1, 5):
+    #     radar_view = RadarView(index=i,
+    #                            enabled=random.choice([True, False]),
+    #                            description="RadarView %s" % i,
+    #                            visible=random.choice([True, False]),
+    #                            location="gps coordinates for radar view %s" % i,
+    #                            type=random.choice([1, 2, 3]),
+    #                            view_scaling=1.5)
+    #     radar_view.save()
 
     # for i in range(1, 8):
     #     radar_object = RadarObject(object_id=str(1+i),
@@ -83,8 +84,7 @@ def init_db():
         [m.create_table() for m in [Account, Radar, RadarView, RadarObject, AlarmZone, AlarmLog]]
         fill_test_data()
         print "tables created"
-    except Exception as e:
-        print("error message: ", e.message)
+    except:
         db.rollback()
         raise
 

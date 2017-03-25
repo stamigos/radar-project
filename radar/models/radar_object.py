@@ -44,6 +44,7 @@ class RadarObject(_Model):
     @staticmethod
     def pull_objects_and_save():
         r = requests.get(config.RADAR_OBJECTS_URL)
+        print ("response: ", r.json())
         return RadarObject.create_from_objects(r.json()['objects'])
 
     @staticmethod
