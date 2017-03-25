@@ -1,4 +1,4 @@
-var url = 'http://54.194.155.176:8000/';
+var url = 'http://0.0.0.0:8000/';
 
 function set_alarm_zone(name, points, color, fabric_state) {
     $.post(url+'alarm-zone/',

@@ -3,7 +3,7 @@ from flask import render_template, request, send_file, url_for
 from flask_socketio import emit
 
 from config import MEDIA_ROOT
-from radar import app, socketio, thread
+from radar import app, socketio
 from radar.controllers.alarm_logs import GetAlarmLogsController
 from radar.controllers.alarm_zones.alarm_zones import GetAlarmZonesController
 from radar.controllers.alarm_zones.delete_alarm_zone import DeleteAlarmZoneController

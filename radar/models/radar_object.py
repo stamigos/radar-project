@@ -56,34 +56,41 @@ class RadarObject(_Model):
         for _object in objects:
             try:
                 with db.atomic():
-                    r_object = RadarObject.get(
-                        object_id=_object['object_id']
-                    )
-                    RadarObject.update(
-                        quality=_object['quality'],
-                        c_distance_x=_object['distance_x'],
-                        c_distance_y=_object['distance_y'],
-                        c_velocity_x=_object['velocity_x'],
-                        c_velocity_y=_object['velocity_y'],
-                        p_distance=_object['distance_polar'],
-                        p_velocity=_object['speed_polar'],
-                        p_angle=_object['angle']
-                    ).execute()
-                    r_objects.append(r_object)
+                    try:
+                        r_object = RadarObject.get(
+                            object_id=_object['object_id']
+                        )
+                        RadarObject.update(
+                            quality=_object['quality'],
+                            c_distance_x=_object['distance_x'],
+                            c_distance_y=_object['distance_y'],
+                            c_velocity_x=_object['velocity_x'],
+                            c_velocity_y=_object['velocity_y'],
+                            p_distance=_object['distance_polar'],
+                            p_velocity=_object['speed_polar'],
+                            p_angle=_object['angle']
+                        ).execute()
+                        r_objects.append(r_object)
+                    except:
+                        db.rollback()
+
             except RadarObject.DoesNotExist:
                 with db.atomic():
-                    r_object = RadarObject.create(
-                        object_id=_object['object_id'],
-                        quality=_object['quality'],
-                        c_distance_x=_object['distance_x'],
-                        c_distance_y=_object['distance_y'],
-                        c_velocity_x=_object['velocity_x'],
-                        c_velocity_y=_object['velocity_y'],
-                        p_distance=_object['distance_polar'],
-                        p_velocity=_object['speed_polar'],
-                        p_angle=_object['angle']
-                    )
-                    r_objects.append(r_object)
+                    try:
+                        r_object = RadarObject.create(
+                            object_id=_object['object_id'],
+                            quality=_object['quality'],
+                            c_distance_x=_object['distance_x'],
+                            c_distance_y=_object['distance_y'],
+                            c_velocity_x=_object['velocity_x'],
+                            c_velocity_y=_object['velocity_y'],
+                            p_distance=_object['distance_polar'],
+                            p_velocity=_object['speed_polar'],
+                            p_angle=_object['angle']
+                        )
+                        r_objects.append(r_object)
+                    except:
+                        db.rollback()
         return r_objects
 
     @staticmethod
