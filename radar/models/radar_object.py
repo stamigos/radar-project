@@ -54,13 +54,11 @@ class RadarObject(_Model):
         """
         r_objects = []
         for _object in objects:
-            print "_object: ", _object
             try:
                 with db.transaction() as txn:
                     r_object = RadarObject.get(
                         object_id=_object['object_id']
                     )
-                    print("r_object: ", r_object)
                     RadarObject.update(
                         quality=_object['quality'],
                         c_distance_x=_object['distance_x'],
@@ -74,9 +72,7 @@ class RadarObject(_Model):
                     r_objects.append(r_object)
 
             except RadarObject.DoesNotExist:
-                print("Does not exits")
                 with db.transaction() as txn:
-                    # try:
                     r_object = RadarObject.create(
                         object_id=_object['object_id'],
                         quality=_object['quality'],
@@ -90,7 +86,6 @@ class RadarObject(_Model):
                     )
                     r_objects.append(r_object)
 
-        print "r_objects:", r_objects
         return r_objects
 
     @staticmethod
