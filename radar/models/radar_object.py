@@ -56,7 +56,7 @@ class RadarObject(_Model):
         for _object in objects:
             print "_object: ", _object
             try:
-                with db.transaction():
+                with db.transaction() as txn:
                     try:
                         r_object = RadarObject.get(
                             object_id=_object['object_id']
@@ -74,11 +74,11 @@ class RadarObject(_Model):
                         ).execute()
                         r_objects.append(r_object)
                     except:
-                        db.rollback()
+                        txn.rollback()
 
             except RadarObject.DoesNotExist:
                 print("Does not exits")
-                with db.transaction():
+                with db.transaction() as txn:
                     try:
                         r_object = RadarObject.create(
                             object_id=_object['object_id'],
@@ -93,7 +93,7 @@ class RadarObject(_Model):
                         )
                         r_objects.append(r_object)
                     except:
-                        db.rollback()
+                        txn.rollback()
         print "r_objects:", r_objects
         return r_objects
 
