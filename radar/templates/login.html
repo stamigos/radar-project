@@ -3,12 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login.css') }}"/>
 </head>
 <body>
-<form method="POST" action="{{ url_for('login') }}">
-    <input type="text" placeholder="Email" name="email" value=""/>
-    <input type="password" placeholder="Password" name="password" value=""/>
-    <input type="submit" value="Login"/>
-</form>
+    <div class="login-box">
+        <img src="{{ url_for('static', filename='img/logo_221x45.png')}}"/>
+        <div class="header"><h1>Log In</h1></div>
+        <div class="login-form">
+            <form method="POST" action="{{ url_for('login') }}">
+                <label for="email">Email</label>
+                <input type="text" placeholder="Enter Email" name="email" value=""/>
+                <label for="password">Password</label>
+                <input type="password" placeholder="Enter Password" name="password" value=""/>
+                <input type="submit" class="btn-main" value="Login"/>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

@@ -1,0 +1,42 @@
+body {
+    background: #eeeeee;
+}
+.login-box {
+    width: 350px;
+    height: 440px;
+    background: #ffffff;
+    position: absolute;
+    top: calc(50% - 220px);
+    left: calc(50% - 175px);
+    border-radius: 5px;
+    box-shadow: 0 9px 20px 10px #e5e5e5;
+}
+.login-box img {
+    padding: 23px 63px;
+}
+.login-box .header,
+.login-box .login-form {
+    position: relative;
+    padding: 10px 20px 0 20px;
+}
+.login-box h1 {
+    border-bottom: 2px solid #dddddd;
+    width: 100%;
+    display: block;
+    padding-bottom: 20px;
+}
+.login-box .login-form input {
+    display: block;
+    width: 90%;
+    margin: 0 auto;
+}
+.login-box .login-form input[type='submit'] {
+    width: 90px;
+    height: 42px;
+    cursor: pointer;
+    margin: 30px auto;
+    float: none;
+}
+.login-box .login-form label {
+    margin: 10px 0;
+}

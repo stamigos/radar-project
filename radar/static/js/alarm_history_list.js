@@ -1,6 +1,5 @@
-
-var TINY={};
-var Count_Alarm_History_Row_DB=0;
+var TINY = {};
+var Count_Alarm_History_Row_DB = 0;
 
 function T$(i) {
     return document.getElementById(i)

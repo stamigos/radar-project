@@ -1,6 +1,3 @@
-/**
- * Created by 1234 on 28.10.2016.
- */
 function ChangeAlarmZoneColor() {
     var color=$("#id_Alarm_Zone_Color").val();
     $('#color-picker').css('background', color);
