@@ -1,5 +1,6 @@
-from . import *
-from . import _Model
+from peewee import CharField, DateTimeField
+
+from base import peewee_now, db, _Model
 
 
 class Account(_Model):

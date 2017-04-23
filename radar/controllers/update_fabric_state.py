@@ -1,5 +1,5 @@
 from flask import jsonify
-from radar.models import AlarmZone
+from radar.models.alarm_zone import AlarmZone
 from . import BaseController
 
 

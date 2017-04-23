@@ -1,13 +1,15 @@
 import math
 from ast import literal_eval
-from matplotlib.path import Path
 from datetime import timedelta, datetime
 
 import requests
+from matplotlib.path import Path
+from peewee import CharField, FloatField, ForeignKeyField, DoesNotExist, DateTimeField, IntegerField
 
-import config
-from . import *
-from . import _Model
+from base import peewee_now, db, _Model
+from config import RADAR_OBJECTS_URL
+from constants import AlarmLogState
+from utils import get_dictionary_from_model
 from .alarm_zone import AlarmZone
 
 canvas_width = 700
@@ -43,8 +45,22 @@ class RadarObject(_Model):
 
     @staticmethod
     def pull_objects_and_save():
-        r = requests.get(config.RADAR_OBJECTS_URL)
+        r = requests.get(RADAR_OBJECTS_URL)
+        if r.status_code != 200:
+            return []
         return RadarObject.create_from_objects(r.json()['objects'])
+
+    @classmethod
+    def populate_and_save(cls):
+        radar_objects = cls.pull_objects_and_save()  # pulling and saving radar objects into database
+        alarm_logs, contains = cls.contains_in_alarm_zones(radar_objects)  # check if contains in alarm zones
+        return {
+          'objects': [r.json() for r in radar_objects],
+          'alarm_logs': {
+              'list': alarm_logs,
+              'updated': contains
+          }
+        }
 
     @staticmethod
     def create_from_objects(objects):
@@ -53,9 +69,9 @@ class RadarObject(_Model):
             received objects dictionary
         """
         r_objects = []
-        for _object in objects:
-            try:
-                with db.transaction() as txn:
+        with db.atomic() as transaction:
+            for _object in objects:
+                try:
                     r_object = RadarObject.get(
                         object_id=_object['object_id']
                     )
@@ -70,9 +86,7 @@ class RadarObject(_Model):
                         p_angle=_object['angle']
                     ).execute()
                     r_objects.append(r_object)
-
-            except RadarObject.DoesNotExist:
-                with db.transaction() as txn:
+                except RadarObject.DoesNotExist:
                     r_object = RadarObject.create(
                         object_id=_object['object_id'],
                         quality=_object['quality'],
@@ -85,6 +99,8 @@ class RadarObject(_Model):
                         p_angle=_object['angle']
                     )
                     r_objects.append(r_object)
+                except:
+                    db.rollback()
 
         return r_objects
 
@@ -132,7 +148,7 @@ class RadarObject(_Model):
         for az in alarm_zones:
             if self._check_point(point_x, point_y, az):
                 contains = True
-                AlarmLog.create_from(az, self)
+                AlarmLog.create_or_update_from(az, self)
         return contains
 
     def _check_point(self, point_x, point_y, a_zone):
@@ -148,6 +164,7 @@ class AlarmLog(_Model):
     alarm_zone = ForeignKeyField(AlarmZone, null=True)
     timestamp = DateTimeField(default=peewee_now)
     radar_object = ForeignKeyField(RadarObject, null=True)
+    state = IntegerField(null=True)  # 1 - IN, 2 - OUT
 
     def get_json(self):
         data = get_dictionary_from_model(self)
@@ -171,11 +188,16 @@ class AlarmLog(_Model):
         )]
 
     @staticmethod
-    def create_from(_alarm_zone, _radar_object):
-        return get_dictionary_from_model(
-            AlarmLog.create(
-                alarm_zone=_alarm_zone,
-                radar_object=_radar_object
+    def create_or_update_from(_alarm_zone, _radar_object):
+        try:
+            alarm_log = AlarmLog.get(alarm_zone=_alarm_zone.id, radar_object=_radar_object.id)
+            alarm_log.update(state=AlarmLogState.IN)
+        except DoesNotExist:
+            return get_dictionary_from_model(
+                AlarmLog.create(
+                    alarm_zone=_alarm_zone,
+                    radar_object=_radar_object,
+                    state=AlarmLogState.IN
+                )
             )
-        )
 

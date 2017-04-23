@@ -31,14 +31,13 @@
         <header>
             <img src="{{ url_for('static', filename='img/logo.png')}}"/>
             <a href="{{ url_for('logout') }}"><i class="fa fa-sign-out"></i></a>
-            <i class="fa fa-cog"></i>
+            <a href="{{ url_for('settings') }}"><i class="fa fa-cog"></i></a>
         </header>
         <div class="main">
             <div class="left-panel">
                 <div class="content-header">
                     <h1>Polygons</h1><br>
                     <h2>Radar live-view</h2>
-
                     <div id="Paint_second"><canvas id = "c2" width = "700" height = "525" ></canvas></div>
 
                     <div class="buttons">
@@ -194,7 +193,7 @@
                     </div>
                 </div>
             </div>
-            <div class="panel">
+            <div class="panel alarm-history">
 {#                <div id="id_Alarm_Text"></div>#}
                 <div class="content-header">
                     <h1>Alarm history</h1><br>
@@ -222,7 +221,7 @@
                         <input style="display:none" type="button" id="id_Sort_Alarm_History" value="Sort" class="btn-simple" />
                     </div>
                 </div>
-                <div class="content">
+                <div class="content bottom">
                     <div class="content-table-header">
 {#                        <table>#}
 {#                            <thead>#}
@@ -269,6 +268,30 @@
 {#                            {% endfor %}#}
 {#                            </tbody>#}
                         </table>
+                    </div>
+                </div>
+                <div class="content-header">
+                    <div class="content-table-header controls">
+                        <div id="controls">
+{#                            <div id="perpage">#}
+{#                                <span>Show</span>#}
+{#                                <select id="id_Sorter_Size_Select" class="alarm-type" onchange="sorter.size(this.value)">#}
+{#                                    <option value="5" selected="selected">5</option>#}
+{#                                    <option value="10">10</option>#}
+{#                                    <option value="20">20</option>#}
+{#                                    <option value="50">50</option>#}
+{#                                    <option value="100">100</option>#}
+{#                                </select>#}
+{#                                <span>entries</span>#}
+{#                            </div>#}
+    {#                        <div id="navigation">#}
+    {#                            <img src="/static/img/first.gif" width="16" height="16" alt="First Page" onclick="sorter.move(-1,true)" />#}
+    {#                            <img src="/static/img/previous.gif" width="16" height="16" alt="First Page" onclick="sorter.move(-1)" />#}
+    {#                            <img src="/static/img/next.gif" width="16" height="16" alt="First Page" onclick="sorter.move(1)" />#}
+    {#                            <img src="static/img/last.gif" width="16" height="16" alt="Last Page" onclick="sorter.move(1,true)" />#}
+    {#                        </div>#}
+{#                            <span id="text">Displaying Page <span id="currentpage"></span> of <span id="pagelimit"></span></span>#}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -465,37 +488,34 @@
 
 
     <script src="https://cdn.socket.io/socket.io-1.0.0.js"></script>
+    <script src="{{ notifier_url }}/socket.io/socket.io.js"></script>
 
     <script>
         var alarm_zones = {{ alarm_zones|tojson|safe }};
         var text_json_Test_Old;
         var alarm_logs = [];
 
-        function socketioClient() {
-                var url = 'http://' + document.domain + ':' + location.port + '/radar';
-                var socket = io.connect(url);
-                socket.on('my_response', function(response) {
-                    if (response.objects) {
-                        text_json_Test = response;
-                        if (text_json_Test != text_json_Test_Old){
-                            Paint_Resive_Obj();
-                        }
-                        text_json_Test = text_json_Test_Old;
-                    }
-                    if ((response.hasOwnProperty("alarm_logs")) && (response.alarm_logs.updated)) {
-                        alarm_logs = response.alarm_logs.list;
-                        alarm_history_db.get_data_arr();
-                    }
-
-                });
-
-        }
-
-
-    </script>
-    <script>
         $(document).ready(function(){
-            socketioClient();
+            var client = io('{{ notifier_url }}');
+{#                clientid = null;#}
+            console.log("client:", client)
+            client.on('register', function(id) {
+                console.log("registered")
+            });
+            client.on('notify', function(response) {
+                var result = JSON.parse(response);
+                if (result.objects) {
+                    text_json_Test = result;
+                    if (text_json_Test != text_json_Test_Old){
+                        Paint_Resive_Obj();
+                    }
+                    text_json_Test = text_json_Test_Old;
+                }
+                if ((result.hasOwnProperty("alarm_logs")) && (result.alarm_logs.updated)) {
+                    alarm_logs = result.alarm_logs.list;
+                    alarm_history_db.get_data_arr();
+                }
+            });
         });
     </script>
 

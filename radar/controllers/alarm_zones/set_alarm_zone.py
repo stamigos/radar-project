@@ -2,7 +2,7 @@ import json
 
 from flask import jsonify
 
-from radar.models import AlarmZone
+from radar.models.alarm_zone import AlarmZone
 from radar.controllers import BaseController, ServiceException
 
 

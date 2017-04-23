@@ -1,4 +1,6 @@
-from . import CharField, TextField, SmallIntegerField, BaseModel
+from peewee import CharField, TextField, SmallIntegerField
+
+from base import BaseModel
 
 
 class AlarmZone(BaseModel):

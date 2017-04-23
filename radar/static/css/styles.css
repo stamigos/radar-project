@@ -81,7 +81,20 @@ tr.selected_zone{
     text-align: center;
     font-size: 14px;
 }
-
+.alarm-history {
+    height: 380px !important;
+}
+.alarm-history .content-table-body {
+    border-bottom: 2px solid #dddddd;
+    height: 185px !important;
+}
+.alarm-history .content.bottom {
+    height: 181px;
+}
+.alarm-history .content-table-header.controls {
+    border-top: none !important;
+    background: transparent;
+}
 th.polygon-name-header:nth-child(1) {
     padding-right: 25px;
 }

@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, session
 
 from . import BaseController, ServiceException
-from radar.models import Account
+from radar.models.account import Account
 from utils import hash_pwd
 
 

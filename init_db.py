@@ -2,6 +2,7 @@ import random
 from hashlib import sha1
 
 from radar.models import *
+from radar.models.base import db
 from utils import random_coord
 
 
@@ -79,9 +80,9 @@ def fill_test_data():
 def init_db():
     try:
         db.connect()
-        map(lambda l: db.drop_table(l, True), [AlarmLog, AlarmZone, RadarObject, RadarView, Radar, Account])
+        map(lambda l: db.drop_table(l, True), [AlarmLog, AlarmZone, RadarObject, RadarView, Image, Radar, Account])
         print "tables dropped"
-        [m.create_table() for m in [Account, Radar, RadarView, RadarObject, AlarmZone, AlarmLog]]
+        [m.create_table() for m in [Account, Radar, Image, RadarView, RadarObject, AlarmZone, AlarmLog]]
         fill_test_data()
         print "tables created"
     except:

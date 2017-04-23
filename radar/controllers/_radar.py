@@ -1,7 +1,9 @@
 from flask import jsonify
-from radar.models import Radar
-from utils import get_dictionary_from_model
+
+from radar.models._radar import Radar
+
 from . import BaseController, ServiceException
+from utils import get_dictionary_from_model
 
 
 class RadarController(BaseController):

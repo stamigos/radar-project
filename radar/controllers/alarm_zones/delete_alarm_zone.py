@@ -1,6 +1,6 @@
 from flask import jsonify
-from radar.models import AlarmZone
-from radar.controllers import BaseController, ServiceException
+from radar.models.alarm_zone import AlarmZone
+from radar.controllers import BaseController
 
 
 class DeleteAlarmZoneController(BaseController):

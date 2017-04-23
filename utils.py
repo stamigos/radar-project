@@ -1,12 +1,9 @@
 import datetime
-from hashlib import sha1
 import random
-import requests
+from hashlib import sha1
 
 from peewee import ForeignKeyField
 from peewee import Model
-
-import config
 
 
 def hash_pwd(password):

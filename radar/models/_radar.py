@@ -1,4 +1,6 @@
-from . import *
+from peewee import CharField
+
+from radar.models.base import BaseModel
 
 
 class Radar(BaseModel):
