@@ -3,7 +3,7 @@ from werkzeug.utils import secure_filename
 
 from peewee import CharField
 
-from . import _Model
+from base import _Model
 
 
 class Image(_Model):

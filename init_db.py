@@ -1,7 +1,12 @@
 import random
 from hashlib import sha1
 
-from radar.models import *
+from radar.models.radar_object import AlarmLog, RadarObject
+from radar.models._radar import Radar
+from radar.models.account import Account
+from radar.models.alarm_zone import AlarmZone
+from radar.models.radar_view import RadarView
+from radar.models.image import Image
 from radar.models.base import db
 from utils import random_coord
 

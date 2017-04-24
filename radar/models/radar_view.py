@@ -4,6 +4,7 @@ from peewee import ForeignKeyField, FloatField
 
 from config import MEDIA_URL
 from .image import Image
+from base import BaseModel
 
 
 class RadarView(BaseModel):
