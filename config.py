@@ -18,7 +18,7 @@ MEDIA_URL = '/media'
 
 RADAR_OBJECTS_URL = 'http://caloric2.prometrix.se/radar/radar.php'
 
-PULLING_INTERVAL = 0.3
+PULLING_INTERVAL = 1
 
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
