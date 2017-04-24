@@ -6,6 +6,9 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 DB_CONFIG = dict(database="radar.db",
                  user="radar",
                  password="123",
+                 host="localhost",
+                 port=5432,
+                 register_hstore=False,
                  autorollback=True,
                  threadlocals=True)
 
