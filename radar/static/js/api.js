@@ -60,3 +60,18 @@ function update_radar(id, height, off_x_distance, off_y_distance, az_angle, el_a
         }
     )
 }
+
+function get_alarm_logs() {
+    $.get(url+'alarm-log/', function(r) {
+        console.log("get_alarm_logs:", r.result)
+        alarm_logs = r.result;
+    })
+}
+
+function delete_alarm_logs() {
+    $.post(url+'alarm-log/delete-all/', function (r) {
+        console.log("delete_alarm_logs:", r.result);
+        document.getElementById("id_Alarm_List_Tbody").innerHTML = "";
+        alarm_logs = [];
+    })
+}

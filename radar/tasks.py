@@ -14,7 +14,6 @@ class NotifierTask(Task):
     def after_return(self, status, retval, task_id, args, kwargs, einfo):
         url = 'http://{}:{}/notify'.format(NOTIFIER_HOST, NOTIFIER_PORT)
         data = {'result': json.dumps(retval)}
-        print "received data:", data
         requests.post(url, json=data)
 
 

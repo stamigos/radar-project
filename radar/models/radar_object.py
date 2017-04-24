@@ -148,7 +148,9 @@ class RadarObject(_Model):
         for az in alarm_zones:
             if self._check_point(point_x, point_y, az):
                 contains = True
-                AlarmLog.create_or_update_from(az, self)
+                AlarmLog.create_or_update_to_state(az, self, AlarmLogState.IN)
+            else:
+                AlarmLog.create_or_update_to_state(az, self, AlarmLogState.OUT)
         return contains
 
     def _check_point(self, point_x, point_y, a_zone):
@@ -188,16 +190,16 @@ class AlarmLog(_Model):
         )]
 
     @staticmethod
-    def create_or_update_from(_alarm_zone, _radar_object):
+    def create_or_update_to_state(_alarm_zone, _radar_object, state):
         try:
             alarm_log = AlarmLog.get(alarm_zone=_alarm_zone.id, radar_object=_radar_object.id)
-            alarm_log.update(state=AlarmLogState.IN)
+            alarm_log.update(state=state)
         except DoesNotExist:
             return get_dictionary_from_model(
                 AlarmLog.create(
                     alarm_zone=_alarm_zone,
                     radar_object=_radar_object,
-                    state=AlarmLogState.IN
+                    state=state
                 )
             )
 

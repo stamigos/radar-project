@@ -7,6 +7,7 @@ from config import MEDIA_ROOT, PULLING_INTERVAL, NOTIFIER_PORT
 from radar import app, socketio
 from radar.controllers._radar import RadarController
 from radar.controllers.alarm_logs import GetAlarmLogsController
+from radar.controllers.alarm_logs import DeleteAlarmLogsController
 from radar.controllers.alarm_zones.alarm_zones import GetAlarmZonesController
 from radar.controllers.alarm_zones.delete_alarm_zone import DeleteAlarmZoneController
 from radar.controllers.alarm_zones.edit_alarm_zone import EditAlarmZoneController
@@ -15,7 +16,7 @@ from radar.controllers.login import LoginController
 from radar.controllers.logout import LogoutController
 from radar.controllers.radar_objects import GetRadarObjectsController
 from radar.controllers.update_fabric_state import UpdateFabricStateController
-from radar.decorators import login_required
+from radar.decorators import login_required, jsonify_result
 from radar.tasks import pull_and_save
 
 
@@ -43,6 +44,7 @@ def override_url_for():
 
 
 @app.route("/runtask", methods=['POST'])
+@login_required
 def runtask():
     pull_and_save.delay()
     return 'running task...', 202
@@ -109,6 +111,20 @@ def edit_alarm_zone():
 @login_required
 def delete_alarm_zone():
     return DeleteAlarmZoneController(request)()
+
+
+@app.route('/alarm-log/', methods=['GET'])
+@login_required
+@jsonify_result
+def get_alarm_logs():
+    return GetAlarmLogsController(request)()
+
+
+@app.route('/alarm-log/delete-all/', methods=['POST'])
+@login_required
+@jsonify_result
+def delete_alarm_logs():
+    return DeleteAlarmLogsController(request)()
 
 
 @app.route("/image/", methods=['POST'])

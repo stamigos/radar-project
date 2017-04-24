@@ -12,3 +12,11 @@ def login_required(func):
             return jsonify({'result': 'You are not logged in'})
         return redirect(url_for('login'))
     return wrapper
+
+
+def jsonify_result(func):
+    @wraps(func)
+    def wrapper(*args, **kwds):
+        result = func(*args, **kwds)
+        return jsonify({"result": result})
+    return wrapper
