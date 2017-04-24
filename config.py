@@ -8,7 +8,6 @@ DB_CONFIG = dict(database="radar.db",
                  password="123",
                  host="localhost",
                  port=5432,
-                 register_hstore=False,
                  autorollback=True,
                  threadlocals=True)
 
