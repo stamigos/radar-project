@@ -23,6 +23,9 @@ h1, h2 {
     margin: 0;
     line-height: 24px;
 }
+a {
+    border-bottom: none !important;
+}
 span {
     font-family: 'Roboto Regular';
     font-size: 13px;
@@ -157,7 +160,7 @@ td.polygon-name:nth-child(1) {
 .alarm-logs td:nth-child(1){
     padding-left: 15px;
     padding-right: 0;
-    width: 60px;
+    width: 100px;
 }
 .alarm-logs td:nth-child(2){
     padding-left: 5px;
@@ -165,27 +168,27 @@ td.polygon-name:nth-child(1) {
     width:135px;
 }
 .alarm-logs td:nth-child(3){
-    padding-left: 5px;
+    padding-left: 28px;
     padding-right: 0;
-    width:175px;
+    width: 100px;
 }
 .alarm-logs td:nth-child(4){
-    padding-left: 5px;
+    padding-left: 28px;
     padding-right: 0;
-    width:200px;
+    width: 125px;
 }
 .alarm-logs td:nth-child(5){
-    padding-left: 5px;
+    padding-left: 28px;
     padding-right: 0;
-    width:160px;
+    width: 125px;
 }
 .alarm-logs td:nth-child(6){
-    padding-left: 5px;
+    padding-left: 28px;
     padding-right: 0;
-    width:185px;
+    width: 155px;
 }
 .alarm-logs td:nth-child(7){
-    padding-left: 5px;
+    padding-left: 28px;
     padding-right: 0;
     width:175px;
 }
@@ -239,6 +242,10 @@ header i.fa.fa-sign-out:hover {
     width: 762px;
     height: 645px;
 }
+.left-panel.settings {
+    width: 400px;
+    height: 400px;
+}
 .main:last-child {
     margin-bottom: 30px;
 }
@@ -268,6 +275,9 @@ header i.fa.fa-sign-out:hover {
     height: 645px;
     margin-left: 30px;
     padding: 0 !important;
+}
+.right-panel.settings {
+    height: 400px;
 }
 .panel {
     display: block;
@@ -329,6 +339,9 @@ button {
     width: 90px;
     border: none;
     margin-left: 20px;
+}
+.btn-main.settings {
+    margin-left: 0;
 }
 .btn-main:hover {
     background: #458cff;
@@ -424,6 +437,16 @@ input[type='color'] {
     float: left;
     margin-right: 15px;
     margin-bottom: 15px;
+}
+.form-item.settings {
+    float: none;
+    width:300px;
+}
+.form-item.settings button {
+    float: none;
+}
+.form-item.settings input {
+    width: 100%;
 }
 select.alarm-type {
     -webkit-appearance: none;
@@ -1009,4 +1032,5 @@ canvas {
 .alarm_zones_setting_tabl td h3 {font-size:16px; color:#c6d5e1; padding:0; text-align:right; margin-right:4px;}
 .alarm_zones_setting_tabl td input {width:80%; border:0;}
 .alarm_zones_setting_tabl td select {width:80%; border:0;}
+
 

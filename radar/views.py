@@ -1,9 +1,9 @@
 import os
 from urlparse import urlparse
-from flask import render_template, request, send_file, url_for
+from flask import render_template, request, send_file, url_for, session
 from flask_socketio import emit
 
-from config import MEDIA_ROOT, PULLING_INTERVAL, NOTIFIER_PORT
+from config import MEDIA_ROOT, PULLING_INTERVAL, NOTIFIER_PORT, RADAR_OBJECTS_URL
 from radar import app, socketio
 from radar.controllers._radar import RadarController
 from radar.controllers.alarm_logs import GetAlarmLogsController
@@ -17,6 +17,7 @@ from radar.controllers.logout import LogoutController
 from radar.controllers.radar_objects import GetRadarObjectsController
 from radar.controllers.update_fabric_state import UpdateFabricStateController
 from radar.decorators import login_required, jsonify_result
+from radar.models.account import Account
 from radar.tasks import pull_and_save
 
 
@@ -66,10 +67,15 @@ def index():
                            notifier_url=notifier_url)
 
 
-@app.route('/settings/')
+@app.route('/settings/', methods=['GET', 'POST'])
 @login_required
 def settings():
-    return render_template("settings.html")
+    account = Account.get(Account.id == session["u"])
+    if request.method == 'POST':
+        account.radar_objects_url = request.form.get('radar_objects_url') or RADAR_OBJECTS_URL
+        account.save()
+    radar_objects_url = account.radar_objects_url
+    return render_template("settings.html", radar_objects_url=radar_objects_url)
 
 
 @app.route('/radar/<int:pk>/', methods=['GET', 'POST'])

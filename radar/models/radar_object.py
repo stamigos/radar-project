@@ -8,7 +8,6 @@ from peewee import CharField, FloatField, ForeignKeyField, DoesNotExist, DateTim
 
 from base import peewee_now, db, _Model
 from config import RADAR_OBJECTS_URL
-from constants import AlarmLogState
 from utils import get_dictionary_from_model
 from .alarm_zone import AlarmZone
 
@@ -148,9 +147,9 @@ class RadarObject(_Model):
         for az in alarm_zones:
             if self._check_point(point_x, point_y, az):
                 contains = True
-                AlarmLog.create_or_update_to_state(az, self, AlarmLogState.IN)
+                AlarmLog.create_or_update_to_in(az, self)
             else:
-                AlarmLog.create_or_update_to_state(az, self, AlarmLogState.OUT)
+                AlarmLog.update_to_out(az, self)
         return contains
 
     def _check_point(self, point_x, point_y, a_zone):
@@ -166,7 +165,7 @@ class AlarmLog(_Model):
     alarm_zone = ForeignKeyField(AlarmZone, null=True)
     timestamp = DateTimeField(default=peewee_now)
     radar_object = ForeignKeyField(RadarObject, null=True)
-    state = IntegerField(null=True)  # 1 - IN, 2 - OUT
+    state = CharField(null=True)  # IN/OUT
 
     def get_json(self):
         data = get_dictionary_from_model(self)
@@ -190,16 +189,27 @@ class AlarmLog(_Model):
         )]
 
     @staticmethod
-    def create_or_update_to_state(_alarm_zone, _radar_object, state):
+    def create_or_update_to_in(_alarm_zone, _radar_object):
+        print("_radar_object:", _radar_object)
         try:
             alarm_log = AlarmLog.get(alarm_zone=_alarm_zone.id, radar_object=_radar_object.id)
-            alarm_log.update(state=state)
+            alarm_log.state = "IN"
+            alarm_log.save()
         except DoesNotExist:
             return get_dictionary_from_model(
                 AlarmLog.create(
                     alarm_zone=_alarm_zone,
                     radar_object=_radar_object,
-                    state=state
+                    state="IN"
                 )
             )
+
+    @staticmethod
+    def update_to_out(_alarm_zone, _radar_object):
+        try:
+            alarm_log = AlarmLog.get(alarm_zone=_alarm_zone.id, radar_object=_radar_object.id)
+            alarm_log.state = "OUT"
+            alarm_log.save()
+        except DoesNotExist:
+            pass
 

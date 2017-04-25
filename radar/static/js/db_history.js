@@ -23,7 +23,6 @@ var alarm_history_db = new function () {
 
         $('#id_Clear_Alarm_History').click(function () {
             alarm_history_db.delete_table();
-            // alarm_history_db.create_table();
             alarm_history_db.get_data_arr();
         });
     };
@@ -46,6 +45,7 @@ var alarm_history_db = new function () {
 
     this.delete_table = function () {
         delete_alarm_logs();
+        alarm_history_db.get_data_arr();
     };
 
 
@@ -72,6 +72,7 @@ var alarm_history_db = new function () {
             Tbl[i]["distance_x"] = alarm_logs[i].radar_object.c_distance_x;
             Tbl[i]["distance_y"] = alarm_logs[i].radar_object.c_distance_y;
             Tbl[i]["id_row_db"] = alarm_logs[i].id;
+            Tbl[i]["state"] = alarm_logs[i].state;
         }
 
         // alarm_history_tbl.change_sort(1,"desc");

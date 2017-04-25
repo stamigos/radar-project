@@ -166,7 +166,6 @@ function ModifyAlarmZone(ind_alr_zone) {
     var type_alarm = $('#id_Alarm_Type_Select');
     var url_zone = $('#id_Alarm_URL');
 
-
     Alarm_Zone_Temp['name'] = Alarm_Zones[ind_alr_zone]['name'];
     Alarm_Zone_Temp['color'] = Alarm_Zones[ind_alr_zone]['color'];
     Alarm_Zone_Temp['type_alarm'] = Alarm_Zones[ind_alr_zone]['type_alarm'];
@@ -193,6 +192,9 @@ function SaveModifyAlarmZone(ind_alr_zone) {
     Alarm_Zone_Temp['type_alarm'] = type_alarm.val();
     Alarm_Zone_Temp['url'] = url_zone.val();
 
+    // call api to edit
+    edit_alarm_zone(Alarm_Zones[ind_alr_zone]['name'], Alarm_Zone_Temp['name'], Alarm_Zone_Temp['color']);
+
     Alarm_Zones[ind_alr_zone] = {};
     Alarm_Zones[ind_alr_zone]['name'] = Alarm_Zone_Temp['name'];
     Alarm_Zones[ind_alr_zone]['color'] = Alarm_Zone_Temp['color'];
@@ -200,12 +202,9 @@ function SaveModifyAlarmZone(ind_alr_zone) {
     Alarm_Zones[ind_alr_zone]['url'] = Alarm_Zone_Temp['url'];
     Alarm_Zones[ind_alr_zone]['polygon'] = Alarm_Zone_Temp['polygon'];
     Alarm_Zones[ind_alr_zone]['polygon_down'] = Alarm_Zone_Temp['polygon_down'];
+    console.log("Alarm_Zones[ind_alr_zone]['name']", Alarm_Zones[ind_alr_zone]['name']);
+    console.log("Alarm_Zone_Temp['name']:", Alarm_Zone_Temp['name'])
 
-    // call api to edit
-    edit_alarm_zone(Alarm_Zones[ind_alr_zone]['name'], Alarm_Zone_Temp['name'], Alarm_Zone_Temp['color']);
-
-    // object_db.delete_row(""+ind_alr_zone+"");
-    // object_db.add_row(""+ind_alr_zone+"",'{"alarm_zone":['+JSON.stringify(Alarm_Zones[ind_alr_zone]["polygon"])+','+JSON.stringify(Alarm_Zones[ind_alr_zone]["polygon_down"])+']}',Alarm_Zones[ind_alr_zone]["name"],Alarm_Zones[ind_alr_zone]["color"],Alarm_Zones[ind_alr_zone]["type_alarm"],Alarm_Zones[ind_alr_zone]["url"], '0', '0', '0', '0', '0');
     fl_alarm_zome = false;
 }
 

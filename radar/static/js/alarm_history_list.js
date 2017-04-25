@@ -216,7 +216,7 @@ var alarm_history_tbl = new function () {
             btn_full_histr = document.getElementById('id_Full_Alarm_History'),
             rowNum = 0,
             sort_size = document.getElementById("id_Sorter_Size_Select"),
-            fields = {1:"val1", 2:"val2", 3:"val3", 4:"val4",5:"val5", 6:"val6", 7:"val7"},
+            fields = {1:"val1", 2:"val2", 3:"val3", 4:"val4",5:"val5", 6:"val6", 7:"val7", 8:"val8"},
             TD, i, txt, sortNum = null;
 
         // clear table before filling
@@ -255,7 +255,8 @@ var alarm_history_tbl = new function () {
                 elem.cells[3].innerText = tbl_arr[i]["object_id"];
                 elem.cells[4].innerText = tbl_arr[i]["distance_x"];
                 elem.cells[5].innerText = tbl_arr[i]["distance_y"];
-                elem.cells[6].innerHTML = "<a onclick='Del_Row_Alarm_History("+elem.id+")'> Delete </a>" +
+                elem.cells[6].innerText = tbl_arr[i]["state"];
+                elem.cells[7].innerHTML = "<a onclick='Del_Row_Alarm_History("+elem.id+")'> Delete </a>" +
                                           "<div class='clear'></div>";
 
             if ((orientation != null)&&(orientation == "bottom")) {
@@ -309,7 +310,7 @@ var alarm_history_tbl = new function () {
             btn_full_histr = document.getElementById('id_Full_Alarm_History'),
             sort_size = document.getElementById("id_Sorter_Size_Select"),
             rowNum = 0,
-            fields = {1:"val1", 2:"val2", 3:"val3", 4:"val4", 5:"val5", 6:"val6", 7:"val7"},
+            fields = {1:"val1", 2:"val2", 3:"val3", 4:"val4", 5:"val5", 6:"val6", 7:"val7", 8:"val8"},
             TD, i, txt, sortNum = null, end_row;
 
         for (var field in fields) {
@@ -350,7 +351,8 @@ var alarm_history_tbl = new function () {
             elem.cells[3].innerText = tbl_arr[i]["object_id"];
             elem.cells[4].innerText = tbl_arr[i]["distance_x"];
             elem.cells[5].innerText = tbl_arr[i]["distance_y"];
-            elem.cells[6].innerHTML = "<a onclick='Del_Row_Alarm_History("+elem.id+")'> Delete </a><div class='clear'></div>";
+            elem.cells[6].innerText = tbl_arr[i]["state"];
+            elem.cells[7].innerHTML = "<a onclick='Del_Row_Alarm_History("+elem.id+")'> Delete </a><div class='clear'></div>";
             rowNum++;
         }
 

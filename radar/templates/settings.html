@@ -11,10 +11,60 @@
 
     <body>
         <header>
-            <img src="{{ url_for('static', filename='img/logo.png')}}"/>
+            <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='img/logo.png')}}"/></a>
             <a href="{{ url_for('logout') }}"><i class="fa fa-sign-out"></i></a>
             <i class="fa fa-cog"></i>
         </header>
-        <div class="main"></div>
+        <div class="main">
+            <div class="left-panel settings">
+                <div class="content-header">
+                    <h1 class="bordered">Settings</h1><br>
+                </div>
+                <div class="content padded">
+                    <form action="{{ url_for('settings') }}" method="POST">
+                        <div class="form-item settings">
+                            <label for="Radar_objects_url">Radar objects url</label>
+                            <input type="text" name="radar_objects_url" id="Radar_objects_url" value="{{ radar_objects_url }}"/>
+                        </div>
+                        <br>
+                        <div class="form-item settings">
+                            <button type="submit" class="btn-main">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+{#            <div class="right-panel settings">#}
+{#                <div class="content-header">#}
+{#                    <h1 class="bordered">Radar settings</h1><br>#}
+{#                </div>#}
+{#                <div class="content padded">#}
+{#                    <div class="form-item">#}
+{#                        <label for="height">Installation Height</label>#}
+{#                        <input type="number" step="0.01" name="height" id="Radar_Height" value="360.0"/>#}
+{#                    </div>#}
+{#                    <div class="form-item">#}
+{#                        <label for="offset_x">Installation Offset X</label>#}
+{#                        <input type="number" step="0.01" name="offset_x" id="Radar_Offset_X" value="0.0"/>#}
+{#                    </div>#}
+{#                    <div class="form-item">#}
+{#                        <label for="offset_y">Installation Offset Y</label>#}
+{#                        <input type="number" step="0.01" name="offset_y" id="Radar_Offset_Y" value="0.0"/>#}
+{#                    </div>#}
+{#                    <div class="form-item">#}
+{#                        <label for="radar_az_angle">Radar Azimuth Angle</label>#}
+{#                        <input type="number" step="0.01" name="radar_az_angle" id="Radar_Azimuth_Angle" value="60.0"/>#}
+{#                    </div>#}
+{#                    <div class="form-item">#}
+{#                        <label for="radar_el_angle">Radar Elevation Angle</label>#}
+{#                        <input type="number" step="0.01" name="radar_el_angle" id="Radar_Elevation_Angle" value="0.0"/>#}
+{#                    </div>#}
+{#                    <br>#}
+{#                    <div class="form-items-actions">#}
+{#                        <button type="button" class="btn-simple" id="id_Clear_Object_Database">Clear</button>#}
+{#                        <button type="button" class="btn-main" id="id_Create_Radar">Save</button>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+        </div>
     </body>
 </html>
