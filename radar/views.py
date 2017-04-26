@@ -19,11 +19,12 @@ from radar.controllers.update_fabric_state import UpdateFabricStateController
 from radar.decorators import login_required, jsonify_result
 from radar.models.account import Account
 from radar.tasks import pull_and_save
+from utils import get_dictionary_from_model
 
 
 def background_thread():
     while True:
-        pull_and_save.delay()
+        pull_and_save.delay(get_dictionary_from_model(Account.get(Account.id == 1)))
         socketio.sleep(PULLING_INTERVAL)
 
 thread = socketio.start_background_task(target=background_thread)
@@ -47,7 +48,8 @@ def override_url_for():
 @app.route("/runtask", methods=['POST'])
 @login_required
 def runtask():
-    pull_and_save.delay()
+    account = Account.get(Account.id == session["u"])
+    pull_and_save.delay(get_dictionary_from_model(account))
     return 'running task...', 202
 
 

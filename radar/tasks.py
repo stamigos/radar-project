@@ -18,6 +18,6 @@ class NotifierTask(Task):
 
 
 @celery.task(base=NotifierTask)
-def pull_and_save():
-    return RadarObject.populate_and_save()
+def pull_and_save(account):
+    return RadarObject.populate_and_save(account['radar_objects_url'])
 

@@ -43,15 +43,15 @@ class RadarObject(_Model):
         return get_dictionary_from_model(self)
 
     @staticmethod
-    def pull_objects_and_save():
-        r = requests.get(RADAR_OBJECTS_URL)
+    def pull_objects_and_save(radar_objects_url):
+        r = requests.get(radar_objects_url)
         if r.status_code != 200:
             return []
         return RadarObject.create_from_objects(r.json()['objects'])
 
     @classmethod
-    def populate_and_save(cls):
-        radar_objects = cls.pull_objects_and_save()  # pulling and saving radar objects into database
+    def populate_and_save(cls, radar_objects_url):
+        radar_objects = cls.pull_objects_and_save(radar_objects_url)  # pulling and saving radar objects into database
         alarm_logs, contains = cls.contains_in_alarm_zones(radar_objects)  # check if contains in alarm zones
         return {
           'objects': [r.json() for r in radar_objects],
