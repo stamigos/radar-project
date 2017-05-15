@@ -2721,7 +2721,7 @@ var fabric = fabric || {
             selectionLineWidth: 1,
             hoverCursor: "move",
             moveCursor: "move",
-            defaultCursor: "default",
+            defaultCursor: "pointer",
             freeDrawingCursor: "crosshair",
             rotationCursor: "crosshair",
             containerClass: "canvas-container",

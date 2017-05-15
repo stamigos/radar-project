@@ -1,6 +1,8 @@
+import redis
 from celery import Celery
 from flask import Flask
 from flask_socketio import SocketIO
+
 
 import config
 
@@ -12,6 +14,7 @@ async_mode = None
 
 app = Flask(__name__, static_url_path='/static', static_folder='static')
 app.config.from_object('config')
+rdb = redis.Redis(host='localhost', port=6379, db=0)
 socketio = SocketIO(app, async_mode=async_mode)
 thread = None
 

@@ -16,18 +16,25 @@ from radar.controllers.login import LoginController
 from radar.controllers.logout import LogoutController
 from radar.controllers.radar_objects import GetRadarObjectsController
 from radar.controllers.update_fabric_state import UpdateFabricStateController
+from radar.controllers.image_upload import ImageUploadController
 from radar.decorators import login_required, jsonify_result
 from radar.models.account import Account
-from radar.tasks import pull_and_save
+from radar.tasks import pull_objects, save_objects
 from utils import get_dictionary_from_model
 
 
 def background_thread():
+    account = Account.get(Account.id == 1)
     while True:
-        pull_and_save.delay(get_dictionary_from_model(Account.get(Account.id == 1)))
-        socketio.sleep(PULLING_INTERVAL)
+        pull_objects.delay()
+        socketio.sleep(float(account.pulling_interval))
+
+
+def save_objects_background_thread():
+    save_objects.delay()
 
 thread = socketio.start_background_task(target=background_thread)
+# thread1 = socketio.start_background_task(target=save_objects_background_thread)
 
 
 def dated_url_for(endpoint, **values):
@@ -49,7 +56,7 @@ def override_url_for():
 @login_required
 def runtask():
     account = Account.get(Account.id == session["u"])
-    pull_and_save.delay(get_dictionary_from_model(account))
+    pull_objects.delay(get_dictionary_from_model(account))
     return 'running task...', 202
 
 
@@ -75,9 +82,13 @@ def settings():
     account = Account.get(Account.id == session["u"])
     if request.method == 'POST':
         account.radar_objects_url = request.form.get('radar_objects_url') or RADAR_OBJECTS_URL
+        account.pulling_interval = request.form.get('pulling_interval') or PULLING_INTERVAL
         account.save()
     radar_objects_url = account.radar_objects_url
-    return render_template("settings.html", radar_objects_url=radar_objects_url)
+    pulling_interval = account.pulling_interval
+    return render_template("settings.html",
+                           radar_objects_url=radar_objects_url,
+                           pulling_interval=pulling_interval)
 
 
 @app.route('/radar/<int:pk>/', methods=['GET', 'POST'])
@@ -137,8 +148,9 @@ def delete_alarm_logs():
 
 @app.route("/image/", methods=['POST'])
 @login_required
+@jsonify_result
 def file_upload():
-    pass
+    return ImageUploadController(request)()
     # url = .upload_photo()
     # return jsonify(dict(result=True, data={"url": url}, error=None))
 

@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 from peewee import CharField
 
 from base import _Model
+from config import MEDIA_ROOT, MEDIA_URL
 
 
 class Image(_Model):

@@ -8,8 +8,8 @@ class GetAlarmLogsController(BaseController):
         super(GetAlarmLogsController, self).__init__(request)
 
     def _call(self):
-        alarm_logs = [get_dictionary_from_model(alarm_log) for alarm_log in AlarmLog.select()]
-        return alarm_logs
+        # alarm_logs = [get_dictionary_from_model(alarm_log) for alarm_log in AlarmLog.select()]
+        return AlarmLog.redis_list_all_json()
 
 
 class DeleteAlarmLogsController(BaseController):
@@ -17,8 +17,7 @@ class DeleteAlarmLogsController(BaseController):
         super(DeleteAlarmLogsController, self).__init__(request)
 
     def _call(self):
-        print("AlarmLog.select() before:", [get_dictionary_from_model(al) for al in AlarmLog.select()])
+        AlarmLog.redis_clear_logs()
         AlarmLog.delete().execute()
-        print("AlarmLog.select():", [get_dictionary_from_model(al) for al in AlarmLog.select()])
         return "OK"
 

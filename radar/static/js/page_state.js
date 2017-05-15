@@ -13,6 +13,7 @@ function PageState(state){
             break;
 
         case "save_alarm_zone":
+            unhighlightPlotState();
             $("#id_Modify_Alarm_Zone").attr("action","Modify");
             $("#id_Modify_Alarm_Zone i").removeClass("fa-floppy-o").addClass("fa-pencil");
             document.getElementById("id_Alarm_Zone_Color").disabled = true;
@@ -59,6 +60,7 @@ function PageState(state){
 
 
         case "creat_alarm_zone":
+            highlightPlotState();
             document.getElementById("id_Upload_Image").disabled=true;
             document.getElementById("file_upp").disabled=true;
             document.getElementById("id_Modify_Alarm_Zone").disabled=true;
@@ -105,6 +107,21 @@ function PageState(state){
         default: break;
 
     }
+}
+
+function highlightPlotState() {
+    var grid = document.getElementById('grid-block');
+        grid.style.zIndex = 1000;
+
+    var overlay = document.getElementById('overlay');
+        overlay.style.visibility = 'visible';
+        overlay.style.opacity = 1;
+        document.getElementById('tools-panel').style.zIndex = 1000;
+}
+function unhighlightPlotState() {
+    var overlay = document.getElementById('overlay');
+        overlay.style.visibility = 'hidden';
+        overlay.style.opacity = 0;
 }
 
 

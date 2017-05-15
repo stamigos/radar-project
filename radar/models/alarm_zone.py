@@ -20,3 +20,7 @@ class AlarmZone(BaseModel):
     @staticmethod
     def list_all():
         return [az for az in AlarmZone.select()]
+
+    @staticmethod
+    def redis_list_all():
+        return

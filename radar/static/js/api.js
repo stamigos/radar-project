@@ -1,4 +1,4 @@
-var url = 'http://54.194.155.176:8000/';
+var url = window.location.href;
 
 function set_alarm_zone(name, points, color, fabric_state) {
     $.post(url+'alarm-zone/',
@@ -63,8 +63,9 @@ function update_radar(id, height, off_x_distance, off_y_distance, az_angle, el_a
 
 function get_alarm_logs() {
     $.get(url+'alarm-log/', function(r) {
-        console.log("get_alarm_logs:", r.result)
-        alarm_logs = r.result;
+        if (r.result) {
+            alarm_logs = r.result;
+        }
     })
 }
 
@@ -74,4 +75,22 @@ function delete_alarm_logs() {
         document.getElementById("id_Alarm_List_Tbody").innerHTML = "";
         alarm_logs = [];
     })
+}
+
+function upload_image() {
+    var form_data = new FormData($('#upload-file')[0]);
+
+        $.ajax({
+            type: 'POST',
+            url: '/image/',
+            data: form_data,
+            contentType: false,
+            cache: false,
+            processData: false,
+            async: false,
+            success: function(data) {
+                console.log("data:", data);
+                console.log('Success!');
+            }
+        });
 }

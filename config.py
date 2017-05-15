@@ -11,6 +11,8 @@ DB_CONFIG = dict(database="radar.db",
                  autorollback=True,
                  threadlocals=True)
 
+MONGOALCHEMY_DATABASE = 'radar_mongo'
+
 SECRET_KEY = 'top-secret'
 
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')

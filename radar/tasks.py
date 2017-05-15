@@ -7,7 +7,7 @@ from radar import celery, socketio
 from radar.models.radar_object import RadarObject
 
 
-class NotifierTask(Task):
+class NotifierPullObjectsTask(Task):
     """Task that sends notification on completion."""
     abstract = True
 
@@ -17,7 +17,13 @@ class NotifierTask(Task):
         requests.post(url, json=data)
 
 
-@celery.task(base=NotifierTask)
-def pull_and_save(account):
-    return RadarObject.populate_and_save(account['radar_objects_url'])
+@celery.task(base=NotifierPullObjectsTask)
+def pull_objects():
+    return RadarObject.redis_populate_and_save()
+
+
+@celery.task()
+def save_objects():
+    return RadarObject.populate_and_save()
+
 

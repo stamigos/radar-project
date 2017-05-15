@@ -23,11 +23,12 @@
         <script type="text/javascript" src="{{ url_for('static', filename='js/db_object.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/page_state.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/button.js') }}"></script>
-
+        <script type="text/javascript" src="{{ url_for('static', filename='js/utils.js') }}"></script>
     </head>
 
 
     <body>
+        <div class="overlay" id="overlay"></div>
         <header>
             <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='img/logo.png')}}"/></a>
             <a href="{{ url_for('logout') }}"><i class="fa fa-sign-out"></i></a>
@@ -40,29 +41,31 @@
                     <h2>Radar live-view</h2>
                     <div id="Paint_second"><canvas id = "c2" width = "700" height = "525" ></canvas></div>
 
-                    <div class="buttons">
-                        <button class="btn-img-upload" id="file_upp">
-                            <i class="fa fa-picture-o" aria-hidden="true"></i>
-                            Load Image
-                        </button>
-                        <div class="wind_wait_url  hidden" id='id_Wait_Upload_Image'>
-                                WAIT UPLOAD IMAGE
+                        <div class="buttons">
+                            <button class="btn-img-upload" id="file_upp">
+                                <i class="fa fa-picture-o" aria-hidden="true"></i>
+                                Load Image
+                            </button>
+                            <div class="wind_wait_url  hidden" id='id_Wait_Upload_Image'>
+                                    WAIT UPLOAD IMAGE
+                            </div>
+                            <form id="upload-file" method="post" enctype="multipart/form-data" style="display: none;">
+                                <input type="file" id="id_Upload_Image" name="image" style="display: none;" />
+                            </form>
+                            <button type = "button" id="id_Scale_Image" class="button" disabled hidden style="width: 100%; margin: 0px;" >Scale</button>
+                            <button class="btn-main" id="id_Save_Image">Save</button>
                         </div>
-                        <input type="file" id="id_Upload_Image" style="display: none;" />
-                        <button type = "button" id = "id_Scale_Image" class="button" disabled hidden style="width: 100%; margin: 0px;" >Scale</button>
-                        <button class="btn-main" id="id_Save_Image">Save</button>
-                    </div>
                 </div>
-                <div class="content" style="padding-left: 10px !important;">
+                <div class="content" style="padding-left: 10px !important;" id="grid-block">
                     <table class="canv_tabl"><tr><td>
                         <div id="id_Canv_Grid_Left_Div"><canvas id="id_Canv_Grid_Left_Canv" width="35" height="525" class="canv_grid"></canvas></div>
                         <td class="bottom">
                         <div id="Paint_first"><canvas id="c" width="700" height="525" ></canvas></div>
                         <tr><td><td>
-                        <div id="id_Canv_Grid_Bottom_Div"><canvas id = "id_Canv_Grid_Bottom_Canv" width="700" height="30" class="canv_grid"></canvas></div>
+                        <div id="id_Canv_Grid_Bottom_Div"><canvas id="id_Canv_Grid_Bottom_Canv" width="700" height="30" class="canv_grid"></canvas></div>
                     </table>
 
-                    <div id = "id_Drop_Scale" class="scale_drop hidden">
+                    <div id="id_Drop_Scale" class="scale_drop hidden">
                         <table class="scale_tabl">
                             <tr><td colspan="2"><button type = "button" id="id_Scale_Line" class="button" style="width: 100%; margin: 0px;">Line</button></td></tr>
                             <tr><td><input type="number" step="0.1" id="id_Scale_Distance_Inpt" value = "0.0"  class="scale_cell" /></td>
@@ -83,7 +86,7 @@
                     </div>
                 </div>
                 <div class="content">
-                    <div class="content-table-header">
+                    <div class="content-table-header" id="tools-panel">
                         <table>
                             <thead>
                                   <tr>
@@ -494,30 +497,30 @@
     <script>
         var alarm_zones = {{ alarm_zones|tojson|safe }};
         var text_json_Test_Old;
-        var alarm_logs = [];
+            alarm_history_db.get_data_arr();
 
-        $(document).ready(function(){
-            var client = io('{{ notifier_url }}');
-{#                clientid = null;#}
-            console.log("client:", client)
-            client.on('register', function(id) {
-                console.log("registered")
-            });
-            client.on('notify', function(response) {
-                var result = JSON.parse(response);
-                if (result.objects) {
-                    text_json_Test = result;
-                    if (text_json_Test != text_json_Test_Old){
-                        Paint_Resive_Obj();
+
+            $(document).ready(function(){
+                var client = io('{{ notifier_url }}');
+                client.on('register', function(id) {
+                    console.log("registered")
+                });
+                client.on('notify', function(response) {
+                    var result = JSON.parse(response);
+                    if ((result.alarm_logs) && (result.alarm_logs.updated)) {
+                        alarm_logs = result.alarm_logs.list;
+                        alarm_history_db.get_data_arr();
                     }
-                    text_json_Test = text_json_Test_Old;
-                }
-                if ((result.hasOwnProperty("alarm_logs")) && (result.alarm_logs.updated)) {
-                    alarm_logs = result.alarm_logs.list;
-                    alarm_history_db.get_data_arr();
-                }
+                    if (result.objects) {
+                        text_json_Test = result;
+
+                        if (text_json_Test != text_json_Test_Old){
+                            Paint_Resive_Obj();
+                        }
+                        text_json_Test = text_json_Test_Old;
+                    }
+                });
             });
-        });
     </script>
 
     </body>

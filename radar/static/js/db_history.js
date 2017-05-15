@@ -9,17 +9,8 @@ $(window).on('load', function() {
 var alarm_history_db = new function () {
     var Alarm_History_Database;
     this.init = function () {
-        if (typeof(openDatabase) !== 'undefined') {
-            // alarm_history_db.open();
-            // alarm_history_db.create_table();
-            // alarm_history_db.get_data();
-            alarm_history_db.get_data_arr();
+        alarm_history_db.get_data_arr();
 
-
-        }
-        else {
-            alert(' Ваш браузер не поддерживает технологию Web SQL ');
-        }
 
         $('#id_Clear_Alarm_History').click(function () {
             alarm_history_db.delete_table();
@@ -69,8 +60,8 @@ var alarm_history_db = new function () {
             Tbl[i]["time_alarm"] = alarm_logs[i].timestamp;
             Tbl[i]["object_type"] = 7; // TODO: alarm_logs[i] ??????;
             Tbl[i]["object_id"] = alarm_logs[i].radar_object.object_id;
-            Tbl[i]["distance_x"] = alarm_logs[i].radar_object.c_distance_x;
-            Tbl[i]["distance_y"] = alarm_logs[i].radar_object.c_distance_y;
+            Tbl[i]["distance_x"] = alarm_logs[i].radar_object.distance_x;
+            Tbl[i]["distance_y"] = alarm_logs[i].radar_object.distance_y;
             Tbl[i]["id_row_db"] = alarm_logs[i].id;
             Tbl[i]["state"] = alarm_logs[i].state;
         }

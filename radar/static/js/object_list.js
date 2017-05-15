@@ -53,14 +53,14 @@ var object_list_tbl = new function () {
                 tableRows[i].cells[0].firstChild.value = (i+1)+".";
                 tableRows[i].cells[1].firstChild.value = DataRows.objects[i].object_id;
                 tableRows[i].cells[2].firstChild.value = DataRows.objects[i].quality;
-                tableRows[i].cells[3].firstChild.value = DataRows.objects[i].c_distance_x;
-                tableRows[i].cells[4].firstChild.value = DataRows.objects[i].c_distance_y;
-                tableRows[i].cells[5].firstChild.value = DataRows.objects[i].c_velocity_x;
-                tableRows[i].cells[6].firstChild.value = DataRows.objects[i].c_velocity_y;
+                tableRows[i].cells[3].firstChild.value = DataRows.objects[i].distance_x;
+                tableRows[i].cells[4].firstChild.value = DataRows.objects[i].distance_y;
+                tableRows[i].cells[5].firstChild.value = DataRows.objects[i].velocity_x;
+                tableRows[i].cells[6].firstChild.value = DataRows.objects[i].velocity_y;
                 tableRows[i].cells[7].firstChild.value = 7;//DataRows.objects[i].object_type;
-                tableRows[i].cells[8].firstChild.value = DataRows.objects[i].p_distance;
-                tableRows[i].cells[9].firstChild.value = DataRows.objects[i].p_velocity;
-                tableRows[i].cells[10].firstChild.value = DataRows.objects[i].p_angle;
+                tableRows[i].cells[8].firstChild.value = DataRows.objects[i].distance_polar;
+                tableRows[i].cells[9].firstChild.value = DataRows.objects[i].speed_polar;
+                tableRows[i].cells[10].firstChild.value = DataRows.objects[i].angle;
             }
 
         }());

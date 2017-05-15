@@ -2,7 +2,11 @@ $(window).on('load', function() {
     /*########################################################################################################## BUTTON:ADD ALARM ZONE */
     document.getElementById('id_Creat_Alarm_Zone').addEventListener('click', function() {
         DisplayAlarmZones(null);
-        if(Count_Alarm_Zones>4){alert("Max Alarm Zones!!!"); PageState('creat_alarm_zone_max'); return false;}//если зон уже 5 выходим.
+        if (Count_Alarm_Zones > 4){
+            alert("Max Alarm Zones!!!");
+            PageState('creat_alarm_zone_max');
+            return false;
+        }//если зон уже 5 выходим.
         scale_wind.setScale(0.9, 100, 100); canvas.renderAll();
         scale_to_set=1;
         prototypefabric.polygon.drawPolygon();
@@ -77,6 +81,12 @@ $(window).on('load', function() {
         Create_Radar();
     });
 
+    document.getElementById('file_upp').addEventListener('click', function() {
+        document.getElementById('id_Upload_Image').click()
+    });
+    document.getElementById('id_Save_Image').addEventListener('click', function() {
+        upload_image();
+    })
 });
 
 
