@@ -1,10 +1,11 @@
 import os
+import json
+from datetime import datetime, timedelta
 from urlparse import urlparse
 from flask import render_template, request, send_file, url_for, session
-from flask_socketio import emit
 
 from config import MEDIA_ROOT, PULLING_INTERVAL, NOTIFIER_PORT, RADAR_OBJECTS_URL
-from radar import app, socketio
+from radar import app, socketio, rdb
 from radar.controllers._radar import RadarController
 from radar.controllers.alarm_logs import GetAlarmLogsController
 from radar.controllers.alarm_logs import DeleteAlarmLogsController
@@ -25,8 +26,17 @@ from utils import get_dictionary_from_model
 
 def background_thread():
     account = Account.get(Account.id == 1)
+    tasks_count = 0
     while True:
-        pull_objects.delay()
+        pull_objects.apply_async()
+        tasks_count += 1
+        if tasks_count > 20:
+            for key in rdb.keys("celery-task-meta-*"):
+                r = rdb.get(key)
+                task = json.loads(r)
+                if task['status'] == 'SUCCESS':
+                    rdb.delete(key)
+            tasks_count = 0
         socketio.sleep(float(account.pulling_interval))
 
 

@@ -1,3 +1,4 @@
+from datetime import timedelta
 import redis
 from celery import Celery
 from flask import Flask
@@ -21,9 +22,12 @@ thread = None
 
 def make_celery(app):
     _celery = Celery(app.import_name,
-                     broker=app.config['CELERY_BROKER_URL'],
-                     backend=app.config['CELERY_RESULT_BACKEND'])
+                     broker=app.config['CELERY_BROKER_URL'])
+                     #backend=app.config['CELERY_RESULT_BACKEND'])
     _celery.conf.update(app.config)
+    _celery.conf.update(
+        celery_result_expires=3,
+    )
     TaskBase = _celery.Task
 
     class ContextTask(TaskBase):

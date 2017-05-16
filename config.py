@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 
 DEBUG = True
 
@@ -24,6 +25,7 @@ PULLING_INTERVAL = 1
 
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+# CELERY_TASK_RESULT_EXPIRES = timedelta(seconds=1)
 
 NOTIFIER_HOST = os.environ.get('NOTIFIER_PORT_3000_TCP_ADDR', 'localhost')
 NOTIFIER_PORT = int(os.environ.get('NOTIFIER_PORT_3000_TCP_PORT', 3000))
