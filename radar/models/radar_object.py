@@ -322,6 +322,7 @@ class AlarmLog(_Model):
                     rdb.hmset('alarm_logs', {"alarm_logs": json.dumps(alarm_logs)})
 
             if is_new_alarm_log:
+                alarm_logs = alarm_logs[-10:]
                 alarm_logs.append({
                     "alarm_zone": get_dictionary_from_model(_alarm_zone),
                     "radar_object": _radar_object,

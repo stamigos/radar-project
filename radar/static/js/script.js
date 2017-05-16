@@ -363,6 +363,7 @@ var prototypefabric = new function () {
         for (i in Obj_Old) {
             color[Obj_Old[i]['color']] = Obj_Old[i]['color'];
         }
+        Obj_New = {}
         for (i = 0; i < num_obj; i++) {
             var id = contact.objects[i].object_id;
                 Obj_New[id] = {};
@@ -386,13 +387,12 @@ var prototypefabric = new function () {
                 }
             }
         }
-
         for(i in Obj_Old) {
             canvas.remove(Obj_Old[i]['object']);
         }
         Obj_Old={};
 
-
+        console.log("Obj_New:", Obj_New)
         for(i in Obj_New) {
 
             circle_obj_resive = new fabric.Circle({
